@@ -5,7 +5,7 @@
 package tmf.org.dsmapi.tt;
 
 /**
- *
+ * none
  * @author pierregauthier
  */
 public enum IncidentType {
