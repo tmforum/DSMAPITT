@@ -122,9 +122,7 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         return super.findAll();
     }
 
-    
-    
-    
+   
 
     @GET
     @Path("count")
