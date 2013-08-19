@@ -567,7 +567,7 @@ TestSupport.prototype = {
                 }
             }
         }
-        if(mName == 'PUT' || mName == 'POST') {   
+        if(mName == 'PUT' || mName == 'POST'|| mName == 'PATCH') {   
             str += '<tr><td valign="top"><span id="j_id14"><label for="blobParam" class="LblLev2Txt_sun4">'+
                 '<span>Content: </span></label></span></td>'+
                 '<td><span id="j_id14"><textarea class="TxtAra_sun4 TxtAraVld_sun4" id=blobParam name=params rows=6 cols=65>Insert content here.</textarea></span></td></tr>';
@@ -1979,7 +1979,7 @@ XHR.prototype = {
     },
 
     put : function(url, mime, content) {
-        return this.httpRequest('PUT', url, mime, content, true);
+        return this.httpRequest('POST', url, mime, content, true);
     },
 
     delete_ : function(url) {

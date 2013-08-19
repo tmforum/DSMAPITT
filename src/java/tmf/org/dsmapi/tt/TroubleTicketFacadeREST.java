@@ -43,12 +43,59 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         super.create(entity);
     }
 
-    @PUT
-    @Override
+    /*@PUT
     @Consumes({"application/json"})
-    public void edit(TroubleTicket entity) {
+    @Produces({"application/json"})
+    public TroubleTicket edit(TroubleTicket entity) {
         super.edit(entity);
+        return entity;
+    }*/
+    
+    //Equivalent to PATCH also PUT with partial attributes is accepted
+    //as replacement for PATCH but will get deprecated check behavior partial populated
+    
+    @PUT
+    @Path("{id}")
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    public  TroubleTicket postpatch(@PathParam("id") String id,TroubleTicket entity) {
+        
+        System.out.println("===PATCH is called ====");
+        return entity;
     }
+    
+    
+    @POST
+    @Path("{id}")
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    public  TroubleTicket postPatch2(@PathParam("id") String id,TroubleTicket entity) {
+        
+        System.out.println("===PATCH is called ====");
+        return entity;
+    }
+    
+    @POST
+    @Path("toto/{id}")
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    public  TroubleTicket postPatchtoto(@PathParam("id") String id,TroubleTicket entity) {
+        
+        System.out.println("===PATCH is called ====");
+        return entity;
+    }
+    
+    //X-HTTP-Method-Override on POST
+    @PATCH
+    @Path("{id}")
+    @Consumes({"application/json"})
+    @Produces({"application/json"})
+    public  TroubleTicket patchRaw(@PathParam("id") String id,TroubleTicket entity) {
+        
+        System.out.println("===PATCH is called ====");
+        return entity;
+    }
+
 
     @DELETE
     @Path("{id}")
@@ -65,8 +112,6 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         tt.setId("42");
         tt.setNotes(null);
         tt.setCreationDate(null);
-        
-       
         return super.find(id);
     }
 
@@ -77,12 +122,9 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         return super.findAll();
     }
 
-    @GET
-    @Path("{from}/{to}")
-    @Produces({"application/json"})
-    public List<TroubleTicket> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
+    
+    
+    
 
     @GET
     @Path("count")
