@@ -39,8 +39,9 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
     @POST
     @Override
     @Consumes({"application/json"})
-    public void create(TroubleTicket entity) {
-        super.create(entity);
+    @Produces({"application/json"})
+    public TroubleTicket create(TroubleTicket entity) {
+       return super.create(entity);
     }
 
     /*@PUT
