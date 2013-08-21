@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  *
@@ -70,7 +71,21 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
+@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
+    
+    
+    public static final    String ALL = "all";
+    public static final    String ID = "id";
+    public static final    String STATUS = "status";
+    public static final    String DESCRIPTION = "description";
+    public static final    String SEVERITY = "severity";
+    
+    
+    //Add other static strings as required....
+    
+    
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
