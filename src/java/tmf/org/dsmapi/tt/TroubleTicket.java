@@ -73,7 +73,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @XmlRootElement
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
-    ///XXX
+    
     
     public static final    String ALL = "all";
     public static final    String ID = "id";
