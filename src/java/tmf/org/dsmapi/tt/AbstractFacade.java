@@ -6,6 +6,10 @@ package tmf.org.dsmapi.tt;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 /**
  *
@@ -20,8 +24,10 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) {
+    public Response create(T entity) {
         getEntityManager().persist(entity);
+        Response response = Response.ok(entity).build();
+        return response;
     }
 
     public T edit(T entity) {
