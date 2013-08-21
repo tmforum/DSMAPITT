@@ -74,6 +74,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
     
+    //XXXX
+    
     
     public static final    String ALL = "all";
     public static final    String ID = "id";
