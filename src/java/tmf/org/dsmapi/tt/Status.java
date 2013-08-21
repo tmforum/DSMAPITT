@@ -6,7 +6,7 @@ package tmf.org.dsmapi.tt;
 
 /**
  *
- * @author pierregauthier
+ * @author pierregauthier TMFORUM
  */
 public enum Status {
  Submitted, Acknowledged, InProgress, Resolved, Closed, Rejected;  //; is optional
