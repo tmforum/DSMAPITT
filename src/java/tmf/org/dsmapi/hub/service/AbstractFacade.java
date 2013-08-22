@@ -2,18 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.hub.service;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.ws.rs.core.Response;
 
-/**xxxxx
+/**
  *
  * @author pierregauthier
  */
 public abstract class AbstractFacade<T> {
-
     private Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
@@ -22,14 +20,12 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public Response create(T entity) {
+    public void create(T entity) {
         getEntityManager().persist(entity);
-        return null;
     }
 
-    public T edit(T entity) {
+    public void edit(T entity) {
         getEntityManager().merge(entity);
-        return entity;
     }
 
     public void remove(T entity) {
@@ -62,4 +58,5 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
+    
 }

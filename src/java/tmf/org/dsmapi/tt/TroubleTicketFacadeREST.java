@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 package tmf.org.dsmapi.tt;
+//changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -130,18 +132,57 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
     public void remove(@PathParam("id") String id) {
         super.remove(super.find(id));
     }
-
+    
     @GET
     @Path("{id}")
     @Produces({"application/json"})
     public TroubleTicket find(@PathParam("id") String id) {
 
-        TroubleTicket tt = new TroubleTicket();
-        tt.setId("42");
-        tt.setNotes(null);
-        tt.setCreationDate(null);
-        return super.find(id);
+      
+     
+        return  super.find(id);
+       
     }
+
+    @GET
+    @Path("{id}/{attributes}")
+    @Produces({"application/json"})
+    public TroubleTicket findWithAttributes(@PathParam("id") String id,@PathParam("attributes") String as ) {
+
+        String[] attributeTokens = null;
+        List<String> tokenList = tokenList = Arrays.asList();
+        //Tokenize the attribute selector to find which attributes are requested
+        if (as != null) {
+            attributeTokens = as.split(",");
+            tokenList = Arrays.asList(attributeTokens);
+        } else {
+            //adding all attributes
+
+            tokenList.add("all");
+        }
+        
+        TroubleTicket tt =  super.find(id);
+        
+        if (tokenList.contains(TroubleTicket.ALL)) {
+            return tt;
+        } else {
+            TroubleTicket partialTT = new TroubleTicket();
+            partialTT.setId(tt.getId());
+            if (tokenList.contains(TroubleTicket.SEVERITY)) {
+                partialTT.setSeverity(tt.getSeverity());
+            }
+            if (tokenList.contains(TroubleTicket.STATUS)) {
+                partialTT.setStatus(tt.getStatus());
+            }
+            if (tokenList.contains(TroubleTicket.DESCRIPTION)) {
+                partialTT.setDescription(tt.getDescription());
+            }
+            return partialTT;
+        }
+       
+        //2 possibilitites null or new with nothing else
+    }
+    
 
     @GET
     @Override
@@ -164,6 +205,7 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         TroubleTicket tt = new TroubleTicket();
         Date dt = new Date();
         String dts = toString(dt);
+        tt.setDescription("Some Description");
 
 
         tt.setCreationDate(dts);
