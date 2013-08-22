@@ -11,7 +11,6 @@ import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,6 +21,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -33,6 +34,8 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
 
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
+    @Context
+    UriInfo uriInfo;
 
     public TroubleTicketFacadeREST() {
         super(TroubleTicket.class);
@@ -58,10 +61,18 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
             response = Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
             return response;
         }
+        
+        // Persist entity
+        super.create(entity);
 
         // 201
-        response = super.create(entity);
-        return response;
+        UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
+        String id = entity.getId();
+        uriBuilder.path("{id}");
+        return Response.created(uriBuilder.build(id)).
+                entity(entity).
+                build();
+
     }
 
     /*@PUT

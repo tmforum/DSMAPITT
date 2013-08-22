@@ -6,16 +6,14 @@ package tmf.org.dsmapi.tt;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 /**
  *
  * @author pierregauthier
  */
 public abstract class AbstractFacade<T> {
+
     private Class<T> entityClass;
 
     public AbstractFacade(Class<T> entityClass) {
@@ -26,8 +24,7 @@ public abstract class AbstractFacade<T> {
 
     public Response create(T entity) {
         getEntityManager().persist(entity);
-        Response response = Response.ok(entity).build();
-        return response;
+        return null;
     }
 
     public T edit(T entity) {
@@ -65,5 +62,4 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-    
 }
