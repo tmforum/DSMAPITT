@@ -34,7 +34,7 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
 
     @POST
     @Override
-    @Consumes({"application/xml", "application/json"})
+    @Consumes({"application/json"})
     public void create(Hub entity) {
         super.create(entity);
     }
@@ -54,21 +54,21 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
 
     @GET
     @Path("{id}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({ "application/json"})
     public Hub find(@PathParam("id") String id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public List<Hub> findAll() {
         return super.findAll();
     }
 
     @GET
     @Path("{from}/{to}")
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/json"})
     public List<Hub> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

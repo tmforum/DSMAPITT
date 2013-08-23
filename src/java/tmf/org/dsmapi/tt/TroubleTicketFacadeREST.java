@@ -207,6 +207,7 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
+        tt.setId("id");
         Date dt = new Date();
         String dts = toString(dt);
         tt.setDescription("Some Description");
@@ -216,6 +217,8 @@ public class TroubleTicketFacadeREST {
         tt.setStatus(Status.Acknowledged);
         tt.setSeverity(Severity.Medium);
         tt.setType("Bills, charges or payment");
+        tt.setResolutionDate(dts);
+        tt.setTargetResolutionDate(dts);
 
         RelatedObject ro = new RelatedObject();
         ro.setInvolvement("involvment");
@@ -237,7 +240,7 @@ public class TroubleTicketFacadeREST {
 
         Note note = new Note();
         note.setAuthor("author");
-        note.setDate("date");
+        note.setDate(dts);
         note.setText("text");
         Note notes[] = new Note[2];
         notes[0] = note;
