@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,19 +33,17 @@ import javax.ws.rs.core.UriInfo;
  */
 @Stateless
 @Path("tmf.org.dsmapi.tt.troubleticket")
-public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
+public class TroubleTicketFacadeREST {
 
-    @PersistenceContext(unitName = "DSTroubleTicketPU")
-    private EntityManager em;
     @Context
     UriInfo uriInfo;
+    @EJB
+    TroubleTicketManager manager;
 
     public TroubleTicketFacadeREST() {
-        super(TroubleTicket.class);
     }
 
     @POST
-    @Override
     @Consumes({"application/json"})
     @Produces({"application/json"})
     public Response create(TroubleTicket entity) {
@@ -63,11 +62,11 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
             response = Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
             return response;
         }
-        
-        // Persist entity
-        super.create(entity);
 
-        // 201
+        // Persist entity
+        manager.create(entity);
+
+        // 201 + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
         String id = entity.getId();
         uriBuilder.path("{id}");
@@ -130,39 +129,46 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id) {
-        super.remove(super.find(id));
+        manager.remove(id);
     }
-    
+
     @GET
     @Path("{id}")
     @Produces({"application/json"})
-    public TroubleTicket find(@PathParam("id") String id) {
+    public Response find(@PathParam("id") String id) {
 
-      
-     
-        return  super.find(id);
-       
+        // 204 - default response
+        Response response = null;
+
+        TroubleTicket tt = manager.find(id);
+
+        // 200
+        if (tt != null) {
+            response = Response.ok(tt).build();
+        }
+
+        return response;
     }
 
     @GET
     @Path("{id}/{attributes}")
     @Produces({"application/json"})
-    public TroubleTicket findWithAttributes(@PathParam("id") String id,@PathParam("attributes") String as ) {
+    public TroubleTicket findWithAttributes(@PathParam("id") String id, @PathParam("attributes") String as) {
 
         String[] attributeTokens = null;
-        List<String> tokenList = tokenList = Arrays.asList();
+        List<String> tokenList;
         //Tokenize the attribute selector to find which attributes are requested
         if (as != null) {
             attributeTokens = as.split(",");
             tokenList = Arrays.asList(attributeTokens);
         } else {
             //adding all attributes
-
+            tokenList = Arrays.asList();
             tokenList.add("all");
         }
-        
-        TroubleTicket tt =  super.find(id);
-        
+
+        TroubleTicket tt = manager.find(id);
+
         if (tokenList.contains(TroubleTicket.ALL)) {
             return tt;
         } else {
@@ -179,23 +185,21 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
             }
             return partialTT;
         }
-       
+
         //2 possibilitites null or new with nothing else
     }
-    
 
     @GET
-    @Override
     @Produces({"application/json"})
     public List<TroubleTicket> findAll() {
-        return super.findAll();
+        return manager.findAll();
     }
 
     @GET
     @Path("count")
     @Produces("text/plain")
     public String countREST() {
-        return String.valueOf(super.count());
+        return String.valueOf(manager.count());
     }
 
     @GET
@@ -241,11 +245,6 @@ public class TroubleTicketFacadeREST extends AbstractFacade<TroubleTicket> {
         tt.setNotes(notes);
         return tt;
 
-    }
-
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
     }
 
     public static String toString(Date date) {
