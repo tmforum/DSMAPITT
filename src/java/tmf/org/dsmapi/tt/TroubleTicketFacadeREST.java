@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -137,12 +135,12 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response find(@PathParam("id") String id) {
 
-        // 204 - default response
+        // 204 - default empty response
         Response response = null;
 
         TroubleTicket tt = manager.find(id);
 
-        // 200
+        // 200 - at least one result
         if (tt != null) {
             response = Response.ok(tt).build();
         }
@@ -153,40 +151,112 @@ public class TroubleTicketFacadeREST {
     @GET
     @Path("{id}/{attributes}")
     @Produces({"application/json"})
-    public TroubleTicket findWithAttributes(@PathParam("id") String id, @PathParam("attributes") String as) {
+    public Response findWithAttributes(@PathParam("id") String id, @PathParam("attributes") String as) {
 
-        String[] attributeTokens = null;
-        List<String> tokenList;
-        //Tokenize the attribute selector to find which attributes are requested
-        if (as != null) {
-            attributeTokens = as.split(",");
-            tokenList = Arrays.asList(attributeTokens);
-        } else {
-            //adding all attributes
-            tokenList = Arrays.asList();
-            tokenList.add("all");
+        // 204 - default empty response
+        Response response = null;
+
+        TroubleTicket fullTT = manager.find(id);
+
+        if (fullTT != null) {
+
+            String[] attributeTokens = null;
+            List<String> tokenList;
+            //Tokenize the attribute selector to find which attributes are requested
+            if (as != null) {
+                attributeTokens = as.split(",");
+                tokenList = Arrays.asList(attributeTokens);
+            } else {
+                //adding all attributes
+                tokenList = Arrays.asList();
+                tokenList.add("all");
+            }
+
+            TroubleTicket responseTT = null;
+
+            if (tokenList.contains(TroubleTicket.ALL)) {
+                responseTT = fullTT;
+            } else {
+                responseTT = new TroubleTicket();
+
+                //      <xs:element name="id" type="xs:string" minOccurs="0"/>
+                responseTT.setId(fullTT.getId());
+
+                //      <xs:element name="correlationId" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.CORRELATION_ID)) {
+                    responseTT.setCorrelationId(fullTT.getCorrelationId());
+                }
+                //      <xs:element name="creationDate" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.CREATION_DATE)) {
+                    responseTT.setCreationDate(fullTT.getCreationDate());
+                }
+                //      <xs:element name="description" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.DESCRIPTION)) {
+                    responseTT.setDescription(fullTT.getDescription());
+                }
+
+                //      <xs:element name="notes" type="note" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                if (tokenList.contains(TroubleTicket.NOTES)) {
+                    responseTT.setNotes(fullTT.getNotes());
+                }
+                //      <xs:element name="relatedObjects" type="relatedObject" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                if (tokenList.contains(TroubleTicket.RELATED_OBJECTS)) {
+                    responseTT.setRelatedObjects(fullTT.getRelatedObjects());
+                }
+
+                //      <xs:element name="relatedParties" type="relatedParty" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+                if (tokenList.contains(TroubleTicket.RELATED_PARTIES)) {
+                    responseTT.setRelatedParties(fullTT.getRelatedParties());
+                }
+
+                //      <xs:element name="resolutionDate" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.RESOLUTION_DATE)) {
+                    responseTT.setResolutionDate(fullTT.getResolutionDate());
+                }
+
+                //      <xs:element name="severity" type="severity" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.SEVERITY)) {
+                    responseTT.setSeverity(fullTT.getSeverity());
+                }
+
+                //      <xs:element name="status" type="status" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.STATUS)) {
+                    responseTT.setStatus(fullTT.getStatus());
+                }
+
+                //      <xs:element name="statusChangeDate" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.STATUS_CHANGE_DATE)) {
+                    responseTT.setStatusChangeDate(fullTT.getStatusChangeDate());
+                }
+
+                //      <xs:element name="statusChangeReason" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.STATUS_CHANGE_REASON)) {
+                    responseTT.setStatusChangeReason(fullTT.getStatusChangeReason());
+                }
+
+                //      <xs:element name="subStatus" type="subStatus" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.SUB_STATUS)) {
+                    responseTT.setSubStatus(fullTT.getSubStatus());
+                }
+
+                //      <xs:element name="targetResolutionDate" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.TARGET_RESOLUTION_DATE)) {
+                    responseTT.setResolutionDate(fullTT.getResolutionDate());
+                }
+
+                //      <xs:element name="type" type="xs:string" minOccurs="0"/>
+                if (tokenList.contains(TroubleTicket.TYPE)) {
+                    responseTT.setType(fullTT.getType());
+                }
+
+            }
+
+            // 200 - one and only one result as responseTT not null
+            response = Response.ok(responseTT).build();
+
         }
 
-        TroubleTicket tt = manager.find(id);
-
-        if (tokenList.contains(TroubleTicket.ALL)) {
-            return tt;
-        } else {
-            TroubleTicket partialTT = new TroubleTicket();
-            partialTT.setId(tt.getId());
-            if (tokenList.contains(TroubleTicket.SEVERITY)) {
-                partialTT.setSeverity(tt.getSeverity());
-            }
-            if (tokenList.contains(TroubleTicket.STATUS)) {
-                partialTT.setStatus(tt.getStatus());
-            }
-            if (tokenList.contains(TroubleTicket.DESCRIPTION)) {
-                partialTT.setDescription(tt.getDescription());
-            }
-            return partialTT;
-        }
-
-        //2 possibilitites null or new with nothing else
+        return response;
     }
 
     @GET
