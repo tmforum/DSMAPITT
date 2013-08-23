@@ -16,78 +16,47 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  *
- * @author pierregauthier
- * {"ticket": {
-    "id": 1,
-    "correlationId": "TT53482",
-    "description": "Customer complaint over last invoice.",
-    "severity": "Urgent",
-    "type": "Bills, charges or payment",
-    "creationDate": "2013-07-23 08:16:39",
-    "targetResolutionDate": "2013-07-30 10:20:01",
-    "status": "In Progress",
-    "subStatus": "Held",
-    "statusChangeReason": "Waiting for invoicing expert.",
-    "statusChangeDate": "2013-07-08 08:55:12",
-    "resolutionDate": "",
-    "relatedParties": [
-        {
-            "role": "Originator",
-            "reference": "/customer/1234"
-        },
-        {
-            "role": "Owner",
-            "reference": "/operator/1234"
-        },
-        {
-            "role": "Reviser",
-            "reference": "Roger Collins"
-        }
-    ],
-    "relatedObjects": [
-        {
-            "involvement": "Disputed",
-            "reference": "/invoice/1234"
-        },
-        {
-            "involvement": "Adjusted",
-            "reference": "/invoice/5678"
-        }
-    ],
-    "notes": [
-        {
-            "date": "2013-07-19 09:55:30",
-            "author": "Arthur Evans",
-            "text": "Already called the expert"
-        },
-        {
-            "date": "2013-07-21 08:55:12",
-            "author": "Arthur Evans",
-            "text": "Informed the originator"
-        }
-    ]
-}}
-
+ * @author pierregauthier {"ticket": { "id": 1, "correlationId": "TT53482",
+ * "description": "Customer complaint over last invoice.", "severity": "Urgent",
+ * "type": "Bills, charges or payment", "creationDate": "2013-07-23 08:16:39",
+ * "targetResolutionDate": "2013-07-30 10:20:01", "status": "In Progress",
+ * "subStatus": "Held", "statusChangeReason": "Waiting for invoicing expert.",
+ * "statusChangeDate": "2013-07-08 08:55:12", "resolutionDate": "",
+ * "relatedParties": [ { "role": "Originator", "reference": "/customer/1234" },
+ * { "role": "Owner", "reference": "/operator/1234" }, { "role": "Reviser",
+ * "reference": "Roger Collins" } ], "relatedObjects": [ { "involvement":
+ * "Disputed", "reference": "/invoice/1234" }, { "involvement": "Adjusted",
+ * "reference": "/invoice/5678" } ], "notes": [ { "date": "2013-07-19 09:55:30",
+ * "author": "Arthur Evans", "text": "Already called the expert" }, { "date":
+ * "2013-07-21 08:55:12", "author": "Arthur Evans", "text": "Informed the
+ * originator" } ] }}
+ *
  */
 @Entity
 @XmlRootElement
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
-    
+
     //XXXXYYYY
-    
-    
-    public static final    String ALL = "all";
-    public static final    String ID = "id";
-    public static final    String STATUS = "status";
-    public static final    String DESCRIPTION = "description";
-    public static final    String SEVERITY = "severity";
-    
+   
+    public static final String ALL = "all";
+    public static final String ID = "id";
+    public static final String CORRELATION_ID = "correlationId";
+    public static final String CREATION_DATE = "creationDate";
+    public static final String DESCRIPTION = "description";
+    public static final String NOTES = "notes";
+    public static final String RELATED_OBJECTS = "relatedObjects";
+    public static final String RELATED_PARTIES = "relatedParties";
+    public static final String RESOLUTION_DATE = "resolutionDate";
+    public static final String SEVERITY = "severity";
+    public static final String STATUS = "status";
+    public static final String STATUS_CHANGE_DATE = "statusChangeDate";
+    public static final String STATUS_CHANGE_REASON = "statusChangeReason";
+    public static final String SUB_STATUS = "subStatus";
+    public static final String TARGET_RESOLUTION_DATE = "targetResolutionDate";
+    public static final String TYPE = "type";
     
     //Add other static strings as required....
-    
-    
-    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -100,12 +69,10 @@ public class TroubleTicket implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-    
     private String correlationId;
     private String description;
     private Severity severity;
     private String type;
-  
     private String creationDate;
     private String targetResolutionDate;
     private Status status;
@@ -148,7 +115,7 @@ public class TroubleTicket implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public String getCreationDate() {
         return creationDate;
     }
@@ -228,7 +195,6 @@ public class TroubleTicket implements Serializable {
     public void setRelatedParties(RelatedParty[] relatedParties) {
         this.relatedParties = relatedParties;
     }
-    
 
     @Override
     public int hashCode() {
@@ -236,7 +202,7 @@ public class TroubleTicket implements Serializable {
         hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
-    
+
     //this must be reimplemented
     @Override
     public boolean equals(Object object) {
@@ -255,8 +221,4 @@ public class TroubleTicket implements Serializable {
     public String toString() {
         return "tmf.org.dsmtt.TroubleTicket[ id=" + id + " ]";
     }
-    
-    
-    
-    
 }
