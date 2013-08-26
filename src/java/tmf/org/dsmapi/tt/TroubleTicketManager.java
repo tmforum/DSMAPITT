@@ -5,7 +5,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Stateless
-public class TroubleTicketManager extends AbstractManager<TroubleTicket> {
+public class TroubleTicketMa  {
 
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
@@ -13,6 +13,8 @@ public class TroubleTicketManager extends AbstractManager<TroubleTicket> {
     public TroubleTicketManager() {
         super(TroubleTicket.class);
     }
+    
+    
 
     @Override
     protected EntityManager getEntityManager() {

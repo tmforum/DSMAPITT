@@ -147,7 +147,7 @@ public class TroubleTicketFacadeREST {
 
         return response;
     }
-
+    
     @GET
     @Path("{id}/{attributes}")
     @Produces({"application/json"})
