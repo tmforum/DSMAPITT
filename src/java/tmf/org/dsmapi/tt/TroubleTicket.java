@@ -5,12 +5,14 @@
 package tmf.org.dsmapi.tt;
 
 import java.io.Serializable;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -36,28 +38,14 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @XmlRootElement
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
-
-    //XXXXYYYY
-   
-    public static final String ALL = "all";
-    public static final String ID = "id";
-    public static final String CORRELATION_ID = "correlationId";
-    public static final String CREATION_DATE = "creationDate";
-    public static final String DESCRIPTION = "description";
-    public static final String NOTES = "notes";
-    public static final String RELATED_OBJECTS = "relatedObjects";
-    public static final String RELATED_PARTIES = "relatedParties";
-    public static final String RESOLUTION_DATE = "resolutionDate";
-    public static final String SEVERITY = "severity";
-    public static final String STATUS = "status";
-    public static final String STATUS_CHANGE_DATE = "statusChangeDate";
-    public static final String STATUS_CHANGE_REASON = "statusChangeReason";
-    public static final String SUB_STATUS = "subStatus";
-    public static final String TARGET_RESOLUTION_DATE = "targetResolutionDate";
-    public static final String TYPE = "type";
     
     //Add other static strings as required....
     private static final long serialVersionUID = 1L;
+    
+    // Technical attribute used for partial update
+    @Transient
+    private Set<TroubleTicketAttributesEnum> tokens;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
@@ -221,5 +209,19 @@ public class TroubleTicket implements Serializable {
     @Override
     public String toString() {
         return "tmf.org.dsmtt.TroubleTicket[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the tokens
+     */
+    public Set<TroubleTicketAttributesEnum> getTokens() {
+        return tokens;
+    }
+
+    /**
+     * @param tokens the tokens to set
+     */
+    public void setTokens(Set<TroubleTicketAttributesEnum> tokens) {
+        this.tokens = tokens;
     }
 }
