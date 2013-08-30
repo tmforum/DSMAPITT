@@ -5,10 +5,13 @@
 package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,6 +24,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -183,11 +188,21 @@ public class TroubleTicketFacadeREST {
         return response;
     }
 
+    
     @GET
     @Produces({"application/json"})
-    public List<TroubleTicket> findAll() {
-        return manager.findAll();
+    public List<TroubleTicket> findByAttributeFilter(@Context UriInfo info) {
+        
+        
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+        
+        if(info.getQueryParameters() == null ) {
+             return manager.findAll();
+        }
+        else   return manager.findByAttributeFilter(map);
     }
+    
+   
 
     @GET
     @Path("count")
