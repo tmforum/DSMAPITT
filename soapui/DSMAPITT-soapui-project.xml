@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="DSMAPITT" resourceRoot="" soapui-version="4.5.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="DSMAPITT" type="rest" basePath="/DSMAPITT/webresources/" definitionUrl="file:/C:/Users/MAIG7313/Documents/home/src/DSMAPITT/application.wadl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/C:/Users/MAIG7313/Documents/home/src/DSMAPITT/application.wadl"><con:part><con:url>file:/C:/Users/MAIG7313/Documents/home/src/DSMAPITT/application.wadl</con:url><con:content><![CDATA[<application xmlns="http://wadl.dev.java.net/2009/02">
+<con:soapui-project activeEnvironment="Default" name="DSMAPITT" resourceRoot="" soapui-version="4.5.2" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
+    <con:settings/>
+    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="DSMAPITT" type="rest" basePath="/DSMAPITT/webresources/" definitionUrl="application.wadl.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <con:settings/>
+        <con:definitionCache type="TEXT" rootPart="file:application.wadl.xml">
+            <con:part>
+                <con:url>file:application.wadl.xml</con:url>
+                <con:content><![CDATA[<application xmlns="http://wadl.dev.java.net/2009/02">
   <doc jersey:generatedBy="Jersey: 1.11.1 03/31/2012 06:49 PM" xmlns:jersey="http://jersey.java.net/"/>
   <grammars>
     <include href="xsd0.xsd">
@@ -78,7 +85,12 @@
       </resource>
     </resource>
   </resources>
-</application>]]></con:content><con:type>http://wadl.dev.java.net/2009/02</con:type></con:part><con:part><con:url>file:\C:\Users\MAIG7313\Documents\home\src\DSMAPITT\xsd0.xsd</con:url><con:content><![CDATA[<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+</application>]]></con:content>
+                <con:type>http://wadl.dev.java.net/2009/02</con:type>
+            </con:part>
+            <con:part>
+                <con:url>file:\C:\Users\MAIG7313\Documents\home\src\DSMAPITT\xsd0.xsd</con:url>
+                <con:content><![CDATA[<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="troubleTicket" type="troubleTicket"/>
   <xs:complexType name="troubleTicket">
     <xs:sequence>
@@ -142,19 +154,185 @@
       <xs:enumeration value="Held"/>
     </xs:restriction>
   </xs:simpleType>
-</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8081</con:endpoint></con:endpoints><con:resource name="tmf.org.dsmapi.tt.troubleticket" path="tmf.org.dsmapi.tt.troubleticket"><con:settings/><con:parameters/><con:resource name="{id}" path="{id}"><con:settings/><con:parameters><con:parameter><con:name>id</con:name><con:value xsi:nil="true"/><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default xsi:nil="true"/></con:parameter></con:parameters><con:method name="DELETE - remove" method="DELETE"><con:settings/><con:parameters/><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method><con:method name="GET - find" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1" mediaType="application/xml" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="42" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method><con:method name="POST - postPatch2" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method><con:method name="PATCH - patchRaw" method="PATCH"><con:settings/><con:parameters/><con:representation type="REQUEST" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method><con:method name="PUT - postpatch" method="PUT"><con:settings/><con:parameters/><con:representation type="REQUEST" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="proto" path="proto"><con:settings/><con:parameters/><con:method name="GET - proto" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1" mediaType="application/xml" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="toto/{id}" path="toto/{id}"><con:settings/><con:parameters><con:parameter><con:name>id</con:name><con:value xsi:nil="true"/><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default xsi:nil="true"/></con:parameter></con:parameters><con:method name="POST - postPatchtoto" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:resource name="count" path="count"><con:settings/><con:parameters/><con:method name="GET - countREST" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE" id=""><con:mediaType>text/plain</con:mediaType><con:params/><con:element xsi:nil="true"/><con:description xsi:nil="true"/></con:representation><con:request name="Request 1"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:parameters/></con:request></con:method></con:resource><con:method name="GET - findAll" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="Request 1" mediaType="application/xml"><con:settings/><con:endpoint>http://localhost:8081</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method><con:method name="POST - create" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST" id=""><con:mediaType>application/json</con:mediaType><con:params/><con:element>troubleTicket</con:element><con:description xsi:nil="true"/></con:representation><con:request name="201" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": null,
-   "correlationId": null,
-   "description": "Description",
-   "severity": "Medium",
+</xs:schema>]]></con:content>
+                <con:type>http://www.w3.org/2001/XMLSchema</con:type>
+            </con:part>
+        </con:definitionCache>
+        <con:endpoints>
+            <con:endpoint>http://localhost:8080</con:endpoint>
+        </con:endpoints>
+        <con:resource name="tmf.org.dsmapi.tt.troubleticket" path="tmf.org.dsmapi.tt.troubleticket">
+            <con:settings/>
+            <con:parameters/>
+            <con:resource name="{id}" path="{id}">
+                <con:settings/>
+                <con:parameters>
+                    <con:parameter>
+                        <con:name>id</con:name>
+                        <con:value xsi:nil="true"/>
+                        <con:style>TEMPLATE</con:style>
+                        <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+                        <con:default xsi:nil="true"/>
+                    </con:parameter>
+                </con:parameters>
+                <con:resource name="{attributes}" path="/{attributes}"><con:settings/><con:parameters><con:parameter><con:name>attributes</con:name><con:value>attributes</con:value><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default>attributes</con:default><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="200 /1/status" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="id" value="1"/>
+  <con:entry key="attributes" value="status"/>
+</con:parameters></con:request><con:request name="200 /1/status,type,relatedObjects" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="id" value="1"/>
+  <con:entry key="attributes" value="status,type,relatedObjects"/>
+</con:parameters></con:request><con:request name="200 /1/status,type,all" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="id" value="1"/>
+  <con:entry key="attributes" value="status,type,all"/>
+</con:parameters></con:request></con:method></con:resource><con:method name="DELETE" method="DELETE">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:request name="Request 1">
+                        <con:settings/>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:parameters/>
+                    </con:request>
+                </con:method>
+                <con:method name="GET" method="GET">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="200 id=1" mediaType="application/xml" accept="application/json">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/>
+                        </con:parameters>
+                    </con:request>
+                <con:request name="400 id=9999" mediaType="application/xml" accept="application/json">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters><entry key="id" value="400" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request></con:method>
+                <con:method name="POST" method="POST">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="REQUEST" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/json" postQueryString="false">
+                        <con:settings/>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request/><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/>
+                    </con:request>
+                </con:method>
+                <con:method name="PATCH" method="PATCH">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="REQUEST" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="201 /1 severity relatedParties=null" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "High",
+   "relatedParties": null
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request>
+                <con:request name="201 /1 severity relatedParties=not null" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "Low",
+   "relatedParties":    [
+            {
+         "role": "role",
+         "reference": "reference party"
+      },
+            {
+         "role": "role",
+         "reference": "reference party"
+      }
+   ]
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="404 /9999" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "9999",
+   "severity": "High",
+   "relatedParties": null
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="9999" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="400 /1 &lt;> id=2" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "2",
+   "severity": "High",
+   "relatedParties": null
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request></con:method>
+                <con:method name="PUT" method="PUT">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="REQUEST" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="200 id=1" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "Low",
    "type": "Bills, charges or payment",
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
+   "creationDate": "2013-08-20T12:39:48UTC",
    "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
    "relatedObjects":    [
             {
          "involvement": "involvment",
@@ -187,19 +365,17 @@
          "reference": "reference party"
       }
    ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="400 severity null" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": null,
-   "correlationId": null,
-   "description": "Description",
-   "severity": null,
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request>
+                <con:request name="400 mandatory fields" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "Low",
    "type": "Bills, charges or payment",
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
+   "creationDate": "2013-08-20T12:39:48UTC",
    "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
    "relatedObjects":    [
             {
          "involvement": "involvment",
@@ -232,19 +408,16 @@
          "reference": "reference party"
       }
    ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="400 description null" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": null,
-   "correlationId": null,
-   "description": null,
-   "severity": "Medium",
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="400 /1 &lt;> id=2" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "Low",
    "type": "Bills, charges or payment",
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
+   "creationDate": "2013-08-20T12:39:48UTC",
    "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
    "relatedObjects":    [
             {
          "involvement": "involvment",
@@ -277,64 +450,16 @@
          "reference": "reference party"
       }
    ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="400 type null" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": null,
-   "correlationId": null,
-   "description": "Description",
-   "severity": "Medium",
-   "type": null,
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
-   "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
-   "relatedObjects":    [
-            {
-         "involvement": "involvment",
-         "reference": "referenceobject"
-      },
-            {
-         "involvement": "involvment",
-         "reference": "referenceobject"
-      }
-   ],
-   "notes":    [
-            {
-         "date": "date",
-         "author": "author",
-         "text": "text"
-      },
-            {
-         "date": "date",
-         "author": "author",
-         "text": "text"
-      }
-   ],
-   "relatedParties":    [
-            {
-         "role": "role",
-         "reference": "reference party"
-      },
-            {
-         "role": "role",
-         "reference": "reference party"
-      }
-   ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="400 id not null" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": "7667474445",
-   "correlationId": null,
-   "description": "Description",
-   "severity": "Medium",
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="404 /9999" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "severity": "Low",
    "type": "Bills, charges or payment",
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
+   "creationDate": "2013-08-20T12:39:48UTC",
    "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
    "relatedObjects":    [
             {
          "involvement": "involvment",
@@ -367,50 +492,472 @@
          "reference": "reference party"
       }
    ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="400 unknow attribute" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8081</con:endpoint><con:request>{
-   "id": "7667474445",
-   "badAttribute": badAttribute,
-   "correlationId": null,
-   "description": null,
-   "severity": "Medium",
-   "type": "Bills, charges or payment",
-   "creationDate": "2013-08-20T18:18:40UTC",
-   "targetResolutionDate": null,
-   "status": "Acknowledged",
-   "subStatus": null,
-   "statusChangeReason": null,
-   "statusChangeDate": null,
-   "resolutionDate": null,
-   "relatedObjects":    [
-            {
-         "involvement": "involvment",
-         "reference": "referenceobject"
-      },
-            {
-         "involvement": "involvment",
-         "reference": "referenceobject"
-      }
-   ],
-   "notes":    [
-            {
-         "date": "date",
-         "author": "author",
-         "text": "text"
-      },
-            {
-         "date": "date",
-         "author": "author",
-         "text": "text"
-      }
-   ],
-   "relatedParties":    [
-            {
-         "role": "role",
-         "reference": "reference party"
-      },
-            {
-         "role": "role",
-         "reference": "reference party"
-      }
-   ]
-}</con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface><con:properties/><con:wssContainer/></con:soapui-project>
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request></con:method>
+            </con:resource>
+            <con:resource name="proto" path="proto">
+                <con:settings/>
+                <con:parameters/>
+                <con:method name="GET - proto" method="GET">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml" accept="application/json">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters/>
+                    </con:request>
+                </con:method>
+            </con:resource>
+            <con:resource name="toto/{id}" path="toto/{id}">
+                <con:settings/>
+                <con:parameters>
+                    <con:parameter>
+                        <con:name>id</con:name>
+                        <con:value xsi:nil="true"/>
+                        <con:style>TEMPLATE</con:style>
+                        <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+                        <con:default xsi:nil="true"/>
+                    </con:parameter>
+                </con:parameters>
+                <con:method name="POST - postPatchtoto" method="POST">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="REQUEST" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:params/>
+                        <con:element>troubleTicket</con:element>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="Request 1">
+                        <con:settings/>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:parameters/>
+                    </con:request>
+                </con:method>
+            </con:resource>
+            <con:resource name="count" path="count">
+                <con:settings/>
+                <con:parameters/>
+                <con:method name="GET - countREST" method="GET">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="RESPONSE" id="">
+                        <con:mediaType>text/plain</con:mediaType>
+                        <con:params/>
+                        <con:element xsi:nil="true"/>
+                        <con:description xsi:nil="true"/>
+                    </con:representation>
+                    <con:request name="Request 1">
+                        <con:settings/>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:parameters/>
+                    </con:request>
+                </con:method>
+            </con:resource>
+            <con:method name="GET - findAll" method="GET">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="RESPONSE" id="">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                    <con:element>troubleTicket</con:element>
+                    <con:description xsi:nil="true"/>
+                </con:representation>
+                <con:request name="200" mediaType="application/xml" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+            <con:method name="POST - create" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="REQUEST" id="">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                    <con:element>troubleTicket</con:element>
+                    <con:description xsi:nil="true"/>
+                </con:representation>
+                <con:request name="201" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+                <con:request name="400 severity null" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": null,
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+                <con:request name="400 description null" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": null,
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+                <con:request name="400 type null" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": "Medium",
+                        "type": null,
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+                <con:request name="400 id not null" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": "7667474445",
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+                <con:request name="400 unknow attribute" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": "7667474445",
+                        "badAttribute": badAttribute,
+                        "correlationId": null,
+                        "description": null,
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Acknowledged",
+                        "subStatus": null,
+                        "statusChangeReason": null,
+                        "statusChangeDate": null,
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+        </con:resource>
+    </con:interface>
+    <con:properties/>
+    <con:wssContainer/>
+</con:soapui-project>

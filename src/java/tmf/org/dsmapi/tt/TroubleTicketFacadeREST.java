@@ -6,9 +6,10 @@ package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -46,25 +47,15 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response create(TroubleTicket entity) {
 
-        Response response;
-
-        // 400 The requester cannot generate the id
-        if (entity.getId() != null) {
-            //Response response = Response.(entity).build();
-            response = Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-            return response;
+        // 400 
+        if ((entity.getId() != null) || manager.hasNotMandatoryFields(entity)) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        // 400 Check mandatory attributes
-        if ((entity.getDescription() == null) || (entity.getSeverity() == null) || (entity.getType() == null)) {
-            response = Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-            return response;
-        }
-
-        // Persist entity
+        // Try to persist entity
         manager.create(entity);
 
-        // 201 + location
+        // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
         String id = entity.getId();
         uriBuilder.path("{id}");
@@ -74,43 +65,31 @@ public class TroubleTicketFacadeREST {
 
     }
 
-    /*@PUT
-     @Consumes({"application/json"})
-     @Produces({"application/json"})
-     public TroubleTicket edit(TroubleTicket entity) {
-     super.edit(entity);
-     return entity;
-     }*/
-    //Equivalent to PATCH also PUT with partial attributes is accepted
-    //as replacement for PATCH but will get deprecated check behavior partial populated
     @PUT
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public TroubleTicket postpatch(@PathParam("id") String id, TroubleTicket entity) {
+    public Response edit(@PathParam("id") String id, TroubleTicket entity) {
 
-        System.out.println("===PATCH is called ====");
-        return entity;
-    }
+        // 400 resource id and entity id must be the same
+        if (!entity.getId().equalsIgnoreCase(id)) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }
+        
+        // 400 
+        if (manager.hasNotMandatoryFields(entity)) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }      
 
-    @POST
-    @Path("{id}")
-    @Consumes({"application/json"})
-    @Produces({"application/json"})
-    public TroubleTicket postPatch2(@PathParam("id") String id, TroubleTicket entity) {
+        // Try to merge        
+        manager.edit(entity);
 
-        System.out.println("===PATCH is called ====");
-        return entity;
-    }
-
-    @POST
-    @Path("toto/{id}")
-    @Consumes({"application/json"})
-    @Produces({"application/json"})
-    public TroubleTicket postPatchtoto(@PathParam("id") String id, TroubleTicket entity) {
-
-        System.out.println("===PATCH is called ====");
-        return entity;
+        // 201 OK + location
+        UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
+        uriBuilder.path("{id}");
+        return Response.created(uriBuilder.build(id)).
+                entity(entity).
+                build();
     }
 
     //X-HTTP-Method-Override on POST
@@ -118,10 +97,30 @@ public class TroubleTicketFacadeREST {
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public TroubleTicket patchRaw(@PathParam("id") String id, TroubleTicket entity) {
+    public Response patch(@PathParam("id") String id, TroubleTicket partialTT) {
 
-        System.out.println("===PATCH is called ====");
-        return entity;
+        // 400 resource id and entity id must be the same
+        if (!partialTT.getId().equalsIgnoreCase(id)) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }
+
+        TroubleTicket fullTT = manager.partialUpdate(partialTT);
+
+        // if troubleTicket exists
+        if (fullTT == null) {
+            // 404 not found
+            return Response.status(404).build();
+
+        } else {
+            // 201 OK + location
+            UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
+            id = fullTT.getId();
+            uriBuilder.path("{id}");
+            return Response.created(uriBuilder.build(id)).
+                    entity(fullTT).
+                    build();
+        }
+
     }
 
     @DELETE
@@ -156,21 +155,22 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response findWithAttributes(@PathParam("id") String id, @PathParam("attributes") String as) {
 
-        String[] attributeTokens = null;
-        List<String> tokenList;
-        //Tokenize the attribute selector to find which attributes are requested
+        Set<TroubleTicketAttributesEnum> tokenList = new HashSet<TroubleTicketAttributesEnum>();
+
+        // Convert attributes parameter to a set of TroubleTicketAttributesEnum
         if (as != null) {
-            attributeTokens = as.split(",");
-            tokenList = Arrays.asList(attributeTokens);
+            String[] tokenArray = as.split(",");
+            for (int i = 0; i < tokenArray.length; i++) {
+                tokenList.add(TroubleTicketAttributesEnum.fromString(tokenArray[i]));
+            }
         } else {
-            //adding all attributes
-            tokenList = Arrays.asList();
-            tokenList.add("all");
+            // ALL
+            tokenList.add(TroubleTicketAttributesEnum.ALL);
         }
 
         TroubleTicket responseTT = manager.find(id, tokenList);
 
-        Response response = null;
+        Response response;
         // if troubleTicket exists
         if (responseTT != null) {
             // 200
