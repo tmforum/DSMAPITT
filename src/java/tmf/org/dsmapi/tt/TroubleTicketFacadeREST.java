@@ -5,12 +5,15 @@
 package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
+import tmf.org.dsmapi.hub.service.PublisherLocal;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -41,6 +44,8 @@ public class TroubleTicketFacadeREST {
     UriInfo uriInfo;
     @EJB
     TroubleTicketFacade manager;
+    @EJB
+    PublisherLocal publisher;
 
     public TroubleTicketFacadeREST() {
     }
@@ -57,6 +62,9 @@ public class TroubleTicketFacadeREST {
 
         // Try to persist entity
         manager.create(entity);
+        System.out.println("Calling  Publish");
+        publisher.publishTicketCreateNotification(entity);
+        System.out.println("After Calling  Publish");
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -86,6 +94,8 @@ public class TroubleTicketFacadeREST {
 
         // Try to merge        
         manager.edit(entity);
+        publisher.publishTicketChangedNotification(entity);
+        publisher.publishTicketStatusChangedNotification(entity);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -115,6 +125,10 @@ public class TroubleTicketFacadeREST {
             return Response.status(404).build();
 
         } else {
+            
+            publisher.publishTicketChangedNotification(partialTT);
+            publisher.publishTicketStatusChangedNotification(partialTT);
+
             // 201 OK + location
             UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
             id = fullTT.getId();
@@ -126,6 +140,7 @@ public class TroubleTicketFacadeREST {
 
     }
 
+    //This is admin only
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id) {
@@ -304,4 +319,6 @@ public class TroubleTicketFacadeREST {
         return df.parse(input);
 
     }
+    
+   
 }

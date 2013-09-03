@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
@@ -37,6 +38,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @Entity
 @XmlRootElement
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+
 public class TroubleTicket implements Serializable {
     
     //Add other static strings as required....
@@ -44,7 +46,8 @@ public class TroubleTicket implements Serializable {
     
     // Technical attribute used for partial update
     @Transient
-    private Set<TroubleTicketAttributesEnum> tokens;
+    @JsonIgnore
+    private  Set<TroubleTicketAttributesEnum> tokens;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -208,8 +211,10 @@ public class TroubleTicket implements Serializable {
 
     @Override
     public String toString() {
-        return "tmf.org.dsmtt.TroubleTicket[ id=" + id + " ]";
+        return "TroubleTicket{" + "id=" + id + ", correlationId=" + correlationId + ", description=" + description + ", severity=" + severity + ", type=" + type + ", creationDate=" + creationDate + ", targetResolutionDate=" + targetResolutionDate + ", status=" + status + ", subStatus=" + subStatus + ", statusChangeReason=" + statusChangeReason + ", statusChangeDate=" + statusChangeDate + ", resolutionDate=" + resolutionDate + ", relatedObjects=" + relatedObjects + ", notes=" + notes + ", relatedParties=" + relatedParties + '}';
     }
+
+    
 
     /**
      * @return the tokens

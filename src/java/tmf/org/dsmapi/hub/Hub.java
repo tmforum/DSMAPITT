@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement
 public class Hub implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -73,5 +74,4 @@ public class Hub implements Serializable {
     public String toString() {
         return "tmf.org.dsmapi.hub.Hub[ id=" + id + " ]";
     }
-    
 }

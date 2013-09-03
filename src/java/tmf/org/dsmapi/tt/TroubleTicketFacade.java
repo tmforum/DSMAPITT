@@ -208,6 +208,16 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
         return resultTT;
     }
+    
+    /**
+     *
+     * @param entity
+     * @return
+     */
+    public boolean hasNotMandatoryFields(TroubleTicket entity) {
+        return ((entity.getDescription() == null) || (entity.getSeverity() == null) || (entity.getType() == null));
+    }
+
 
     public List<TroubleTicket> findByAttributeFilter(MultivaluedMap<String, String> map) {
 
