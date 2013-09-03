@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.model;
 
 public enum TroubleTicketAttributesEnum {
 

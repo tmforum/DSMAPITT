@@ -1,5 +1,7 @@
 package tmf.org.dsmapi.tt;
 
+import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.TroubleTicket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -69,7 +71,6 @@ public class TroubleTicketReader implements MessageBodyReader<TroubleTicket> {
         // Iterate over first level to set received tokens
         Iterator<String> it = root.getFieldNames();
         while (it.hasNext()) {
-
             tokenList.add(TroubleTicketAttributesEnum.fromString(it.next()));
         }
 

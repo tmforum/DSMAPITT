@@ -5,12 +5,18 @@
 package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
+import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.RelatedObject;
+import tmf.org.dsmapi.tt.model.Severity;
+import tmf.org.dsmapi.tt.model.RelatedParty;
+import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.model.Note;
+import tmf.org.dsmapi.tt.model.Status;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -25,6 +31,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
+import tmf.org.dsmapi.commons.exceptions.StatusException;
+import tmf.org.dsmapi.commons.utils.Format;
 
 /**
  *
@@ -48,12 +58,16 @@ public class TroubleTicketFacadeREST {
     public Response create(TroubleTicket entity) {
 
         // 400 
-        if ((entity.getId() != null) || manager.hasNotMandatoryFields(entity)) {
+        if (entity.getId() != null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        // Try to persist entity
-        manager.create(entity);
+        try {
+            // Try to persist entity
+            manager.create(entity);
+        } catch (MandatoryFieldException e) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -75,11 +89,11 @@ public class TroubleTicketFacadeREST {
         if (!entity.getId().equalsIgnoreCase(id)) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
-        
+
         // 400 
-        if (manager.hasNotMandatoryFields(entity)) {
+        if (!Validator.hasMandatoryFields(entity)) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-        }      
+        }
 
         // Try to merge        
         manager.edit(entity);
@@ -104,7 +118,15 @@ public class TroubleTicketFacadeREST {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        TroubleTicket fullTT = manager.partialUpdate(partialTT);
+        TroubleTicket fullTT;
+        
+        try {
+            fullTT = manager.partialUpdate(partialTT);
+        } catch (BadUsageException e) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        } catch (StatusException e) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }
 
         // if troubleTicket exists
         if (fullTT == null) {
@@ -202,7 +224,7 @@ public class TroubleTicketFacadeREST {
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
         Date dt = new Date();
-        String dts = toString(dt);
+        String dts = Format.toString(dt);
         tt.setDescription("Some Description");
 
 
@@ -238,32 +260,6 @@ public class TroubleTicketFacadeREST {
         notes[1] = note;
         tt.setNotes(notes);
         return tt;
-
-    }
-
-    public static String toString(Date date) {
-
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-
-        df.setTimeZone(tz);
-
-        String output = df.format(date);
-
-        return output;
-        /*
-         int inset0 = 9;
-         int inset1 = 6;
-        
-         String s0 = output.substring( 0, output.length() - inset0 );
-         String s1 = output.substring( output.length() - inset1, output.length() );
-
-         String result = s0 + s1;
-
-         result = result.replaceAll( "UTC", "+00:00" ); 
-        
-         return result; */
 
     }
 

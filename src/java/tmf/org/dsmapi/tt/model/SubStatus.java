@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.model;
 
 /**
  *
  * @author pierregauthier
  */
-public enum Severity {
-    Low, Critical, Medium, High;  //; is optional
+public enum SubStatus {
+ Pending, Held;  //; is optional
 }

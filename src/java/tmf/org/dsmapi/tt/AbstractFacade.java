@@ -6,6 +6,7 @@ package tmf.org.dsmapi.tt;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
 
 /**xxxxx
  *
@@ -21,7 +22,7 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
 
-    public void create(T entity) {
+    public void create(T entity) throws MandatoryFieldException {        
         getEntityManager().persist(entity);
     }
 
@@ -61,4 +62,5 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
+ 
 }

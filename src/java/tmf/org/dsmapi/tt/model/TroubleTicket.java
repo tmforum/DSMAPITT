@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.model;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
@@ -42,6 +43,7 @@ public class TroubleTicket implements Serializable {
     
     // Technical attribute used for partial update
     @Transient
+    @JsonIgnore
     private Set<TroubleTicketAttributesEnum> tokens;
     
     @Id

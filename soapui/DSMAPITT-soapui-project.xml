@@ -308,6 +308,46 @@
    "severity": "High",
    "relatedParties": null
 }</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="201 /1 status Acknowledged" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "status": "Acknowledged",
+   "statusChangeReason": "Acknowledged"
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="400 /1 statut" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "status": "Closed",
+   "statusChangeReason": "Acknowledged"
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="201 /1 status InProgress" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "status": "InProgress",
+   "statusChangeReason": "InProgress"
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="400 /1 status Closed" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "status": "Closed",
+   "statusChangeReason": "Closed"
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
+                    </con:request><con:request name="201 /1 status Cancelled" mediaType="application/json" postQueryString="false" accept="application/json">
+                        <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings>
+                        <con:endpoint>http://localhost:8080</con:endpoint>
+                        <con:request>{
+   "id": "1",
+   "status": "Cancelled",
+   "statusChangeReason": "Cancelled"
+}</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
                     </con:request></con:method>
                 <con:method name="PUT" method="PUT">
                     <con:settings/>
@@ -619,10 +659,9 @@
                         "type": "Bills, charges or payment",
                         "creationDate": "2013-08-20T18:18:40UTC",
                         "targetResolutionDate": null,
-                        "status": "Acknowledged",
+                        "status": "Submitted",
                         "subStatus": null,
-                        "statusChangeReason": null,
-                        "statusChangeDate": null,
+                        "statusChangeReason": "Creation",
                         "resolutionDate": null,
                         "relatedObjects":    [
                         {

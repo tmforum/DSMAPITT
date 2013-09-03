@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 1.11.1 03/31/2012 06:49 PM"/>
+    <grammars>
+        <include href="xsd0.xsd">
+            <doc title="Generated" xml:lang="en"/>
+        </include>
+    </grammars>
+    <resources base="http://localhost:8081/DSMAPITT/webresources/">
+        <resource path="tmf.org.dsmapi.tt.troubleticket">
+            <method id="findAll" name="GET">
+                <response>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="create" name="POST">
+                <request>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                </request>
+            </method>
+            <resource path="{id}">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" name="id" style="template" type="xs:string"/>
+                <method id="remove" name="DELETE"/>
+                <method id="find" name="GET">
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+                <method id="postPatch2" name="POST">
+                    <request>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </request>
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+                <method id="patchRaw" name="PATCH">
+                    <request>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </request>
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+                <method id="postpatch" name="PUT">
+                    <request>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </request>
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="proto">
+                <method id="proto" name="GET">
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="toto/{id}">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" name="id" style="template" type="xs:string"/>
+                <method id="postPatchtoto" name="POST">
+                    <request>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </request>
+                    <response>
+                        <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns="" element="troubleTicket" mediaType="application/json"/>
+                    </response>
+                </method>
+            </resource>
+            <resource path="count">
+                <method id="countREST" name="GET">
+                    <response>
+                        <representation mediaType="text/plain"/>
+                    </response>
+                </method>
+            </resource>
+        </resource>
+    </resources>
+</application>

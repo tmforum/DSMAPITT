@@ -1,23 +1,32 @@
 package tmf.org.dsmapi.tt;
 
+import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import java.util.Calendar;
+import java.util.Date;
+import tmf.org.dsmapi.tt.model.TroubleTicket;
 import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.CORRELATION_ID;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.CREATION_DATE;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.DESCRIPTION;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.NOTES;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.RELATED_OBJECTS;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.RELATED_PARTIES;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.SEVERITY;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.STATUS;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.STATUS_CHANGE_DATE;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.STATUS_CHANGE_REASON;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.SUB_STATUS;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.TARGET_RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.TroubleTicketAttributesEnum.TYPE;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
+import tmf.org.dsmapi.commons.exceptions.StatusException;
+import tmf.org.dsmapi.commons.utils.Format;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.CORRELATION_ID;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.CREATION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.DESCRIPTION;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.NOTES;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RELATED_OBJECTS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RELATED_PARTIES;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.SEVERITY;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS_CHANGE_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS_CHANGE_REASON;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.SUB_STATUS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.TARGET_RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.TYPE;
+import tmf.org.dsmapi.tt.model.Status;
 
 /**
  *
@@ -63,13 +72,30 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param partialTT
      * @return
      */
-    public TroubleTicket partialUpdate(TroubleTicket partialTT) {
+    public TroubleTicket partialUpdate(TroubleTicket partialTT) throws StatusException, BadUsageException {
 
         TroubleTicket targetTT = this.find(partialTT.getId());
 
         if (targetTT != null) {
 
-            for (TroubleTicketAttributesEnum token : partialTT.getTokens()) {
+            Set<TroubleTicketAttributesEnum> tokens = partialTT.getTokens();
+
+            if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
+                throw new BadUsageException();
+            }
+
+            if (tokens.contains(STATUS)) {
+                if (Validator.isStatusUpdateValid(targetTT.getStatus(), partialTT.getStatus())) {
+                    targetTT.setStatus(partialTT.getStatus());
+                    targetTT.setStatusChangeDate(Format.toString(new Date()));
+                    targetTT.setStatusChangeReason(partialTT.getStatusChangeReason());
+                } else {
+                    throw new StatusException();
+                }
+            }
+
+
+            for (TroubleTicketAttributesEnum token : tokens) {
                 switch (token) {
                     case CORRELATION_ID:
                         targetTT.setCorrelationId(partialTT.getCorrelationId());
@@ -99,15 +125,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                             targetTT.setSeverity(partialTT.getSeverity());
                         }
                         break;
-                    case STATUS:
-                        targetTT.setStatus(partialTT.getStatus());
-                        break;
-                    case STATUS_CHANGE_DATE:
-                        targetTT.setStatusChangeDate(partialTT.getStatusChangeDate());
-                        break;
-                    case STATUS_CHANGE_REASON:
-                        targetTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-                        break;
                     case SUB_STATUS:
                         targetTT.setSubStatus(partialTT.getSubStatus());
                         break;
@@ -122,9 +139,21 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                 }
             }
         }
-
         return targetTT;
+    }
 
+    
+    @Override
+    public void create(TroubleTicket tt) throws MandatoryFieldException {
+
+        if (!Validator.hasMandatoryFields(tt)) {
+            throw new MandatoryFieldException();
+        }
+
+        tt.setStatus(Status.Submitted);
+        tt.setStatusChangeDate(Format.toString(new Date()));
+        tt.setStatusChangeReason("Creation");
+        super.create(tt);
     }
 
     /**
@@ -199,14 +228,5 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
 
         return resultTT;
-    }
-
-    /**
-     *
-     * @param entity
-     * @return
-     */
-    public boolean hasNotMandatoryFields(TroubleTicket entity) {
-        return ((entity.getDescription() == null) || (entity.getSeverity() == null) || (entity.getType() == null));
     }
 }
