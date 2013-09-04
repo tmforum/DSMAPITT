@@ -28,6 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -35,6 +36,7 @@ import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
 import tmf.org.dsmapi.commons.exceptions.StatusException;
 import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.hub.service.PublisherLocal;
 
 /**
  *
@@ -48,6 +50,8 @@ public class TroubleTicketFacadeREST {
     UriInfo uriInfo;
     @EJB
     TroubleTicketFacade manager;
+    @EJB
+    PublisherLocal publisher;
 
     public TroubleTicketFacadeREST() {
     }
@@ -62,12 +66,17 @@ public class TroubleTicketFacadeREST {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
+
+        // Try to persist entity
         try {
-            // Try to persist entity
-            manager.create(entity);
+        manager.create(entity);
         } catch (MandatoryFieldException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
+        
+        System.out.println("Calling  Publish");
+        publisher.publishTicketCreateNotification(entity);
+        System.out.println("After Calling  Publish");
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -97,6 +106,8 @@ public class TroubleTicketFacadeREST {
 
         // Try to merge        
         manager.edit(entity);
+        publisher.publishTicketChangedNotification(entity);
+        publisher.publishTicketStatusChangedNotification(entity);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -134,6 +145,10 @@ public class TroubleTicketFacadeREST {
             return Response.status(404).build();
 
         } else {
+            
+            publisher.publishTicketChangedNotification(partialTT);
+            publisher.publishTicketStatusChangedNotification(partialTT);
+
             // 201 OK + location
             UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
             id = fullTT.getId();
@@ -145,6 +160,7 @@ public class TroubleTicketFacadeREST {
 
     }
 
+    //This is admin only
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id) {
@@ -171,7 +187,7 @@ public class TroubleTicketFacadeREST {
 
         return response;
     }
-
+    
     @GET
     @Path("{id}/{attributes}")
     @Produces({"application/json"})
@@ -205,11 +221,21 @@ public class TroubleTicketFacadeREST {
         return response;
     }
 
+    
     @GET
     @Produces({"application/json"})
-    public List<TroubleTicket> findAll() {
-        return manager.findAll();
+    public List<TroubleTicket> findByAttributeFilter(@Context UriInfo info) {
+        
+        
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+        
+        if(info.getQueryParameters() == null ) {
+             return manager.findAll();
+        }
+        else   return manager.findByAttributeFilter(map);
     }
+    
+   
 
     @GET
     @Path("count")
@@ -223,6 +249,7 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
+        tt.setId("id");
         Date dt = new Date();
         String dts = Format.toString(dt);
         tt.setDescription("Some Description");
@@ -232,6 +259,8 @@ public class TroubleTicketFacadeREST {
         tt.setStatus(Status.Acknowledged);
         tt.setSeverity(Severity.Medium);
         tt.setType("Bills, charges or payment");
+        tt.setResolutionDate(dts);
+        tt.setTargetResolutionDate(dts);
 
         RelatedObject ro = new RelatedObject();
         ro.setInvolvement("involvment");
@@ -253,7 +282,7 @@ public class TroubleTicketFacadeREST {
 
         Note note = new Note();
         note.setAuthor("author");
-        note.setDate("date");
+        note.setDate(dts);
         note.setText("text");
         Note notes[] = new Note[2];
         notes[0] = note;
@@ -284,4 +313,6 @@ public class TroubleTicketFacadeREST {
         return df.parse(input);
 
     }
+    
+   
 }
