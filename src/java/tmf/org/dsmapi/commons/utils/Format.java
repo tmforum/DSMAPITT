@@ -2,12 +2,14 @@ package tmf.org.dsmapi.commons.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TimeZone;
-
+import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
 
 public class Format {
-    
-        public static String toString(Date date) {
+
+    public static String toString(Date date) {
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 

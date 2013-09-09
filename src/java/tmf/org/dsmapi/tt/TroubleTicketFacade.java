@@ -69,8 +69,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * 
      * Token "all" return all attributes
      * 
-     */
-    /**
      *
      * @param id
      * @param tokens
@@ -83,6 +81,26 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         TroubleTicket responseTT = getView(fullTT, tokens);
 
         return responseTT;
+    }
+
+    public List<TroubleTicket> find(MultivaluedMap<String, String> map, Set<TroubleTicketAttributesEnum> tokens) {
+
+        List<TroubleTicket> listFullTT;
+
+        if (map == null) {
+            listFullTT = this.findAll();
+        } else {
+            listFullTT = this.find(map);
+        }
+
+        List<TroubleTicket> listResponseTT = new ArrayList();
+        TroubleTicket responseTT;
+        for (TroubleTicket fullTT : listFullTT) {
+            responseTT = getView(fullTT, tokens);
+            listResponseTT.add(responseTT);
+        }
+
+        return listResponseTT;
     }
 
     /**
@@ -160,7 +178,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return targetTT;
     }
 
-    
     @Override
     public void create(TroubleTicket tt) throws MandatoryFieldException {
 
@@ -250,8 +267,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return resultTT;
     }
 
-
-    public List<TroubleTicket> findByAttributeFilter(MultivaluedMap<String, String> map) {
+    public List<TroubleTicket> find(MultivaluedMap<String, String> map) {
 
 
         List<TroubleTicket> tickets = null;
@@ -294,13 +310,18 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     }
 
     Predicate buildPredicate(Root<TroubleTicket> tt, String name, String value) {
-        Predicate predicate = null;
-        if (name.equals("severity")) {
-            predicate = cb.equal(tt.get(name), Severity.valueOf(value));
-        } else {
-            predicate = cb.equal(tt.get(name), value);
-        }
-        return predicate;
-    }
 
+        // Use .fromString not valueOf for Enum, to avoid case sensitive problem
+        
+        if (name.equalsIgnoreCase("status")) {
+            return cb.equal(tt.get(name), Status.fromString(value));
+        }
+
+        if (name.equalsIgnoreCase("severity")) {
+            return cb.equal(tt.get(name), Severity.fromString(value));
+        }
+
+        return cb.equal(tt.get(name), value);
+
+    }
 }

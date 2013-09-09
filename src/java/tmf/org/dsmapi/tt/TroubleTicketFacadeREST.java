@@ -15,9 +15,7 @@ import tmf.org.dsmapi.tt.model.Status;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -31,7 +29,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
@@ -46,7 +43,7 @@ import tmf.org.dsmapi.hub.service.PublisherLocal;
  * @author pierregauthier
  */
 @Stateless
-@Path("tmf.org.dsmapi.tt.troubleticket")
+@Path("troubleTickets")
 public class TroubleTicketFacadeREST {
 
     @Context
@@ -58,25 +55,28 @@ public class TroubleTicketFacadeREST {
 
     public TroubleTicketFacadeREST() {
     }
-
+    
+   /*
+     * RESOURCE
+     * troubleTickets
+     */        
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response create(TroubleTicket entity) {
+    public Response post(TroubleTicket entity) {
 
         // 400 
         if (entity.getId() != null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-
         // Try to persist entity
         try {
-        manager.create(entity);
+            manager.create(entity);
         } catch (MandatoryFieldException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
-        
+
         System.out.println("Calling  Publish");
         publisher.publishTicketCreateNotification(entity);
         System.out.println("After Calling  Publish");
@@ -89,13 +89,43 @@ public class TroubleTicketFacadeREST {
                 entity(entity).
                 build();
 
+    }    
+
+    /*
+     * RESOURCE
+     * troubleTickets/list
+     */
+    @GET
+    @Path("list")    
+    @Produces({"application/json"})
+    public Response getAll() {
+        List<TroubleTicket> listTT = manager.findAll();        
+        return Response.ok(listTT).build();
     }
 
+    @GET
+    @Path("list/{fields}")
+    @Produces({"application/json"})
+    public Response getByCriteria(@Context UriInfo info, @PathParam("fields") String fields) {
+
+        // Convert fields parameter to a set of TroubleTicketAttributesEnum
+        Set<TroubleTicketAttributesEnum> fieldList = convertSelectionFromString(fields);
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+        List<TroubleTicket> listTT = manager.find(map, fieldList);
+
+        return Response.ok(listTT).build();
+
+    }
+
+    /*
+     * RESOURCE
+     * troubleTickets/{id}
+     */
     @PUT
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response edit(@PathParam("id") String id, TroubleTicket entity) {
+    public Response put(@PathParam("id") String id, TroubleTicket entity) {
 
         // 400 resource id and entity id must be the same
         if (!entity.getId().equalsIgnoreCase(id)) {
@@ -133,7 +163,7 @@ public class TroubleTicketFacadeREST {
         }
 
         TroubleTicket fullTT;
-        
+
         try {
             fullTT = manager.partialUpdate(partialTT);
         } catch (BadUsageException e) {
@@ -148,7 +178,7 @@ public class TroubleTicketFacadeREST {
             return Response.status(404).build();
 
         } else {
-            
+
             publisher.publishTicketChangedNotification(partialTT);
             publisher.publishTicketStatusChangedNotification(partialTT);
 
@@ -166,14 +196,14 @@ public class TroubleTicketFacadeREST {
     //This is admin only
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") String id) {
+    public void delete(@PathParam("id") String id) {
         manager.remove(id);
     }
 
     @GET
     @Path("{id}")
     @Produces({"application/json"})
-    public Response find(@PathParam("id") String id) {
+    public Response getById(@PathParam("id") String id) {
 
         TroubleTicket tt = manager.find(id);
 
@@ -190,26 +220,21 @@ public class TroubleTicketFacadeREST {
 
         return response;
     }
-    
+
+    /*
+     * RESOURCE
+     * troubleTickets/{id}/f/{fields}
+     */
     @GET
-    @Path("{id}/{attributes}")
+    @Path("{id}/{fields}")
     @Produces({"application/json"})
-    public Response findWithAttributes(@PathParam("id") String id, @PathParam("attributes") String as) {
+    public Response getById(@PathParam("id") String id, @PathParam("fields") String fields) {
 
-        Set<TroubleTicketAttributesEnum> tokenList = new HashSet<TroubleTicketAttributesEnum>();
+        // Convert fields parameter to a set of TroubleTicketAttributesEnum
+        Set<TroubleTicketAttributesEnum> fieldList = convertSelectionFromString(fields);
 
-        // Convert attributes parameter to a set of TroubleTicketAttributesEnum
-        if (as != null) {
-            String[] tokenArray = as.split(",");
-            for (int i = 0; i < tokenArray.length; i++) {
-                tokenList.add(TroubleTicketAttributesEnum.fromString(tokenArray[i]));
-            }
-        } else {
-            // ALL
-            tokenList.add(TroubleTicketAttributesEnum.ALL);
-        }
-
-        TroubleTicket responseTT = manager.find(id, tokenList);
+        // Go getById
+        TroubleTicket responseTT = manager.find(id, fieldList);
 
         Response response;
         // if troubleTicket exists
@@ -224,31 +249,23 @@ public class TroubleTicketFacadeREST {
         return response;
     }
 
-    
+    /*
+     * RESOURCE
+     * troubleTickets/dev/count
+     */
     @GET
-    @Produces({"application/json"})
-    public List<TroubleTicket> findByAttributeFilter(@Context UriInfo info) {
-        
-        
-        MultivaluedMap<String, String> map = info.getQueryParameters();
-        
-        if(info.getQueryParameters() == null ) {
-             return manager.findAll();
-        }
-        else   return manager.findByAttributeFilter(map);
-    }
-    
-   
-
-    @GET
-    @Path("count")
+    @Path("dev/count")
     @Produces("text/plain")
-    public String countREST() {
+    public String count() {
         return String.valueOf(manager.count());
     }
 
+    /*
+     * RESOURCE
+     * troubleTickets/dev/mock
+     */
     @GET
-    @Path("proto")
+    @Path("dev/mock")
     @Produces({"application/json"})
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
@@ -316,6 +333,20 @@ public class TroubleTicketFacadeREST {
         return df.parse(input);
 
     }
-    
-   
+
+    private static Set<TroubleTicketAttributesEnum> convertSelectionFromString(String selection) {
+        // Convert selection parameter to a set of TroubleTicketAttributesEnum
+        Set<TroubleTicketAttributesEnum> tokenList = new HashSet<TroubleTicketAttributesEnum>();
+        if (selection != null) {
+            String[] tokenArray = selection.split(",");
+            for (int i = 0; i < tokenArray.length; i++) {
+                tokenList.add(TroubleTicketAttributesEnum.fromString(tokenArray[i]));
+            }
+        } else {
+            // ALL
+            tokenList.add(TroubleTicketAttributesEnum.ALL);
+        }
+
+        return tokenList;
+    }
 }

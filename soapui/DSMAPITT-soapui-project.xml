@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:soapui-project activeEnvironment="Default" name="DSMAPITT" resourceRoot="" soapui-version="4.5.2" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
     <con:settings/>
-    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="DSMAPITT" type="rest" basePath="/DSMAPITT/webresources/" definitionUrl="application.wadl.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="DSMAPITT" type="rest" basePath="/DSMAPITT/api/" definitionUrl="application.wadl.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
         <con:definitionCache type="TEXT" rootPart="file:application.wadl.xml">
             <con:part>
@@ -161,7 +161,7 @@
         <con:endpoints>
             <con:endpoint>http://localhost:8080</con:endpoint>
         </con:endpoints>
-        <con:resource name="tmf.org.dsmapi.tt.troubleticket" path="tmf.org.dsmapi.tt.troubleticket">
+        <con:resource name="troubleTickets" path="troubleTickets">
             <con:settings/>
             <con:parameters/>
             <con:resource name="{id}" path="{id}">
@@ -175,16 +175,7 @@
                         <con:default xsi:nil="true"/>
                     </con:parameter>
                 </con:parameters>
-                <con:resource name="{attributes}" path="/{attributes}"><con:settings/><con:parameters><con:parameter><con:name>attributes</con:name><con:value>attributes</con:value><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default>attributes</con:default><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="200 /1/status" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="id" value="1"/>
-  <con:entry key="attributes" value="status"/>
-</con:parameters></con:request><con:request name="200 /1/status,type,relatedObjects" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="id" value="1"/>
-  <con:entry key="attributes" value="status,type,relatedObjects"/>
-</con:parameters></con:request><con:request name="200 /1/status,type,all" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="id" value="1"/>
-  <con:entry key="attributes" value="status,type,all"/>
-</con:parameters></con:request></con:method></con:resource><con:method name="DELETE" method="DELETE">
+                <con:resource name="{fields}" path="f/{fields}"><con:settings/><con:parameters><con:parameter><con:name>fields</con:name><con:style>TEMPLATE</con:style><con:default>status</con:default></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="200 /1/status" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="200 /1/status,type,relatedObjects" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="200 /1/status,type,all" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method></con:resource><con:method name="DELETE" method="DELETE">
                     <con:settings/>
                     <con:parameters/>
                     <con:request name="Request 1">
@@ -543,7 +534,7 @@
 }</con:request><con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
                     </con:request></con:method>
             </con:resource>
-            <con:resource name="proto" path="proto">
+            <con:resource name="dev/mock" path="dev/mock">
                 <con:settings/>
                 <con:parameters/>
                 <con:method name="GET - proto" method="GET">
@@ -570,40 +561,8 @@
                     </con:request>
                 </con:method>
             </con:resource>
-            <con:resource name="toto/{id}" path="toto/{id}">
-                <con:settings/>
-                <con:parameters>
-                    <con:parameter>
-                        <con:name>id</con:name>
-                        <con:value xsi:nil="true"/>
-                        <con:style>TEMPLATE</con:style>
-                        <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
-                        <con:default xsi:nil="true"/>
-                    </con:parameter>
-                </con:parameters>
-                <con:method name="POST - postPatchtoto" method="POST">
-                    <con:settings/>
-                    <con:parameters/>
-                    <con:representation type="REQUEST" id="">
-                        <con:mediaType>application/json</con:mediaType>
-                        <con:params/>
-                        <con:element>troubleTicket</con:element>
-                        <con:description xsi:nil="true"/>
-                    </con:representation>
-                    <con:representation type="RESPONSE" id="">
-                        <con:mediaType>application/json</con:mediaType>
-                        <con:params/>
-                        <con:element>troubleTicket</con:element>
-                        <con:description xsi:nil="true"/>
-                    </con:representation>
-                    <con:request name="Request 1">
-                        <con:settings/>
-                        <con:endpoint>http://localhost:8080</con:endpoint>
-                        <con:credentials><con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:parameters/>
-                    </con:request>
-                </con:method>
-            </con:resource>
-            <con:resource name="count" path="count">
+            
+            <con:resource name="dev/count" path="dev/count">
                 <con:settings/>
                 <con:parameters/>
                 <con:method name="GET - countREST" method="GET">
@@ -622,29 +581,7 @@
                     </con:request>
                 </con:method>
             </con:resource>
-            <con:method name="GET - findAll" method="GET">
-                <con:settings/>
-                <con:parameters/>
-                <con:representation type="RESPONSE" id="">
-                    <con:mediaType>application/json</con:mediaType>
-                    <con:params/>
-                    <con:element>troubleTicket</con:element>
-                    <con:description xsi:nil="true"/>
-                </con:representation>
-                <con:request name="200" mediaType="application/xml" accept="application/json">
-                    <con:settings>
-                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-                    </con:settings>
-                    <con:endpoint>http://localhost:8080</con:endpoint>
-                    <con:request/>
-                    <con:credentials>
-                        <con:username/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
-                    </con:credentials>
-                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-                    <con:jmsPropertyConfig/>
-                    <con:parameters/>
-                </con:request>
-            </con:method>
+            <con:resource name="list" path="list"><con:settings/><con:parameters/><con:resource name="{fields}" path="/{fields}"><con:settings/><con:parameters><con:parameter><con:name>fields</con:name><con:value>fields</con:value><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default>fields</con:default><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="status=submitted" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="fields" value="status" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method></con:resource><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="200" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource>
             <con:method name="POST - create" method="POST">
                 <con:settings/>
                 <con:parameters/>
@@ -1005,6 +942,6 @@
             </con:method>
         </con:resource>
     </con:interface>
-    <con:properties/>
+    <con:testSuite name="TestSuite Basic Scenario"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Basic" searchProperties="true"><con:settings/><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties/>
     <con:wssContainer/>
 </con:soapui-project>
