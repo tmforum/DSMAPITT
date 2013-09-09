@@ -55,11 +55,11 @@ public class TroubleTicketFacadeREST {
 
     public TroubleTicketFacadeREST() {
     }
-    
-   /*
+
+    /*
      * RESOURCE
      * troubleTickets
-     */        
+     */
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
@@ -89,17 +89,20 @@ public class TroubleTicketFacadeREST {
                 entity(entity).
                 build();
 
-    }    
+    }
 
     /*
      * RESOURCE
      * troubleTickets/list
      */
     @GET
-    @Path("list")    
+    @Path("list")
     @Produces({"application/json"})
-    public Response getAll() {
-        List<TroubleTicket> listTT = manager.findAll();        
+    public Response getByCriteria(@Context UriInfo info) {
+
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+        List<TroubleTicket> listTT = manager.find(map);
+
         return Response.ok(listTT).build();
     }
 
