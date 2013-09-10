@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:soapui-project activeEnvironment="Default" name="DSMAPITT" resourceRoot="" soapui-version="4.5.2" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
-    <con:settings/>
+    <con:settings><con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Environment" value="Default"/>
+  <con:entry key="Global Properties" value=""/>
+  <con:entry key="TestSuite" value="TestSuite Basic Scenario"/>
+  <con:entry key="Report to Generate" value=""/>
+  <con:entry key="Password" value=""/>
+  <con:entry key="soapui-setings.xml Password" value=""/>
+  <con:entry key="TestRunner Path" value="/home/maig7313/src/DSMAPITT/target/soapui"/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Ignore Errors" value="false"/>
+  <con:entry key="Host:Port" value=""/>
+  <con:entry key="WSS Password Type" value=""/>
+  <con:entry key="Save Project" value="false"/>
+  <con:entry key="Enable UI" value="false"/>
+  <con:entry key="System Properties" value=""/>
+  <con:entry key="Domain" value=""/>
+  <con:entry key="Coverage Report" value="false"/>
+  <con:entry key="Export JUnit Results" value="false"/>
+  <con:entry key="Open Report" value="false"/>
+  <con:entry key="Project Properties" value=""/>
+  <con:entry key="Project Password" value=""/>
+  <con:entry key="Export All" value="false"/>
+  <con:entry key="Report Format(s)" value=""/>
+  <con:entry key="TestCase" value="Basic"/>
+  <con:entry key="Print Report" value="false"/>
+  <con:entry key="Username" value=""/>
+  <con:entry key="Root Folder" value=""/>
+  <con:entry key="Save After" value="false"/>
+  <con:entry key="Add Settings" value="false"/>
+  <con:entry key="Endpoint" value=""/>
+</xml-fragment>]]></con:setting></con:settings>
     <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="DSMAPITT" type="rest" basePath="/DSMAPITT/api/" definitionUrl="application.wadl.xml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
         <con:definitionCache type="TEXT" rootPart="file:application.wadl.xml">
@@ -906,6 +936,121 @@
   <con:entry key="severity" value=""/>
 </con:parameters></con:request><con:request name="?status=submitted" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="severity" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="?severity=medium" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="status" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method></con:resource>
     </con:interface>
-    <con:testSuite name="TestSuite Basic Scenario"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Basic" searchProperties="true"><con:settings/><con:properties/></con:testCase><con:properties/></con:testSuite><con:endpointStrategy xsi:type="con:DefaultEndpointStrategy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:endpoint mode="COMPLEMENT" username="hackuser" password="user4hack">http://localhost:8080</con:endpoint></con:endpointStrategy><con:properties/>
+    <con:testSuite name="TestSuite Basic Scenario"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Basic" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="create TT 1"><con:settings/><con:config service="DSMAPITT" resourcePath="/DSMAPITT/api/troubleTicket" methodName="POST - create" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="create TT 1" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Submitted",
+                        "subStatus": null,
+                        "statusChangeReason": "Creation",
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="create TT 3"><con:settings/><con:config service="DSMAPITT" resourcePath="/DSMAPITT/api/troubleTicket" methodName="POST - create" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="create TT 3" mediaType="application/json" postQueryString="false" accept="application/json">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                    </con:settings>
+                    <con:endpoint>http://localhost:8080</con:endpoint>
+                    <con:request>{
+                        "id": null,
+                        "correlationId": null,
+                        "description": "Description",
+                        "severity": "Medium",
+                        "type": "Bills, charges or payment",
+                        "creationDate": "2013-08-20T18:18:40UTC",
+                        "targetResolutionDate": null,
+                        "status": "Submitted",
+                        "subStatus": null,
+                        "statusChangeReason": "Creation",
+                        "resolutionDate": null,
+                        "relatedObjects":    [
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        },
+                        {
+                        "involvement": "involvment",
+                        "reference": "referenceobject"
+                        }
+                        ],
+                        "notes":    [
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        },
+                        {
+                        "date": "date",
+                        "author": "author",
+                        "text": "text"
+                        }
+                        ],
+                        "relatedParties":    [
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        },
+                        {
+                        "role": "role",
+                        "reference": "reference party"
+                        }
+                        ]
+                        }</con:request>
+                    <con:credentials>
+                        <con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:restRequest></con:config></con:testStep><con:testStep type="restrequest" name="get list of TT"><con:settings/><con:config service="DSMAPITT" resourcePath="/DSMAPITT/api/troubleTicket" methodName="GET" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="get list of TT" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="status" value=""/>
+  <con:entry key="severity" value=""/>
+</con:parameters></con:restRequest></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:endpointStrategy xsi:type="con:DefaultEndpointStrategy" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:endpoint mode="COMPLEMENT" username="hackuser" password="user4hack">http://localhost:8080</con:endpoint></con:endpointStrategy><con:properties/>
     <con:wssContainer/>
 </con:soapui-project>
