@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
-import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.TroubleTicketField;
 
 public class Format {
 

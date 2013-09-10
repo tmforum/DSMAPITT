@@ -1,6 +1,6 @@
 package tmf.org.dsmapi.tt;
 
-import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import tmf.org.dsmapi.tt.model.TroubleTicket;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,12 +66,12 @@ public class TroubleTicketReader implements MessageBodyReader<TroubleTicket> {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readValue(entityStream, JsonNode.class);
         
-        Set<TroubleTicketAttributesEnum> tokenList = new HashSet<TroubleTicketAttributesEnum>();
+        Set<TroubleTicketField> tokenList = new HashSet<TroubleTicketField>();
         
         // Iterate over first level to set received tokens
         Iterator<String> it = root.getFieldNames();
         while (it.hasNext()) {
-            tokenList.add(TroubleTicketAttributesEnum.fromString(it.next()));
+            tokenList.add(TroubleTicketField.fromString(it.next()));
         }
 
         tt = mapper.readValue(root, TroubleTicket.class);

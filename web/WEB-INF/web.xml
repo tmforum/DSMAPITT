@@ -20,10 +20,10 @@
 
 
 	<!-- Security config -->
-	<!--security-constraint>
+	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Secure REST</web-resource-name>
-			<url-pattern>/webresources/*</url-pattern>
+			<url-pattern>/api/*</url-pattern>
 			<http-method>GET</http-method>
                         <http-method>POST</http-method>
                         <http-method>PUT</http-method>
@@ -39,11 +39,11 @@
 
 	<login-config>
 		<auth-method>BASIC</auth-method>
-		<realm-name>file</realm-name>
+		<realm-name>fileRealm</realm-name>
 	</login-config>
 
 	<security-role>
 		<role-name>USERS</role-name>
-	</security-role-->
+	</security-role>
 
 </web-app>

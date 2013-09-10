@@ -1,7 +1,7 @@
 package tmf.org.dsmapi.tt;
 
 import java.util.ArrayList;
-import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,20 +23,20 @@ import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
 import tmf.org.dsmapi.commons.exceptions.StatusException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.tt.model.Severity;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.CORRELATION_ID;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.CREATION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.DESCRIPTION;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.NOTES;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RELATED_OBJECTS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RELATED_PARTIES;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.SEVERITY;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS_CHANGE_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.STATUS_CHANGE_REASON;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.SUB_STATUS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.TARGET_RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum.TYPE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.CORRELATION_ID;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.CREATION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.DESCRIPTION;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.NOTES;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.RELATED_OBJECTS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.RELATED_PARTIES;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.SEVERITY;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS_CHANGE_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS_CHANGE_REASON;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.SUB_STATUS;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.TARGET_RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.model.TroubleTicketField.TYPE;
 import tmf.org.dsmapi.tt.model.Status;
 
 /**
@@ -74,7 +74,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param tokens
      * @return
      */
-    public TroubleTicket find(Object id, Set<TroubleTicketAttributesEnum> tokens) {
+    public TroubleTicket find(Object id, Set<TroubleTicketField> tokens) {
 
         TroubleTicket fullTT = super.find(id);
 
@@ -83,7 +83,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return responseTT;
     }
 
-    public List<TroubleTicket> find(MultivaluedMap<String, String> map, Set<TroubleTicketAttributesEnum> tokens) {
+    public List<TroubleTicket> find(MultivaluedMap<String, String> map, Set<TroubleTicketField> tokens) {
 
         List<TroubleTicket> listFullTT;
 
@@ -114,7 +114,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         if (targetTT != null) {
 
-            Set<TroubleTicketAttributesEnum> tokens = partialTT.getTokens();
+            Set<TroubleTicketField> tokens = partialTT.getTokens();
 
             if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
                 throw new BadUsageException();
@@ -131,7 +131,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             }
 
 
-            for (TroubleTicketAttributesEnum token : tokens) {
+            for (TroubleTicketField token : tokens) {
                 switch (token) {
                     case CORRELATION_ID:
                         targetTT.setCorrelationId(partialTT.getCorrelationId());
@@ -200,13 +200,13 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return em;
     }
 
-    private static TroubleTicket getView(TroubleTicket fullTT, Set<TroubleTicketAttributesEnum> tokens) {
+    private static TroubleTicket getView(TroubleTicket fullTT, Set<TroubleTicketField> tokens) {
 
         TroubleTicket resultTT = null;
 
         if (fullTT != null) {
 
-            if (tokens.contains(TroubleTicketAttributesEnum.ALL)) {
+            if (tokens.contains(TroubleTicketField.ALL)) {
                 resultTT = fullTT;
 
             } else {
@@ -215,7 +215,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                 //      <xs:element name="id" type="xs:string" minOccurs="0"/>
                 resultTT.setId(fullTT.getId());
 
-                for (TroubleTicketAttributesEnum token : tokens) {
+                for (TroubleTicketField token : tokens) {
                     switch (token) {
                         case CORRELATION_ID:
                             resultTT.setCorrelationId(fullTT.getCorrelationId());

@@ -5,7 +5,7 @@
 package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
-import tmf.org.dsmapi.tt.model.TroubleTicketAttributesEnum;
+import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import tmf.org.dsmapi.tt.model.RelatedObject;
 import tmf.org.dsmapi.tt.model.Severity;
 import tmf.org.dsmapi.tt.model.RelatedParty;
@@ -14,7 +14,6 @@ import tmf.org.dsmapi.tt.model.Note;
 import tmf.org.dsmapi.tt.model.Status;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
@@ -43,7 +42,7 @@ import tmf.org.dsmapi.hub.service.PublisherLocal;
  * @author pierregauthier
  */
 @Stateless
-@Path("troubleTickets")
+@Path("troubleTicket")
 public class TroubleTicketFacadeREST {
 
     @Context
@@ -60,6 +59,74 @@ public class TroubleTicketFacadeREST {
      * RESOURCE
      * troubleTickets
      */
+    @GET
+    @Produces({"application/json"})
+    public Response getByCriteria(@Context UriInfo info) {
+
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+        List<TroubleTicket> listTT = manager.find(map);
+
+        return Response.ok(listTT).build();
+    }
+
+    @GET
+    @Path("{idOrFieldSelector}")
+    @Produces({"application/json"})
+    public Response find(@Context UriInfo info, @PathParam("idOrFieldSelector") String idOrFieldSelector) {
+
+        //Check if idOrFieldSelector is made of two token or more then it is attribute selection
+        //otherwise it ad
+
+        //If one check if it is a valid attribute then it is attribute selection
+        //otherwise use it an id
+        int numTokens = 0;
+        if (idOrFieldSelector != null) {
+            String[] tokenArray = idOrFieldSelector.split(",");
+            numTokens = tokenArray.length;
+        }
+
+        //If one check if it is a valid attribute then it is attribute selection
+        //otherwise use it an id
+        boolean fieldSelectionOn = false;
+        if (numTokens == 1) {
+            if (TroubleTicketField.fromString(idOrFieldSelector) != null) {
+                fieldSelectionOn = true;
+            }
+        } else if (numTokens > 1) {
+            fieldSelectionOn = true;
+        }
+
+        Response response = null;
+
+        // Case : id
+        if (fieldSelectionOn == false) {
+
+            TroubleTicket tt = manager.find(idOrFieldSelector);
+
+            // if troubleTicket exists
+            if (tt != null) {
+                // 200
+                response = Response.ok(tt).build();
+            } else {
+                // 404 not found
+                response = Response.status(404).build();
+            }
+            
+        // Case field selector On, return a list
+        } else {
+
+            // Convert fieldSelector to a set of TroubleTicketField
+            Set<TroubleTicketField> fieldSet = TroubleTicketField.fromStringToSet(idOrFieldSelector);
+            MultivaluedMap<String, String> map = info.getQueryParameters();
+            List<TroubleTicket> listTT = manager.find(map, fieldSet);
+
+            return Response.ok(listTT).build();
+
+        }
+
+        return response;
+    }
+
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
@@ -88,35 +155,6 @@ public class TroubleTicketFacadeREST {
         return Response.created(uriBuilder.build(id)).
                 entity(entity).
                 build();
-
-    }
-
-    /*
-     * RESOURCE
-     * troubleTickets/list
-     */
-    @GET
-    @Path("list")
-    @Produces({"application/json"})
-    public Response getByCriteria(@Context UriInfo info) {
-
-        MultivaluedMap<String, String> map = info.getQueryParameters();
-        List<TroubleTicket> listTT = manager.find(map);
-
-        return Response.ok(listTT).build();
-    }
-
-    @GET
-    @Path("list/{fields}")
-    @Produces({"application/json"})
-    public Response getByCriteria(@Context UriInfo info, @PathParam("fields") String fields) {
-
-        // Convert fields parameter to a set of TroubleTicketAttributesEnum
-        Set<TroubleTicketAttributesEnum> fieldList = convertSelectionFromString(fields);
-        MultivaluedMap<String, String> map = info.getQueryParameters();
-        List<TroubleTicket> listTT = manager.find(map, fieldList);
-
-        return Response.ok(listTT).build();
 
     }
 
@@ -203,41 +241,20 @@ public class TroubleTicketFacadeREST {
         manager.remove(id);
     }
 
-    @GET
-    @Path("{id}")
-    @Produces({"application/json"})
-    public Response getById(@PathParam("id") String id) {
-
-        TroubleTicket tt = manager.find(id);
-
-        Response response = null;
-
-        // if troubleTicket exists
-        if (tt != null) {
-            // 200
-            response = Response.ok(tt).build();
-        } else {
-            // 404 not found
-            response = Response.status(404).build();
-        }
-
-        return response;
-    }
-
     /*
      * RESOURCE
-     * troubleTickets/{id}/f/{fields}
+     * troubleTickets/{id}/{fieldSelector}
      */
     @GET
-    @Path("{id}/{fields}")
+    @Path("{id}/{fieldSelector}")
     @Produces({"application/json"})
-    public Response getById(@PathParam("id") String id, @PathParam("fields") String fields) {
+    public Response getById(@PathParam("id") String id, @PathParam("fieldSelector") String fieldSelector) {
 
-        // Convert fields parameter to a set of TroubleTicketAttributesEnum
-        Set<TroubleTicketAttributesEnum> fieldList = convertSelectionFromString(fields);
+        // Convert fieldSelector parameter to a set of TroubleTicketField
+        Set<TroubleTicketField> fieldSet = TroubleTicketField.fromStringToSet(fieldSelector);
 
         // Go getById
-        TroubleTicket responseTT = manager.find(id, fieldList);
+        TroubleTicket responseTT = manager.find(id, fieldSet);
 
         Response response;
         // if troubleTicket exists
@@ -335,21 +352,5 @@ public class TroubleTicketFacadeREST {
 
         return df.parse(input);
 
-    }
-
-    private static Set<TroubleTicketAttributesEnum> convertSelectionFromString(String selection) {
-        // Convert selection parameter to a set of TroubleTicketAttributesEnum
-        Set<TroubleTicketAttributesEnum> tokenList = new HashSet<TroubleTicketAttributesEnum>();
-        if (selection != null) {
-            String[] tokenArray = selection.split(",");
-            for (int i = 0; i < tokenArray.length; i++) {
-                tokenList.add(TroubleTicketAttributesEnum.fromString(tokenArray[i]));
-            }
-        } else {
-            // ALL
-            tokenList.add(TroubleTicketAttributesEnum.ALL);
-        }
-
-        return tokenList;
     }
 }
