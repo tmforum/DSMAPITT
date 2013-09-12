@@ -41,14 +41,19 @@ public enum TroubleTicketField {
         }
         return null;
     }
-    
+
     public static Set<TroubleTicketField> fromStringToSet(String fields) {
         // Convert fields parameter to a set of TroubleTicketField
         Set<TroubleTicketField> fieldsSet = new HashSet<TroubleTicketField>();
+        TroubleTicketField fieldName;
         if (fields != null) {
             String[] tokenArray = fields.split(",");
             for (int i = 0; i < tokenArray.length; i++) {
-                fieldsSet.add(TroubleTicketField.fromString(tokenArray[i]));
+                fieldName = TroubleTicketField.fromString(tokenArray[i]);
+                // Avoid to add null when fieldName doesn't exist
+                if (fieldName != null) {
+                    fieldsSet.add(fieldName);
+                }
             }
         } else {
             // ALL
@@ -56,5 +61,5 @@ public enum TroubleTicketField {
         }
 
         return fieldsSet;
-    }    
+    }
 }

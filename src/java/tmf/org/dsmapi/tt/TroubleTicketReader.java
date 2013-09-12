@@ -75,7 +75,7 @@ public class TroubleTicketReader implements MessageBodyReader<TroubleTicket> {
         }
 
         tt = mapper.readValue(root, TroubleTicket.class);
-        tt.setTokens(tokenList);
+        tt.setFields(tokenList);
 
         return tt;
     }

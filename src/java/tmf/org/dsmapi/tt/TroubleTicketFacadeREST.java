@@ -5,7 +5,6 @@
 package tmf.org.dsmapi.tt;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import tmf.org.dsmapi.tt.model.RelatedObject;
 import tmf.org.dsmapi.tt.model.Severity;
 import tmf.org.dsmapi.tt.model.RelatedParty;
@@ -15,7 +14,6 @@ import tmf.org.dsmapi.tt.model.Status;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -27,6 +25,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
@@ -36,6 +35,9 @@ import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
 import tmf.org.dsmapi.commons.exceptions.StatusException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
+import tmf.org.dsmapi.tt.PATCH;
+import tmf.org.dsmapi.tt.TroubleTicketFacade;
+import tmf.org.dsmapi.tt.Validator;
 
 /**
  *
@@ -63,69 +65,17 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response getByCriteria(@Context UriInfo info) {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();
+        MultivaluedMap<String, String> map = info.getQueryParameters();        
         List<TroubleTicket> listTT = manager.find(map);
 
-        return Response.ok(listTT).build();
-    }
+        // Uses GenericEntity for messageBodyWriter list oriented
+        // http://christopherhunt-software.blogspot.fr/2010/08/messagebodywriter-iswriteable-method.html
+        GenericEntity<List<TroubleTicket>> entity =
+                new GenericEntity<List<TroubleTicket>>(listTT) {
+        };
 
-    @GET
-    @Path("{idOrFieldSelector}")
-    @Produces({"application/json"})
-    public Response find(@Context UriInfo info, @PathParam("idOrFieldSelector") String idOrFieldSelector) {
-
-        //Check if idOrFieldSelector is made of two token or more then it is attribute selection
-        //otherwise it ad
-
-        //If one check if it is a valid attribute then it is attribute selection
-        //otherwise use it an id
-        int numTokens = 0;
-        if (idOrFieldSelector != null) {
-            String[] tokenArray = idOrFieldSelector.split(",");
-            numTokens = tokenArray.length;
-        }
-
-        //If one check if it is a valid attribute then it is attribute selection
-        //otherwise use it an id
-        boolean fieldSelectionOn = false;
-        if (numTokens == 1) {
-            if (TroubleTicketField.fromString(idOrFieldSelector) != null) {
-                fieldSelectionOn = true;
-            }
-        } else if (numTokens > 1) {
-            fieldSelectionOn = true;
-        }
-
-        Response response = null;
-
-        // Case : id
-        if (fieldSelectionOn == false) {
-
-            TroubleTicket tt = manager.find(idOrFieldSelector);
-
-            // if troubleTicket exists
-            if (tt != null) {
-                // 200
-                response = Response.ok(tt).build();
-            } else {
-                // 404 not found
-                response = Response.status(404).build();
-            }
-            
-        // Case field selector On, return a list
-        } else {
-
-            // Convert fieldSelector to a set of TroubleTicketField
-            Set<TroubleTicketField> fieldSet = TroubleTicketField.fromStringToSet(idOrFieldSelector);
-            MultivaluedMap<String, String> map = info.getQueryParameters();
-            List<TroubleTicket> listTT = manager.find(map, fieldSet);
-
-            return Response.ok(listTT).build();
-
-        }
-
-        return response;
-    }
+        return Response.ok(entity).build();
+    }    
 
     @POST
     @Consumes({"application/json"})
@@ -246,15 +196,12 @@ public class TroubleTicketFacadeREST {
      * troubleTickets/{id}/{fieldSelector}
      */
     @GET
-    @Path("{id}/{fieldSelector}")
+    @Path("{id}")
     @Produces({"application/json"})
-    public Response getById(@PathParam("id") String id, @PathParam("fieldSelector") String fieldSelector) {
-
-        // Convert fieldSelector parameter to a set of TroubleTicketField
-        Set<TroubleTicketField> fieldSet = TroubleTicketField.fromStringToSet(fieldSelector);
+    public Response getById(@PathParam("id") String id) {
 
         // Go getById
-        TroubleTicket responseTT = manager.find(id, fieldSet);
+        TroubleTicket responseTT = manager.find(id);
 
         Response response;
         // if troubleTicket exists
