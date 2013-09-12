@@ -209,10 +209,9 @@
   <con:entry key="id" value="1"/>
   <con:entry key="fieldSelector" value="status,type,relatedObjects"/>
   <con:entry key="fields" value="status,type,relatedObjects"/>
-</con:parameters></con:request><con:request name="200 /1/status,type,all" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+</con:parameters></con:request><con:request name="/1/relatedParties" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
   <con:entry key="id" value="1"/>
-  <con:entry key="fieldSelector" value="status,type,all"/>
-  <con:entry key="fields" value="status,type,all"/>
+  <con:entry key="fieldSelector" value="relatedParties"/>
 </con:parameters></con:request></con:method></con:resource><con:method name="DELETE" method="DELETE">
                     <con:settings/>
                     <con:parameters/>

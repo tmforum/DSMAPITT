@@ -44,7 +44,7 @@ public class TroubleTicket implements Serializable {
     // Technical attribute used for partial update
     @Transient
     @JsonIgnore
-    private Set<TroubleTicketField> tokens;
+    private Set<TroubleTicketField> fields;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -211,16 +211,16 @@ public class TroubleTicket implements Serializable {
     }
 
     /**
-     * @return the tokens
+     * @return the fields
      */
-    public Set<TroubleTicketField> getTokens() {
-        return tokens;
+    public Set<TroubleTicketField> getFields() {
+        return fields;
     }
 
     /**
-     * @param tokens the tokens to set
+     * @param fields the fields to set
      */
-    public void setTokens(Set<TroubleTicketField> tokens) {
-        this.tokens = tokens;
+    public void setFields(Set<TroubleTicketField> fields) {
+        this.fields = fields;
     }
 }

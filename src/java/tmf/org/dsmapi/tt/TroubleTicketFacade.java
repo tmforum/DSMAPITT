@@ -74,33 +74,11 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param tokens
      * @return
      */
-    public TroubleTicket find(Object id, Set<TroubleTicketField> tokens) {
+    public TroubleTicket find(Object id) {
 
         TroubleTicket fullTT = super.find(id);
-
-        TroubleTicket responseTT = getView(fullTT, tokens);
-
-        return responseTT;
-    }
-
-    public List<TroubleTicket> find(MultivaluedMap<String, String> map, Set<TroubleTicketField> tokens) {
-
-        List<TroubleTicket> listFullTT;
-
-        if (map == null) {
-            listFullTT = this.findAll();
-        } else {
-            listFullTT = this.find(map);
-        }
-
-        List<TroubleTicket> listResponseTT = new ArrayList();
-        TroubleTicket responseTT;
-        for (TroubleTicket fullTT : listFullTT) {
-            responseTT = getView(fullTT, tokens);
-            listResponseTT.add(responseTT);
-        }
-
-        return listResponseTT;
+        return fullTT;
+        
     }
 
     /**
@@ -114,7 +92,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         if (targetTT != null) {
 
-            Set<TroubleTicketField> tokens = partialTT.getTokens();
+            Set<TroubleTicketField> tokens = partialTT.getFields();
 
             if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
                 throw new BadUsageException();
@@ -200,81 +178,11 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return em;
     }
 
-    private static TroubleTicket getView(TroubleTicket fullTT, Set<TroubleTicketField> tokens) {
-
-        TroubleTicket resultTT = null;
-
-        if (fullTT != null) {
-
-            if (tokens.contains(TroubleTicketField.ALL)) {
-                resultTT = fullTT;
-
-            } else {
-                resultTT = new TroubleTicket();
-
-                //      <xs:element name="id" type="xs:string" minOccurs="0"/>
-                resultTT.setId(fullTT.getId());
-
-                for (TroubleTicketField token : tokens) {
-                    switch (token) {
-                        case CORRELATION_ID:
-                            resultTT.setCorrelationId(fullTT.getCorrelationId());
-                            break;
-                        case CREATION_DATE:
-                            resultTT.setCreationDate(fullTT.getCreationDate());
-                            break;
-                        case DESCRIPTION:
-                            resultTT.setDescription(fullTT.getDescription());
-                            break;
-                        case NOTES:
-                            resultTT.setNotes(fullTT.getNotes());
-                            break;
-                        case RELATED_OBJECTS:
-                            resultTT.setRelatedObjects(fullTT.getRelatedObjects());
-                            break;
-                        case RELATED_PARTIES:
-                            resultTT.setRelatedParties(fullTT.getRelatedParties());
-                            break;
-                        case RESOLUTION_DATE:
-                            resultTT.setResolutionDate(fullTT.getResolutionDate());
-                            break;
-                        case SEVERITY:
-                            resultTT.setSeverity(fullTT.getSeverity());
-                            break;
-                        case STATUS:
-                            resultTT.setStatus(fullTT.getStatus());
-                            break;
-                        case STATUS_CHANGE_DATE:
-                            resultTT.setStatusChangeDate(fullTT.getStatusChangeDate());
-                            break;
-                        case STATUS_CHANGE_REASON:
-                            resultTT.setStatusChangeReason(fullTT.getStatusChangeReason());
-                            break;
-                        case SUB_STATUS:
-                            resultTT.setSubStatus(fullTT.getSubStatus());
-                            break;
-                        case TARGET_RESOLUTION_DATE:
-                            resultTT.setResolutionDate(fullTT.getResolutionDate());
-                            break;
-                        case TYPE:
-                            resultTT.setType(fullTT.getType());
-                            break;
-                    }
-
-                }
-            }
-        }
-        return resultTT;
-    }
-
     public List<TroubleTicket> find(MultivaluedMap<String, String> map) {
-
 
         List<TroubleTicket> tickets = null;
 
-
         Iterator<Map.Entry<String, List<String>>> it = map.entrySet().iterator();
-
 
         CriteriaQuery<TroubleTicket> cq = cb.createQuery(TroubleTicket.class);
         List<Predicate> andPredicates = new ArrayList<Predicate>();
@@ -299,7 +207,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                 andPredicates.add(predicate);
             }
         }
-
 
         cq.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
         cq.select(tt);
