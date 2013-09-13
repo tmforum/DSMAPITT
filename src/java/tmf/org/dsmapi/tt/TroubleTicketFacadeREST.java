@@ -17,7 +17,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -35,9 +34,6 @@ import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
 import tmf.org.dsmapi.commons.exceptions.StatusException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
-import tmf.org.dsmapi.tt.PATCH;
-import tmf.org.dsmapi.tt.TroubleTicketFacade;
-import tmf.org.dsmapi.tt.Validator;
 
 /**
  *
@@ -65,7 +61,7 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response getByCriteria(@Context UriInfo info) {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();        
+        MultivaluedMap<String, String> map = info.getQueryParameters();
         List<TroubleTicket> listTT = manager.find(map);
 
         // Uses GenericEntity for messageBodyWriter list oriented
@@ -75,7 +71,7 @@ public class TroubleTicketFacadeREST {
         };
 
         return Response.ok(entity).build();
-    }    
+    }
 
     @POST
     @Consumes({"application/json"})
@@ -182,18 +178,11 @@ public class TroubleTicketFacadeREST {
                     build();
         }
 
-    }
-
-    //This is admin only
-    @DELETE
-    @Path("{id}")
-    public void delete(@PathParam("id") String id) {
-        manager.remove(id);
-    }
+    }    
 
     /*
      * RESOURCE
-     * troubleTickets/{id}/{fieldSelector}
+     * troubleTickets/{id}
      */
     @GET
     @Path("{id}")

@@ -205,14 +205,7 @@
                         <con:default xsi:nil="true"/>
                     </con:parameter>
                 </con:parameters>
-                <con:resource name="{fieldSelector}" path="{fieldSelector}"><con:settings/><con:parameters><con:parameter><con:name>fieldSelector</con:name><con:style>TEMPLATE</con:style><con:default>status</con:default></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters/><con:request name="200 /1/status" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="200 /1/status,type,relatedObjects" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="id" value="1"/>
-  <con:entry key="fieldSelector" value="status,type,relatedObjects"/>
-  <con:entry key="fields" value="status,type,relatedObjects"/>
-</con:parameters></con:request><con:request name="/1/relatedParties" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="id" value="1"/>
-  <con:entry key="fieldSelector" value="relatedParties"/>
-</con:parameters></con:request></con:method></con:resource><con:method name="DELETE" method="DELETE">
+                <con:method name="DELETE" method="DELETE">
                     <con:settings/>
                     <con:parameters/>
                     <con:request name="Request 1">
@@ -514,7 +507,14 @@
    ]
 }</con:request><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters>
                     </con:request></con:method>
-            </con:resource>
+            <con:method name="GET" method="GET"><con:settings/><con:parameters><con:parameter><con:name>:fields</con:name><con:value/><con:style>QUERY</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default/><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>status</con:name><con:value/><con:style>QUERY</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default/><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>severity</con:name><con:value/><con:style>QUERY</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default/><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:request name="1" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="1" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="9999" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="id" value="9999" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="status,severity" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="id" value="1"/>
+  <con:entry key=":fields" value="status,severity"/>
+</con:parameters></con:request><con:request name="?:fields=status,relatedObjects" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="id" value="1"/>
+  <con:entry key=":fields" value="status,relatedObjects"/>
+  <con:entry key="status" value="submitted"/>
+</con:parameters></con:request></con:method></con:resource>
             <con:resource name="dev/mock" path="dev/mock">
                 <con:settings/>
                 <con:parameters/>
@@ -563,16 +563,7 @@
                 </con:method>
             </con:resource>
             
-            <con:resource name="{idOrFieldSelector}" path="/{idOrFieldSelector}"><con:settings/><con:parameters><con:parameter><con:name>idOrFieldSelector</con:name><con:value>idOrFieldSelector</con:value><con:style>TEMPLATE</con:style><con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type><con:default>idOrFieldSelector</con:default><con:path xsi:nil="true"/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="GET" method="GET"><con:settings/><con:parameters><con:parameter><con:name>status</con:name><con:value>submitted</con:value><con:style>QUERY</con:style><con:default>submitted</con:default></con:parameter></con:parameters><con:request name="1" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="status" value=""/>
-  <con:entry key="idOrFieldSelector" value="1"/>
-</con:parameters></con:request><con:request name="9999" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="status" value=""/>
-  <con:entry key="idOrFieldSelector" value="9999"/>
-</con:parameters></con:request><con:request name="status,severity" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
-  <con:entry key="status" value=""/>
-  <con:entry key="idOrFieldSelector" value="status,severity"/>
-</con:parameters></con:request><con:request name="status?status=Submitted" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="idOrFieldSelector" value="status" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method></con:resource><con:method name="POST - create" method="POST">
+            <con:method name="POST - create" method="POST">
                 <con:settings/>
                 <con:parameters/>
                 <con:representation type="REQUEST" id="">
@@ -934,7 +925,91 @@
   <con:entry key="status" value=""/>
   <con:entry key="severity" value=""/>
 </con:parameters></con:request><con:request name="?status=submitted" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="severity" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request><con:request name="?severity=medium" mediaType="application/xml"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request/><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="status" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters></con:request></con:method></con:resource>
-    </con:interface>
+    <con:resource name="admin" path="admin"><con:settings/><con:parameters/><con:resource name="troubleTicket" path="troubleTicket"><con:settings/><con:parameters/><con:method name="POST" method="POST"><con:settings/><con:parameters/><con:request name="create 3 TT" mediaType="application/json" postQueryString="false" accept="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8080</con:endpoint><con:request>[
+{
+   "description": "Description1",
+   "severity": "Medium",
+   "type": "Bills, charges or payment",
+   "creationDate": "2013-08-20T18:18:40UTC",
+   "status": "Submitted",
+   "statusChangeReason": "Creation",
+   "statusChangeDate": "2013-09-04T12:49:47UTC",
+   "relatedObjects":    [
+            {
+         "involvement": "involvment",
+         "reference": "referenceobject"
+      },
+            {
+         "involvement": "involvment",
+         "reference": "referenceobject"
+      }
+   ],
+   "notes":    [
+            {
+         "date": "date",
+         "author": "author",
+         "text": "text"
+      },
+            {
+         "date": "date",
+         "author": "author",
+         "text": "text"
+      }
+   ],
+   "relatedParties":    [
+            {
+         "role": "role",
+         "reference": "reference party"
+      },
+            {
+         "role": "role",
+         "reference": "reference party"
+      }
+   ]
+},
+{
+   "description": "Description2",
+   "severity": "Medium",
+   "type": "Bills, charges or payment",
+   "creationDate": "2013-08-20T18:18:40UTC",
+   "status": "Submitted",
+   "statusChangeReason": "Creation",
+   "statusChangeDate": "2013-09-04T12:49:47UTC",
+   "relatedObjects":    [
+            {
+         "involvement": "involvment",
+         "reference": "referenceobject"
+      },
+            {
+         "involvement": "involvment",
+         "reference": "referenceobject"
+      }
+   ],
+   "notes":    [
+            {
+         "date": "date",
+         "author": "author",
+         "text": "text"
+      },
+            {
+         "date": "date",
+         "author": "author",
+         "text": "text"
+      }
+   ],
+   "relatedParties":    [
+            {
+         "role": "role",
+         "reference": "reference party"
+      },
+            {
+         "role": "role",
+         "reference": "reference party"
+      }
+   ]
+}
+]
+</con:request><con:credentials><con:username>hackuser</con:username><con:password>user4hack</con:password><con:domain xsi:nil="true"/><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:resource></con:interface>
     <con:testSuite name="TestSuite Basic Scenario"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Basic" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="create TT 1"><con:settings/><con:config service="DSMAPITT" resourcePath="/DSMAPITT/api/troubleTicket" methodName="POST - create" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="create TT 1" mediaType="application/json" postQueryString="false" accept="application/json">
                     <con:settings>
                         <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
