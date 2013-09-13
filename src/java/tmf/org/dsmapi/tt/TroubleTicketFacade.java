@@ -201,8 +201,9 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             Map.Entry<String, List<String>> sv = it.next();
             String key = sv.getKey();
             System.out.println(key);
-            System.out.println(sv.getValue());            
-            if ((!key.equals("timestamp")) && (ReservedKeyword.fromString(key)==null)) //timestamp : bug with netbeans test tool
+            System.out.println(sv.getValue());
+            TroubleTicketField fieldName = TroubleTicketField.fromString(key);
+            if ((!key.equals("timestamp")) && (ReservedKeyword.fromString(key)==null) && fieldName!=null) //timestamp : bug with netbeans test tool
             {
                 Predicate predicate = buildPredicate(tt, sv.getKey(), sv.getValue().get(0));
                 andPredicates.add(predicate);
