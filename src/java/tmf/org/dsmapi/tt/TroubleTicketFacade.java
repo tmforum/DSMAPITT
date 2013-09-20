@@ -1,5 +1,6 @@
 package tmf.org.dsmapi.tt;
 
+import tmf.org.dsmapi.commons.exceptions.ExceptionBean;
 import java.util.ArrayList;
 import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import java.util.Date;
@@ -20,8 +21,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
-import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
-import tmf.org.dsmapi.commons.exceptions.StatusException;
+import tmf.org.dsmapi.commons.exceptions.ExceptionType;
+import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.tt.model.Severity;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.CORRELATION_ID;
@@ -62,23 +63,10 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     public TroubleTicketFacade() {
         super(TroubleTicket.class);
     }
-
-    /*
-     * Find troubleTicket by id
-     * Return only existing troubleTicket attributes specified in the tokenList
-     * 
-     * Token "all" return all attributes
-     * 
-     *
-     * @param id
-     * @param tokens
-     * @return
-     */
-    public TroubleTicket find(Object id) {
-
-        TroubleTicket fullTT = super.find(id);
-        return fullTT;
-
+    
+    public TroubleTicket edit(String id, TroubleTicket tt) throws UnknownResourceException {
+        tt.setId(id);
+        return super.edit(id, tt);
     }
 
     /**
@@ -86,87 +74,83 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param partialTT
      * @return
      */
-    public TroubleTicket partialUpdate(TroubleTicket partialTT) throws StatusException, BadUsageException {
+    public TroubleTicket partialUpdate(TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
         TroubleTicket currentTT = this.find(partialTT.getId());
 
-        if (currentTT != null) {
+        if (currentTT == null) {
+            throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
+        }
 
-            Set<TroubleTicketField> tokens = partialTT.getFields();
+        Set<TroubleTicketField> tokens = partialTT.getFields();
 
-            if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
-                BadUsageException ex = new BadUsageException();
-                JsonError error = new JsonError("2", "WHILE UPDATING STATUS, please provide a change reason");
-                ex.setError(error);
-                throw ex;
-            }
+        if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
+            throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "While updating 'status', please provide a 'statusChangeReason'");
+        }
 
-            if (tokens.contains(STATUS)) {
-                if (Validator.isStatusUpdateValid(currentTT.getStatus(), partialTT.getStatus())) {
-                    currentTT.setStatus(partialTT.getStatus());
-                    currentTT.setStatusChangeDate(Format.toString(new Date()));
-                    currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-                } else {
-                    StatusException ex = new StatusException();
-                    JsonError error = new JsonError("1", "BAD STATUS TRANSITION current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
-                    ex.setError(error);
-                    throw ex;
-                }
-            }
-
-
-            for (TroubleTicketField token : tokens) {
-                switch (token) {
-                    case CORRELATION_ID:
-                        currentTT.setCorrelationId(partialTT.getCorrelationId());
-                        break;
-                    case CREATION_DATE:
-                        currentTT.setCreationDate(partialTT.getCreationDate());
-                        break;
-                    case DESCRIPTION:
-                        if (partialTT.getDescription() != null) {
-                            currentTT.setDescription(partialTT.getDescription());
-                        }
-                        break;
-                    case NOTES:
-                        currentTT.setNotes(partialTT.getNotes());
-                        break;
-                    case RELATED_OBJECTS:
-                        currentTT.setRelatedObjects(partialTT.getRelatedObjects());
-                        break;
-                    case RELATED_PARTIES:
-                        currentTT.setRelatedParties(partialTT.getRelatedParties());
-                        break;
-                    case RESOLUTION_DATE:
-                        currentTT.setResolutionDate(partialTT.getResolutionDate());
-                        break;
-                    case SEVERITY:
-                        if (partialTT.getSeverity() != null) {
-                            currentTT.setSeverity(partialTT.getSeverity());
-                        }
-                        break;
-                    case SUB_STATUS:
-                        currentTT.setSubStatus(partialTT.getSubStatus());
-                        break;
-                    case TARGET_RESOLUTION_DATE:
-                        currentTT.setResolutionDate(partialTT.getResolutionDate());
-                        break;
-                    case TYPE:
-                        if (partialTT.getDescription() != null) {
-                            currentTT.setType(partialTT.getType());
-                        }
-                        break;
-                }
+        if (tokens.contains(STATUS)) {
+            if (Validator.isStatusUpdateValid(currentTT.getStatus(), partialTT.getStatus())) {
+                currentTT.setStatus(partialTT.getStatus());
+                currentTT.setStatusChangeDate(Format.toString(new Date()));
+                currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
+            } else {
+                throw new BadUsageException(ExceptionType.BAD_USAGE_STATUS_TRANSITION, "current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
             }
         }
+
+        for (TroubleTicketField token : tokens) {
+            switch (token) {
+                case CORRELATION_ID:
+                    currentTT.setCorrelationId(partialTT.getCorrelationId());
+                    break;
+                case CREATION_DATE:
+                    currentTT.setCreationDate(partialTT.getCreationDate());
+                    break;
+                case DESCRIPTION:
+                    if (partialTT.getDescription() != null) {
+                        currentTT.setDescription(partialTT.getDescription());
+                    }
+                    break;
+                case NOTES:
+                    currentTT.setNotes(partialTT.getNotes());
+                    break;
+                case RELATED_OBJECTS:
+                    currentTT.setRelatedObjects(partialTT.getRelatedObjects());
+                    break;
+                case RELATED_PARTIES:
+                    currentTT.setRelatedParties(partialTT.getRelatedParties());
+                    break;
+                case RESOLUTION_DATE:
+                    currentTT.setResolutionDate(partialTT.getResolutionDate());
+                    break;
+                case SEVERITY:
+                    if (partialTT.getSeverity() != null) {
+                        currentTT.setSeverity(partialTT.getSeverity());
+                    }
+                    break;
+                case SUB_STATUS:
+                    currentTT.setSubStatus(partialTT.getSubStatus());
+                    break;
+                case TARGET_RESOLUTION_DATE:
+                    currentTT.setResolutionDate(partialTT.getResolutionDate());
+                    break;
+                case TYPE:
+                    if (partialTT.getDescription() != null) {
+                        currentTT.setType(partialTT.getType());
+                    }
+                    break;
+            }
+        }
+
         return currentTT;
+
     }
 
     @Override
-    public void create(TroubleTicket tt) throws MandatoryFieldException {
+    public void create(TroubleTicket tt) throws BadUsageException {
 
         if (!Validator.hasMandatoryFields(tt)) {
-            throw new MandatoryFieldException();
+            throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS);
         }
 
         tt.setStatus(Status.Submitted);

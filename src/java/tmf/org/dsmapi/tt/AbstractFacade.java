@@ -6,9 +6,12 @@ package tmf.org.dsmapi.tt;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.ExceptionType;
+import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 
-/**xxxxx
+/**
+ * xxxxx
  *
  * @author pierregauthier
  */
@@ -21,30 +24,38 @@ public abstract class AbstractFacade<T> {
     }
 
     protected abstract EntityManager getEntityManager();
-    
-    public int create(List<T> entities) throws MandatoryFieldException {
-        for (T entity:entities) {
+
+    public int create(List<T> entities) throws BadUsageException {
+        for (T entity : entities) {
             this.create(entity);
         }
         return entities.size();
     }
 
-    public void create(T entity) throws MandatoryFieldException {        
+    public void create(T entity) throws BadUsageException {
         getEntityManager().persist(entity);
     }
 
-    public T edit(T entity) {
-        getEntityManager().merge(entity);
+    public T edit(String id, T entity) throws UnknownResourceException {
+        T targetEntity = this.find(id);
+        if (targetEntity == null) {
+            throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
+        }        
+        getEntityManager().merge(entity);        
         return entity;
     }
 
-    public void remove(Object id) {
+    public void remove(Object id) throws UnknownResourceException {
         T entity = getEntityManager().find(entityClass, id);
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
-    public T find(Object id) {
-        return getEntityManager().find(entityClass, id);
+    public T find(Object id) throws UnknownResourceException {
+        T entity = getEntityManager().find(entityClass, id);
+        if (entity == null) {
+            throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
+        }
+        return entity;
     }
 
     public List<T> findAll() {
@@ -69,9 +80,7 @@ public abstract class AbstractFacade<T> {
         javax.persistence.Query q = getEntityManager().createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
-    
+
     public void filterStuff() {
-        
-        
     }
 }

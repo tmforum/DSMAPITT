@@ -7,14 +7,13 @@ package tmf.org.dsmapi.tt;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import org.codehaus.jackson.map.JsonMappingException;
-import tmf.org.dsmapi.commons.exceptions.ExceptionType;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 
 @Provider
-public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingException> {
+public class BadUsageExceptionMapper implements ExceptionMapper<BadUsageException> {
     @Override
-    public Response toResponse(JsonMappingException ex) {
-        JsonError error = new JsonError(ExceptionType.BAD_USAGE_UNKNOWN_VALUE.getInfo(), ex.getMessage());
+    public Response toResponse(BadUsageException ex) {
+        JsonError error = new JsonError(ex.getType().getInfo(),ex.getMessage());
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(error).build();
     }
 }

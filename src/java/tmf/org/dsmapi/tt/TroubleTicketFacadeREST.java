@@ -25,8 +25,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
-import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
-import tmf.org.dsmapi.commons.exceptions.StatusException;
+import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 
 /**
@@ -80,7 +79,7 @@ public class TroubleTicketFacadeREST {
         // Try to persist entity
         try {
             manager.create(entity);
-        } catch (MandatoryFieldException e) {
+        } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
@@ -106,17 +105,10 @@ public class TroubleTicketFacadeREST {
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response put(@PathParam("id") String id, TroubleTicket entity) {
-
-        entity.setId(id);
-
-        // 400 
-        if (!Validator.hasMandatoryFields(entity)) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-        }
+    public Response put(@PathParam("id") String id, TroubleTicket entity) throws UnknownResourceException {
 
         // Try to merge        
-        manager.edit(entity);
+        entity = manager.edit(id, entity);
         publisher.publishTicketChangedNotification(entity);
         publisher.publishTicketStatusChangedNotification(entity);
 
@@ -133,45 +125,31 @@ public class TroubleTicketFacadeREST {
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response patch(@PathParam("id") String id, TroubleTicket partialTT) {
+    public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
-        TroubleTicket fullTT;
         partialTT.setId(id);
+        
+        TroubleTicket fullTT;        
+        fullTT = manager.partialUpdate(partialTT);
 
-        try {
-            fullTT = manager.partialUpdate(partialTT);
-        } catch (BadUsageException e) {
-            //return Response.ok(e.getError()).build();
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(e.getError()).build();
-        } catch (StatusException e) {            
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(e.getError()).build();
-        }
+        publisher.publishTicketChangedNotification(partialTT);
+        publisher.publishTicketStatusChangedNotification(partialTT);
 
-        // if troubleTicket exists
-        if (fullTT == null) {
-            // 404 not found
-            return Response.status(404).build();
+        // 201 OK + location
+        UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
+        id = fullTT.getId();
+        uriBuilder.path("{id}");
+        return Response.created(uriBuilder.build(id)).
+                entity(fullTT).
+                build();
 
-        } else {
-
-            publisher.publishTicketChangedNotification(partialTT);
-            publisher.publishTicketStatusChangedNotification(partialTT);
-
-            // 201 OK + location
-            UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
-            id = fullTT.getId();
-            uriBuilder.path("{id}");
-            return Response.created(uriBuilder.build(id)).
-                    entity(fullTT).
-                    build();
-        }
 
     }
 
     @GET
     @Path("{id}")
     @Produces({"application/json"})
-    public Response get(@PathParam("id") String id) {
+    public Response get(@PathParam("id") String id) throws UnknownResourceException {
 
         // Go get
         TroubleTicket responseTT = manager.find(id);

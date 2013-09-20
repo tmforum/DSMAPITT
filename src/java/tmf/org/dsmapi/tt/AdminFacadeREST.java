@@ -12,7 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import tmf.org.dsmapi.commons.exceptions.MandatoryFieldException;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.tt.admin.model.Report;
 import tmf.org.dsmapi.tt.model.Note;
@@ -43,7 +44,7 @@ public class AdminFacadeREST {
         // Try to persist entities
         try {
             affectedRows = manager.create(entities);
-        } catch (MandatoryFieldException e) {
+        } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
@@ -73,7 +74,7 @@ public class AdminFacadeREST {
 
     @DELETE
     @Path("troubleTicket/{id}")
-    public Report delete(@PathParam("id") String id) {
+    public Report delete(@PathParam("id") String id) throws UnknownResourceException {
 
         int previousRows = manager.count();
 

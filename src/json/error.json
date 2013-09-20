@@ -1,0 +1,8 @@
+{
+    "error":
+            {
+                "code": "4002",
+                "title": "The status transition is not allowed"
+            },
+    "detail": "current=Acknowledged sent=Acknowledged"
+}

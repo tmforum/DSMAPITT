@@ -1,44 +1,50 @@
 package tmf.org.dsmapi.tt;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+import tmf.org.dsmapi.commons.exceptions.ExceptionBean;
 
 @XmlRootElement
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class JsonError {
-    
-    private String code;
-    private String message;
-    
-    public JsonError(String code, String message) {
-        this.code=code;
-        this.message=message;
+
+    private ExceptionBean error;
+    private String detail;
+
+    public JsonError(ExceptionBean error) {
+        this.error = error;
+    }
+
+    public JsonError(ExceptionBean error, String detail) {
+        this.error = error;
+        this.detail = detail;
     }
 
     /**
-     * @return the code
+     * @return the type
      */
-    public String getCode() {
-        return code;
+    public ExceptionBean getError() {
+        return error;
     }
 
     /**
-     * @param code the code to set
+     * @param type the type to set
      */
-    public void setCode(String code) {
-        this.code = code;
+    public void setError(ExceptionBean error) {
+        this.error = error;
     }
 
     /**
-     * @return the message
+     * @return the detail
      */
-    public String getMessage() {
-        return message;
+    public String getDetail() {
+        return detail;
     }
 
     /**
-     * @param message the message to set
+     * @param detail the detail to set
      */
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
-    
 }
