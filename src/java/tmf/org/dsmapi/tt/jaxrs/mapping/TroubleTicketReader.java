@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
 import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import tmf.org.dsmapi.tt.model.TroubleTicket;

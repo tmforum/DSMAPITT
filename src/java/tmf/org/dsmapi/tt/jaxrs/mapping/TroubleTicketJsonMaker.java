@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.jackson;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
 import java.util.Set;
 import javax.ws.rs.core.PathSegment;

@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.admin.model;
+package tmf.org.dsmapi.tt.model.admin;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

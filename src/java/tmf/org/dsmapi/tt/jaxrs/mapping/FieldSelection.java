@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
 import java.util.HashSet;
 import java.util.List;

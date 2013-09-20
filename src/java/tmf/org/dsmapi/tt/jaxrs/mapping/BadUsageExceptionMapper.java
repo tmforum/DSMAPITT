@@ -2,12 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.tt.jaxrs.JsonError;
 
 @Provider
 public class BadUsageExceptionMapper implements ExceptionMapper<BadUsageException> {

@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +15,8 @@ import javax.ws.rs.core.Response;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
-import tmf.org.dsmapi.tt.admin.model.Report;
+import tmf.org.dsmapi.tt.facade.TroubleTicketFacade;
+import tmf.org.dsmapi.tt.model.admin.Report;
 import tmf.org.dsmapi.tt.model.Note;
 import tmf.org.dsmapi.tt.model.RelatedObject;
 import tmf.org.dsmapi.tt.model.RelatedParty;

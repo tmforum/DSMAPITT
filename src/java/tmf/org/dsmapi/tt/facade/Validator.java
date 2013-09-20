@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.facade;
 
 import tmf.org.dsmapi.tt.model.Status;
 import static tmf.org.dsmapi.tt.model.Status.Acknowledged;

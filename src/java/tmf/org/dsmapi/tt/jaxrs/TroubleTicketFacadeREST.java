@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
 import tmf.org.dsmapi.tt.model.TroubleTicket;
@@ -27,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
+import tmf.org.dsmapi.tt.facade.TroubleTicketFacade;
 
 /**
  *

@@ -1,6 +1,6 @@
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
-import tmf.org.dsmapi.tt.ReservedKeyword;
+import tmf.org.dsmapi.commons.utils.ReservedKeyword;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
@@ -23,7 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
-import tmf.org.dsmapi.tt.jackson.TroubleTicketJsonMaker;
+import tmf.org.dsmapi.commons.utils.ReservedKeyword;
 import tmf.org.dsmapi.tt.model.TroubleTicketField;
 
 @Provider

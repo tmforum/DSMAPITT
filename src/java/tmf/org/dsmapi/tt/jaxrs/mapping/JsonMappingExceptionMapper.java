@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt;
+package tmf.org.dsmapi.tt.jaxrs.mapping;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.JsonMappingException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
+import tmf.org.dsmapi.tt.jaxrs.JsonError;
 
 @Provider
 public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingException> {
