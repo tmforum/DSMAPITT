@@ -22,10 +22,11 @@ public abstract class AbstractFacade<T> {
 
     protected abstract EntityManager getEntityManager();
     
-    public void create(List<T> entities) throws MandatoryFieldException {
+    public int create(List<T> entities) throws MandatoryFieldException {
         for (T entity:entities) {
             this.create(entity);
         }
+        return entities.size();
     }
 
     public void create(T entity) throws MandatoryFieldException {        

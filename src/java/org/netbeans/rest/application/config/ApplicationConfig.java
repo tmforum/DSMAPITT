@@ -26,6 +26,7 @@ public class ApplicationConfig extends Application {
         Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
         resources.add(tmf.org.dsmapi.hub.service.HubFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.AdminFacadeREST.class);
+        resources.add(tmf.org.dsmapi.tt.JsonMappingExceptionMapper.class);
         resources.add(tmf.org.dsmapi.tt.TroubleTicketFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.TroubleTicketListWriter.class);
         resources.add(tmf.org.dsmapi.tt.TroubleTicketReader.class);

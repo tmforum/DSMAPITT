@@ -1,0 +1,39 @@
+{
+    "description": "Description",
+    "severity": "Low",
+    "type": "Bills, charges or payment",
+    "creationDate": "2013-08-20T12:39:48UTC",
+    "status": "Acknowledged",
+    "relatedObjects": [
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject"
+        },
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject"
+        }
+    ],
+    "notes": [
+        {
+            "date": "date",
+            "author": "author",
+            "text": "text"
+        },
+        {
+            "date": "date",
+            "author": "author",
+            "text": "text"
+        }
+    ],
+    "relatedParties": [
+        {
+            "role": "role",
+            "reference": "reference party"
+        },
+        {
+            "role": "role",
+            "reference": "reference party"
+        }
+    ]
+}

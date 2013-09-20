@@ -81,7 +81,7 @@
             }
         ]
     },
-{
+    {
         "description": "trouble ticket 3",
         "severity": "Medium",
         "type": "Bills, charges or payment",
@@ -121,5 +121,5 @@
                 "reference": "reference party"
             }
         ]
-    }    
+    }
 ]

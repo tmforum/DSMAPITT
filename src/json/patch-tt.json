@@ -1,0 +1,14 @@
+{
+   "status": "Acknowledged",
+   "statusChangeReason": "trouble ticket is valid",
+   "relatedParties":    [
+            {
+         "role": "role",
+         "reference": "reference party"
+      },
+            {
+         "role": "role",
+         "reference": "reference party"
+      }
+   ]
+}

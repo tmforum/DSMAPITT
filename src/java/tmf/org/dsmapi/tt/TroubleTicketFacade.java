@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,7 +33,6 @@ import static tmf.org.dsmapi.tt.model.TroubleTicketField.RELATED_PARTIES;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.RESOLUTION_DATE;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.SEVERITY;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS_CHANGE_DATE;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS_CHANGE_REASON;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.SUB_STATUS;
 import static tmf.org.dsmapi.tt.model.TroubleTicketField.TARGET_RESOLUTION_DATE;
@@ -78,7 +78,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         TroubleTicket fullTT = super.find(id);
         return fullTT;
-        
+
     }
 
     /**
@@ -88,23 +88,29 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      */
     public TroubleTicket partialUpdate(TroubleTicket partialTT) throws StatusException, BadUsageException {
 
-        TroubleTicket targetTT = this.find(partialTT.getId());
+        TroubleTicket currentTT = this.find(partialTT.getId());
 
-        if (targetTT != null) {
+        if (currentTT != null) {
 
             Set<TroubleTicketField> tokens = partialTT.getFields();
 
             if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
-                throw new BadUsageException();
+                BadUsageException ex = new BadUsageException();
+                JsonError error = new JsonError("2", "WHILE UPDATING STATUS, please provide a change reason");
+                ex.setError(error);
+                throw ex;
             }
 
             if (tokens.contains(STATUS)) {
-                if (Validator.isStatusUpdateValid(targetTT.getStatus(), partialTT.getStatus())) {
-                    targetTT.setStatus(partialTT.getStatus());
-                    targetTT.setStatusChangeDate(Format.toString(new Date()));
-                    targetTT.setStatusChangeReason(partialTT.getStatusChangeReason());
+                if (Validator.isStatusUpdateValid(currentTT.getStatus(), partialTT.getStatus())) {
+                    currentTT.setStatus(partialTT.getStatus());
+                    currentTT.setStatusChangeDate(Format.toString(new Date()));
+                    currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
                 } else {
-                    throw new StatusException();
+                    StatusException ex = new StatusException();
+                    JsonError error = new JsonError("1", "BAD STATUS TRANSITION current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
+                    ex.setError(error);
+                    throw ex;
                 }
             }
 
@@ -112,48 +118,48 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             for (TroubleTicketField token : tokens) {
                 switch (token) {
                     case CORRELATION_ID:
-                        targetTT.setCorrelationId(partialTT.getCorrelationId());
+                        currentTT.setCorrelationId(partialTT.getCorrelationId());
                         break;
                     case CREATION_DATE:
-                        targetTT.setCreationDate(partialTT.getCreationDate());
+                        currentTT.setCreationDate(partialTT.getCreationDate());
                         break;
                     case DESCRIPTION:
                         if (partialTT.getDescription() != null) {
-                            targetTT.setDescription(partialTT.getDescription());
+                            currentTT.setDescription(partialTT.getDescription());
                         }
                         break;
                     case NOTES:
-                        targetTT.setNotes(partialTT.getNotes());
+                        currentTT.setNotes(partialTT.getNotes());
                         break;
                     case RELATED_OBJECTS:
-                        targetTT.setRelatedObjects(partialTT.getRelatedObjects());
+                        currentTT.setRelatedObjects(partialTT.getRelatedObjects());
                         break;
                     case RELATED_PARTIES:
-                        targetTT.setRelatedParties(partialTT.getRelatedParties());
+                        currentTT.setRelatedParties(partialTT.getRelatedParties());
                         break;
                     case RESOLUTION_DATE:
-                        targetTT.setResolutionDate(partialTT.getResolutionDate());
+                        currentTT.setResolutionDate(partialTT.getResolutionDate());
                         break;
                     case SEVERITY:
                         if (partialTT.getSeverity() != null) {
-                            targetTT.setSeverity(partialTT.getSeverity());
+                            currentTT.setSeverity(partialTT.getSeverity());
                         }
                         break;
                     case SUB_STATUS:
-                        targetTT.setSubStatus(partialTT.getSubStatus());
+                        currentTT.setSubStatus(partialTT.getSubStatus());
                         break;
                     case TARGET_RESOLUTION_DATE:
-                        targetTT.setResolutionDate(partialTT.getResolutionDate());
+                        currentTT.setResolutionDate(partialTT.getResolutionDate());
                         break;
                     case TYPE:
                         if (partialTT.getDescription() != null) {
-                            targetTT.setType(partialTT.getType());
+                            currentTT.setType(partialTT.getType());
                         }
                         break;
                 }
             }
         }
-        return targetTT;
+        return currentTT;
     }
 
     @Override
@@ -203,7 +209,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             System.out.println(key);
             System.out.println(sv.getValue());
             TroubleTicketField fieldName = TroubleTicketField.fromString(key);
-            if ((!key.equals("timestamp")) && (ReservedKeyword.fromString(key)==null) && fieldName!=null) //timestamp : bug with netbeans test tool
+            if ((!key.equals("timestamp")) && (ReservedKeyword.fromString(key) == null) && fieldName != null) //timestamp : bug with netbeans test tool
             {
                 Predicate predicate = buildPredicate(tt, sv.getKey(), sv.getValue().get(0));
                 andPredicates.add(predicate);
@@ -221,7 +227,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     Predicate buildPredicate(Root<TroubleTicket> tt, String name, String value) {
 
         // Use .fromString not valueOf for Enum, to avoid case sensitive problem
-        
+
         if (name.equalsIgnoreCase("status")) {
             return cb.equal(tt.get(name), Status.fromString(value));
         }
@@ -232,5 +238,10 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         return cb.equal(tt.get(name), value);
 
+    }
+
+    public int removeAll() {
+        Query query = em.createQuery("DELETE FROM TroubleTicket tt");
+        return query.executeUpdate();
     }
 }
