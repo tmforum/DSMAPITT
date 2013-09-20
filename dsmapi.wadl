@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:apigee="http://api.apigee.com/wadl/2010/07/"
+    xmlns="http://wadl.dev.java.net/2009/02"
+    xsi:schemaLocation="http://wadl.dev.java.net/2009/02 http://apigee.com/schemas/wadl-schema.xsd http://api.apigee.com/wadl/2010/07/ http://apigee.com/schemas/apigee-wadl-extensions.xsd">
+    <doc xmlns:jersey="http://jersey.java.net/"
+        jersey:generatedBy="Jersey: 1.11.1 03/31/2012 06:49 PM"/>
+    <doc xmlns:jersey="http://jersey.java.net/"
+        jersey:generatedBy="Jersey: 1.11.1 03/31/2012 06:49 PM"/>
+    <grammars>
+        <include href="application.wadl/xsd0.xsd">
+            <doc title="Generated" xml:lang="en"/>
+        </include>
+    </grammars>
+    <resources base="http://env-4126955.jelastic.servint.net/DSTroubleTicket/api/">
+
+
+
+        <resource path="troubleTicket">
+
+
+            <method id="getById" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+
+            <method id="createTT" name="POST">
+
+                <request>
+                    <param name="Content-Type" type="xsd:string" style="header" required="true"
+                        default="application/json">
+                        <doc>The content type.</doc>
+                        <option value="application/json"/>
+
+                    </param>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="troubleTicket" mediaType="application/json">
+                        <apigee:payload required="true">
+
+                            <!-- Body content. -->
+                            <apigee:content>
+                                <![CDATA[ {
+  "description": "Some Description",
+  "severity": "Medium",
+  "type": "Bills, charges or payment",
+  "creationDate": "2013-09-16T16:39:28UTC",
+  "targetResolutionDate": "2013-09-16T16:39:28UTC",
+  "status": "Acknowledged",
+  "resolutionDate": "2013-09-16T16:39:28UTC",
+  "relatedObjects":  [
+     {
+      "involvement": "involvment",
+      "reference": "referenceobject"
+    },
+     {
+      "involvement": "involvment",
+      "reference": "referenceobject"
+    }
+  ],
+  "notes":  [
+     {
+      "date": "2013-09-16T16:39:28UTC",
+      "author": "author",
+      "text": "text"
+    },
+     {
+      "date": "2013-09-16T16:39:28UTC",
+      "author": "author",
+      "text": "text"
+    }
+  ],
+  "relatedParties":  [
+     {
+      "role": "role",
+      "reference": "reference party"
+    },
+     {
+      "role": "role",
+      "reference": "reference party"
+    }
+  ]
+}
+]]>
+                            </apigee:content>
+                        </apigee:payload>
+                    </ns2:representation>
+                </request>
+
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+
+        </resource>
+        <resource path="troubleTicket/{id}">
+            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" name="id" style="template"
+                type="xs:string"/>
+            <method id="getByCriteria" name="GET">
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="patch" name="POST"
+                apigee:displayName="PATCH via X-HTTP-Method-Override on POST">
+                <request>
+                    <param name="Content-Type" type="xsd:string" style="header" required="true"
+                        default="application/json">
+                        <doc>The content type.</doc>
+                        <option value="application/json"/>
+
+                    </param>
+                    <param name="X-HTTP-Method-Override" type="xsd:string" style="header"
+                        required="true" default="PATCH">
+                        <doc>The content type.</doc>
+                        <option value="PATCH"/>
+                    </param>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="troubleTicket" mediaType="application/json">
+                        <apigee:payload required="true">
+
+                            <!-- Body content. -->
+                            <apigee:content>
+                                <![CDATA[  
+                               { 
+  "status":"InProgress_Held",
+  "statusChangeReason":"test"
+}
+]]>
+                            </apigee:content>
+                        </apigee:payload>
+                    </ns2:representation>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="put" name="PUT">
+                <request>
+                    <param name="Content-Type" type="xsd:string" style="header" required="true"
+                        default="application/json">
+                        <doc>The content type.</doc>
+                        <option value="application/json"/>
+
+                    </param>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="troubleTicket" mediaType="application/json">
+                        <apigee:payload required="true">
+
+                            <!-- Body content. -->
+                            <apigee:content>
+                                    <![CDATA[ {
+    "id": "151",
+    "description": "Some Description",
+    "severity": "Medium",
+    "type": "Bills, charges or payment",
+    "creationDate": "2013-09-16T16:39:28UTC",
+    "targetResolutionDate": "2013-09-16T16:39:28UTC",
+    "status": "Acknowledged",
+    "resolutionDate": "2013-09-16T16:39:28UTC",
+    "relatedObjects":  [
+       {
+        "involvement": "involvment",
+        "reference": "referenceobject"
+      },
+       {
+        "involvement": "involvment",
+        "reference": "referenceobject"
+      }
+    ],
+    "notes":  [
+       {
+        "date": "2013-09-16T16:39:28UTC",
+        "author": "author",
+        "text": "text"
+      },
+       {
+        "date": "2013-09-16T16:39:28UTC",
+        "author": "author",
+        "text": "text"
+      }
+    ],
+    "relatedParties":  [
+       {
+        "role": "role",
+        "reference": "reference party"
+      },
+       {
+        "role": "role",
+        "reference": "reference party"
+      }
+    ]
+  }
+]]>
+                                </apigee:content>
+                        </apigee:payload>
+                    </ns2:representation>
+                </request>
+                <response>
+                    <representation mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="troubleTicket/dev/count">
+            <method id="count" name="GET">
+                <response>
+                    <representation mediaType="text/plain"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="troubleTicket/dev/mock">
+            <method id="proto" name="GET">
+                <response>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="troubleTicket" mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+
+        <resource path="hub">
+            <method id="create" name="POST">
+                <request>
+
+                    <param name="Content-Type" type="xsd:string" style="header" required="true"
+                        default="application/json">
+                        <doc>The content type.</doc>
+                        <option value="application/json"/>
+
+                    </param>
+                    
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="troubleTicket" mediaType="application/json">
+                        <apigee:payload required="true">
+
+                            <!-- Body content. -->
+                            <apigee:content>
+                                <![CDATA[  
+                              
+ {
+  "callback": "callback",
+  "query": "queryString"
+}
+]]>
+                            </apigee:content>
+                        </apigee:payload>
+                    </ns2:representation>
+                </request>
+
+            </method>
+
+        </resource>
+        <resource path="hub/{id}">
+            <param xmlns:xs="http://www.w3.org/2001/XMLSchema" name="id" style="template"
+                type="xs:string"/>
+            <method id="find" name="GET">
+                <response>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="hub" mediaType="application/json"/>
+                </response>
+            </method>
+            <method id="remove" name="DELETE"/>
+        </resource>
+       
+        <resource path="hub/dev/mock">
+            <method id="hubProto" name="GET">
+                <response>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="hub" mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+        <resource path="hub/event/dev/mock">
+            <method id="eventProto" name="GET">
+                <response>
+                    <ns2:representation xmlns:ns2="http://wadl.dev.java.net/2009/02" xmlns=""
+                        element="hubEvent" mediaType="application/json"/>
+                </response>
+            </method>
+        </resource>
+
+
+    </resources>
+</application>
