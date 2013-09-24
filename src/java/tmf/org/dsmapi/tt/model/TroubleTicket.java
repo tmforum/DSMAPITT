@@ -42,9 +42,14 @@ public class TroubleTicket implements Serializable {
     private static final long serialVersionUID = 1L;
     
     // Technical attribute used for partial update
+    @Deprecated
     @Transient
     @JsonIgnore
     private Set<TroubleTicketField> fields;
+    
+    @Transient
+    @JsonIgnore    
+    private Set<String> fieldSet;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -222,5 +227,19 @@ public class TroubleTicket implements Serializable {
      */
     public void setFields(Set<TroubleTicketField> fields) {
         this.fields = fields;
+    }
+
+    /**
+     * @return the fieldSet
+     */
+    public Set<String> getFieldSet() {
+        return fieldSet;
+    }
+
+    /**
+     * @param fieldSet the fieldSet to set
+     */
+    public void setFieldSet(Set<String> fieldSet) {
+        this.fieldSet = fieldSet;
     }
 }

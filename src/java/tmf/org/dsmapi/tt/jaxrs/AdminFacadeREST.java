@@ -16,7 +16,7 @@ import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.tt.facade.TroubleTicketFacade;
-import tmf.org.dsmapi.tt.model.admin.Report;
+import tmf.org.dsmapi.tt.jaxrs.model.Report;
 import tmf.org.dsmapi.tt.model.Note;
 import tmf.org.dsmapi.tt.model.RelatedObject;
 import tmf.org.dsmapi.tt.model.RelatedParty;

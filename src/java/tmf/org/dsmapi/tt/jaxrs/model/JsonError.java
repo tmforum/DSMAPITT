@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.jaxrs;
+package tmf.org.dsmapi.tt.jaxrs.model;
 
 import tmf.org.dsmapi.commons.exceptions.KeyValue;
 import java.util.ArrayList;

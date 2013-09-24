@@ -2,10 +2,7 @@ package tmf.org.dsmapi.commons.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.TimeZone;
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
 
 public class Format {
 

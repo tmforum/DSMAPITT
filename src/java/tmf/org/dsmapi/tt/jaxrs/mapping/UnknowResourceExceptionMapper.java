@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.tt.jaxrs.JsonError;
+import tmf.org.dsmapi.tt.jaxrs.model.JsonError;
 
 @Provider
 public class UnknowResourceExceptionMapper implements ExceptionMapper<UnknownResourceException> {

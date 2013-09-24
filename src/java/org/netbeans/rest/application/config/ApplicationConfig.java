@@ -28,6 +28,7 @@ public class ApplicationConfig extends Application {
         resources.add(tmf.org.dsmapi.tt.jaxrs.AdminFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.jaxrs.TroubleTicketFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.jaxrs.mapping.BadUsageExceptionMapper.class);
+        resources.add(tmf.org.dsmapi.tt.jaxrs.mapping.JacksonConfigurator.class);
         resources.add(tmf.org.dsmapi.tt.jaxrs.mapping.JsonMappingExceptionMapper.class);
         resources.add(tmf.org.dsmapi.tt.jaxrs.mapping.TroubleTicketListWriter.class);
         resources.add(tmf.org.dsmapi.tt.jaxrs.mapping.TroubleTicketReader.class);

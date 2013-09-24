@@ -5,6 +5,7 @@
 package tmf.org.dsmapi.tt.jaxrs;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
+import tmf.org.dsmapi.commons.jaxrs.PATCH;
 import tmf.org.dsmapi.tt.model.TroubleTicket;
 import java.text.SimpleDateFormat;
 import java.util.Date;

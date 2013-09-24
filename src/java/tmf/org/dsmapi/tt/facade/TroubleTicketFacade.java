@@ -1,6 +1,5 @@
 package tmf.org.dsmapi.tt.facade;
 
-import tmf.org.dsmapi.commons.utils.ReservedKeyword;
 import java.util.ArrayList;
 import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import java.util.Date;
@@ -241,5 +240,10 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     public int removeAll() {
         Query query = em.createQuery("DELETE FROM TroubleTicket tt");
         return query.executeUpdate();
+    }
+
+    @Override
+    protected TroubleTicket getView(TroubleTicket fullElement, Set<String> fieldNames) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

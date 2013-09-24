@@ -1,12 +1,9 @@
 package tmf.org.dsmapi.tt.jaxrs.mapping;
 
-import tmf.org.dsmapi.commons.utils.ReservedKeyword;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import tmf.org.dsmapi.tt.model.TroubleTicket;
 import javax.ws.rs.Produces;
@@ -19,8 +16,6 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
-import tmf.org.dsmapi.commons.utils.ReservedKeyword;
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
 
 @Provider
 @Produces({"application/json"})
@@ -42,28 +37,19 @@ public class TroubleTicketWriter implements MessageBodyWriter<TroubleTicket> {
     @Override
     public void writeTo(TroubleTicket tt, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();
+        // search queryParameters
+        MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
+        // fields to filter view
+        Set<String> fieldSet = FacadeRestUtil.getFieldSet(queryParameters);
 
-        List<String> fields = null;
-        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD.getText())) {
-            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
-        }
-        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD_2.getText())) {
-            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD_2.getText());
-        }
-
-        if (fields != null) {
-
-            Set<TroubleTicketField> template = FieldSelection.getFields(fields);
-            ObjectNode root = TroubleTicketJsonMaker.getView(tt, template);
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(entityStream, root);
-
-        } else {
-
+        if (fieldSet.isEmpty() || fieldSet.contains(FacadeRestUtil.ALL_FIELDS)) {
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(entityStream, tt);
-
+        } else {
+            fieldSet.add(FacadeRestUtil.ID_FIELD);
+            ObjectNode root = FacadeRestUtil.createNodeViewWithFields(tt, fieldSet);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(entityStream, root);
         }
     }
 }

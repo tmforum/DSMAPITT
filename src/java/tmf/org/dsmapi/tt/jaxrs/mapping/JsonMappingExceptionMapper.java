@@ -9,7 +9,7 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.JsonMappingException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
-import tmf.org.dsmapi.tt.jaxrs.JsonError;
+import tmf.org.dsmapi.tt.jaxrs.model.JsonError;
 
 @Provider
 public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingException> {

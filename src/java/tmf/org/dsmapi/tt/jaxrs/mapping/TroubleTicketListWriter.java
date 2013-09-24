@@ -1,13 +1,11 @@
 package tmf.org.dsmapi.tt.jaxrs.mapping;
 
-import tmf.org.dsmapi.commons.utils.ReservedKeyword;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.ws.rs.Produces;
@@ -15,16 +13,11 @@ import javax.ws.rs.core.Context;
 import tmf.org.dsmapi.tt.model.TroubleTicket;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ArrayNode;
-import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
-import tmf.org.dsmapi.commons.utils.ReservedKeyword;
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
 
 @Provider
 @Produces({"application/json"})
@@ -65,34 +58,29 @@ public class TroubleTicketListWriter implements
             MultivaluedMap<String, Object> arg5, OutputStream os)
             throws IOException {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();
+        // search criteria
+        MultivaluedMap<String, String> criteria = info.getQueryParameters();
+        // fields to filter view
+        Set<String> fieldSet = FacadeRestUtil.getFieldSet(criteria);
 
-        List<String> fields = null;
-        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD.getText())) {
-            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
-        }
-        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD_2.getText())) {
-            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD_2.getText());
-        }
-
-        if (fields != null) {
-
-            Set<TroubleTicketField> template = FieldSelection.getFields(fields);
-
-            List<ObjectNode> list = new ArrayList<ObjectNode>();
-            ObjectNode item;
-
-            for (TroubleTicket tt : ttList) {
-                item = TroubleTicketJsonMaker.getView(tt, template);
-                list.add(item);
-            }
-
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(os, list);
-
-        } else {
+        if (fieldSet.isEmpty() || fieldSet.contains(FacadeRestUtil.ALL_FIELDS)) {
+            
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(os, ttList);
+            
+        } else {
+            
+            fieldSet.add(FacadeRestUtil.ID_FIELD);
+            List<ObjectNode> nodeList = new ArrayList<ObjectNode>();
+            ObjectNode node;
+            for (TroubleTicket tt : ttList) {
+                node = FacadeRestUtil.createNodeViewWithFields(tt, fieldSet);
+                nodeList.add(node);
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.writeValue(os, nodeList);
+            
         }
+
     }
 }
