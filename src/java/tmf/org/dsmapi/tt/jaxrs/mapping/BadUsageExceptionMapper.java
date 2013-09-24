@@ -14,7 +14,7 @@ import tmf.org.dsmapi.tt.jaxrs.JsonError;
 public class BadUsageExceptionMapper implements ExceptionMapper<BadUsageException> {
     @Override
     public Response toResponse(BadUsageException ex) {
-        JsonError error = new JsonError(ex.getType().getInfo(),ex.getMessage());
+        JsonError error = new JsonError(ex.getType().getInfo(),ex.getMessage(), ex.getKeyValue());
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(error).build();
     }
 }

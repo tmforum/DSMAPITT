@@ -4,7 +4,7 @@
 	DIRECTORIES
 	***********
 
-../json
+json
 	Contains json samples played by scripts
 commons
 	Contains curl template for output & function ( get/post/patch etc )
@@ -14,41 +14,11 @@ commons
 	HOW TO
 	******
 
-	- create TT
-create-tt.sh
+Edit commons/conf.sh
 
-	- List All TT
-./list-tt.sh
-
-	- List All TT with attribute selection
-./list-tt.sh ${attribute} with attribute=field1,field2,field3,...
-
-	- Get single TT resource
-./get-tt.sh ${id}	
-
-	- Get single TT resource with attribute selection
-./get-tt.sh ${id} ${attribute} with attribute=field1,field2,field3,...
-
-	- Partial update
-./patch-tt.sh ${id}
-
-	- Full update
-./put-tt.sh ${id}
-
-	- Count TT
-./admin-count-tt.sh
-
-	- Delete TT
-./admin-delete-single-tt ${id}
-
-	- Delete all TT
-./admin-delete-all-tt.sh
-
-	- Create 10 TT
-./admin-create-tt-10.sh
-
-	- Get a mock TT
-./admin-mock-tt.sh
+Help :
+./admin.sh -h
+./ticket.sh -h
 
 
 

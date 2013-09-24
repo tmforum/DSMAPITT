@@ -1,6 +1,8 @@
 package tmf.org.dsmapi.commons.exceptions;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * generic class for all functional exceptions. Functional exceptions must be
@@ -12,6 +14,7 @@ public class FunctionalException extends Exception implements Serializable {
     private String localisationClass;
     private String localisationMethod;
     private ExceptionType type;
+    private List<KeyValue> keyValue;
 
 
     public FunctionalException() {
@@ -89,4 +92,27 @@ public class FunctionalException extends Exception implements Serializable {
     public void setType(ExceptionType type) {
         this.type = type;
     }
+    
+    /**
+     * @return the keyValue
+     */
+    public List<KeyValue> getKeyValue() {
+        return keyValue;
+    }
+
+    public List<KeyValue> addKeyValue(KeyValue keyValue) {
+        if (this.keyValue == null)  {
+            this.keyValue = new ArrayList<KeyValue>();
+        }
+        this.keyValue.add(keyValue);
+        return this.keyValue;
+    }
+    
+    public List<KeyValue> addKeyValue(String key, String value) {
+        if (this.keyValue == null)  {
+            this.keyValue = new ArrayList<KeyValue>();
+        }        
+        this.keyValue.add(new KeyValue(key, value));
+        return this.keyValue;
+    }     
 }

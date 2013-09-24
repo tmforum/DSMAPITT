@@ -67,11 +67,18 @@ public class TroubleTicketListWriter implements
 
         MultivaluedMap<String, String> map = info.getQueryParameters();
 
+        List<String> fields = null;
         if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD.getText())) {
-                         
-            List<String> fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
+            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
+        }
+        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD_2.getText())) {
+            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD_2.getText());
+        }
+
+        if (fields != null) {
+
             Set<TroubleTicketField> template = FieldSelection.getFields(fields);
-            
+
             List<ObjectNode> list = new ArrayList<ObjectNode>();
             ObjectNode item;
 

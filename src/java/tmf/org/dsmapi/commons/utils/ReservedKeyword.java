@@ -2,7 +2,9 @@ package tmf.org.dsmapi.commons.utils;
 
 public enum ReservedKeyword {
 
-    QUERY_KEY_FIELD(":fields");
+    QUERY_KEY_FIELD(":fields"),
+    QUERY_KEY_FIELD_2(
+    "fields");
     private String text;
 
     ReservedKeyword(String text) {

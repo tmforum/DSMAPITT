@@ -70,19 +70,9 @@ public class TroubleTicketFacadeREST {
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response post(TroubleTicket entity) {
+    public Response post(TroubleTicket entity) throws BadUsageException {
 
-        // 400 
-        if (entity.getId() != null) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-        }
-
-        // Try to persist entity
-        try {
-            manager.create(entity);
-        } catch (BadUsageException e) {
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-        }
+        manager.create(entity);
 
         System.out.println("Calling  Publish");
         publisher.publishTicketCreateNotification(entity);
@@ -129,8 +119,8 @@ public class TroubleTicketFacadeREST {
     public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
         partialTT.setId(id);
-        
-        TroubleTicket fullTT;        
+
+        TroubleTicket fullTT;
         fullTT = manager.partialUpdate(partialTT);
 
         publisher.publishTicketChangedNotification(partialTT);

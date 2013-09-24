@@ -42,11 +42,18 @@ public class TroubleTicketWriter implements MessageBodyWriter<TroubleTicket> {
     @Override
     public void writeTo(TroubleTicket tt, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException, WebApplicationException {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();          
-        
+        MultivaluedMap<String, String> map = info.getQueryParameters();
+
+        List<String> fields = null;
         if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD.getText())) {
-            
-            List<String> fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
+            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD.getText());
+        }
+        if (map.containsKey(ReservedKeyword.QUERY_KEY_FIELD_2.getText())) {
+            fields = map.get(ReservedKeyword.QUERY_KEY_FIELD_2.getText());
+        }
+
+        if (fields != null) {
+
             Set<TroubleTicketField> template = FieldSelection.getFields(fields);
             ObjectNode root = TroubleTicketJsonMaker.getView(tt, template);
             ObjectMapper mapper = new ObjectMapper();

@@ -1,0 +1,45 @@
+{
+    "id": 3,
+    "correlationId": null,
+    "description": "Description",
+    "severity": "Medium",
+    "type": "Bills, charges or payment",
+    "creationDate": "2013-08-20T18:18:40UTC",
+    "targetResolutionDate": null,
+    "status": "Submitted",
+    "subStatus": null,
+    "statusChangeReason": "Creation",
+    "resolutionDate": null,
+    "relatedObjects": [
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject"
+        },
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject"
+        }
+    ],
+    "notes": [
+        {
+            "date": "date",
+            "author": "author",
+            "text": "text"
+        },
+        {
+            "date": "date",
+            "author": "author",
+            "text": "text"
+        }
+    ],
+    "relatedParties": [
+        {
+            "role": "role",
+            "reference": "reference party"
+        },
+        {
+            "role": "role",
+            "reference": "reference party"
+        }
+    ]
+}

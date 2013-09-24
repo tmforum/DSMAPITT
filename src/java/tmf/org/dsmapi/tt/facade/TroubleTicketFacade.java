@@ -1,7 +1,6 @@
 package tmf.org.dsmapi.tt.facade;
 
 import tmf.org.dsmapi.commons.utils.ReservedKeyword;
-import tmf.org.dsmapi.commons.exceptions.ExceptionBean;
 import java.util.ArrayList;
 import tmf.org.dsmapi.tt.model.TroubleTicketField;
 import java.util.Date;
@@ -64,7 +63,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     public TroubleTicketFacade() {
         super(TroubleTicket.class);
     }
-    
+
     public TroubleTicket edit(String id, TroubleTicket tt) throws UnknownResourceException {
         tt.setId(id);
         return super.edit(id, tt);
@@ -90,7 +89,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
 
         if (tokens.contains(STATUS)) {
-            if (Validator.isStatusUpdateValid(currentTT.getStatus(), partialTT.getStatus())) {
+            if (WorkflowValidator.isCorrect(currentTT.getStatus(), partialTT.getStatus())) {
                 currentTT.setStatus(partialTT.getStatus());
                 currentTT.setStatusChangeDate(Format.toString(new Date()));
                 currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
@@ -150,8 +149,22 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     @Override
     public void create(TroubleTicket tt) throws BadUsageException {
 
-        if (!Validator.hasMandatoryFields(tt)) {
-            throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS);
+        if (tt.getId() != null) {
+            throw new BadUsageException(ExceptionType.BAD_USAGE_GENERIC, "While creating a TT id should be null");
+        }
+
+        if ((tt.getDescription() == null) || (tt.getSeverity() == null) || (tt.getType() == null)) {
+            String fieldName = null;
+            if (tt.getDescription() == null) {
+                fieldName = TroubleTicketField.DESCRIPTION.getText();
+            } else {
+                if (tt.getSeverity() == null) {
+                    fieldName = TroubleTicketField.SEVERITY.getText();
+                } else if (tt.getType() == null) {
+                    fieldName = TroubleTicketField.TYPE.getText();
+                }
+            }
+            throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, fieldName);
         }
 
         tt.setStatus(Status.Submitted);
