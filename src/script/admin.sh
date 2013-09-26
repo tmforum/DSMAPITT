@@ -9,7 +9,8 @@ usage() {
 	echo "+ +  ${nom} [-c] Create list of TT with default file"
 	echo "+ +  ${nom} [-c -f file ] Create list of TT with specified file"    
     echo "+ +  ${nom} [-d] Delete all TT"
-    echo "+ +  ${nom} [-d -i id ] Delete single TT"    
+    echo "+ +  ${nom} [-d -i id ] Delete single TT"
+    echo "+ +  ${nom} [-x] Invalid TT JPA cache"   
 	echo "+ +  ${nom} [-h] Help"  
     echo "+ +  query format: \"fields=x,y,...\"] attribute selection"
     echo "+ +  query format: \"key=value&...\"] attribute filtering"    
@@ -26,13 +27,17 @@ if [ $# -eq 1 -a "$1" = -h ]; then usage; exit 2; fi
 # OPTIONS
 errOption=0
 OPTIND=1
-while getopts "cndf:i:q:" option
+while getopts "mcndf:i:q:" option
 do
 	case $option in
+		m)  MOCK=OK
+            ;;    
 		c)  CREATE=OK
             ;;
 		n)  COUNT=OK
             ;;
+		n)  CACHE=OK
+            ;;            
         d)  DELETE=OK
             ;; 
         i)  ID="${OPTARG}"
@@ -68,6 +73,18 @@ fi
 # COUNT
 if [ -n "$COUNT" ]; then
     get "api/admin/troubleTicket/count"
+    exit 2
+fi
+
+# COUNT
+if [ -n "$MOCK" ]; then
+    get "api/admin/troubleTicket/mock"
+    exit 2
+fi
+
+# CACHE
+if [ -n "$CACHE" ]; then
+    delete "api/admin/troubleTicket/cache"
     exit 2
 fi
 

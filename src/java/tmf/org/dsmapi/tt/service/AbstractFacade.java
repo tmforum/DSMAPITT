@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.facade;
+package tmf.org.dsmapi.tt.service;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -22,6 +22,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
+import static tmf.org.dsmapi.tt.service.FacadeRestUtil.QUERY_KEY_FIELD;
+import static tmf.org.dsmapi.tt.service.FacadeRestUtil.QUERY_KEY_FIELD_ESCAPE;
+import tmf.org.dsmapi.tt.Status;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
  * xxxxx
@@ -53,8 +57,8 @@ public abstract class AbstractFacade<T> {
         T targetEntity = this.find(id);
         if (targetEntity == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
-        }        
-        getEntityManager().merge(entity);        
+        }
+        getEntityManager().merge(entity);
         return entity;
     }
 
@@ -75,7 +79,7 @@ public abstract class AbstractFacade<T> {
         getEntityManager().detach(entity);
     }
 
-    public void clear() {
+    public void invalidCache() {
         getEntityManager().clear();
     }
 
@@ -102,40 +106,19 @@ public abstract class AbstractFacade<T> {
         return ((Long) q.getSingleResult()).intValue();
     }
 
-    public List<T> findAllWithFields(Set<String> fieldNames) {
-        List<T> list = findAll();
-        return getViewList(list, fieldNames);
-    }
-
-    public List<T> findByCriteriaWithFields(MultivaluedMap<String, String> map, Set<String> fieldNames, Class<T> clazz) {
-        List<T> list = findByCriteria(map, clazz);
-        return getViewList(list, fieldNames);
-}
-
-    private List<T> getViewList(List<T> list, Set<String> fieldNames) {
-        List<T> resultList = new ArrayList<T>(list.size());
-        for (T fullElement : list) {
-            T viewElement = getView(fullElement, fieldNames);
-            resultList.add(viewElement);
-        }
-        return resultList;
-    }
-
-    protected abstract T getView(T fullElement, Set<String> fieldNames);
-
-    public List<T> findByCriteria(MultivaluedMap<String, String> map, Class<T> clazz) {
+    public List<T> findByCriteria(MultivaluedMap<String, String> queryParameters, Class<T> clazz) {
         List<T> resultsList = null;
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<T> cq = criteriaBuilder.createQuery(clazz);
         List<Predicate> andPredicates = new ArrayList<Predicate>();
         Root<T> tt = cq.from(clazz);
-        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+        for (Map.Entry<String, List<String>> entry : queryParameters.entrySet()) {
             List<String> valueList = entry.getValue();
             Predicate predicate = null;
             if (valueList.size() > 1) {
-                // name=value1&name=value2&...&name=valueN
-                // value of name is list [value1, value2, ..., valueN]
-                // => name=value1 OR name=value2 OR ... OR name=valueN
+                // name=value1&name=value&...&name=valueN
+                // value of name is list [value1, value, ..., valueN]
+                // => name=value1 OR name=value OR ... OR name=valueN
                 List<Predicate> orPredicates = new ArrayList<Predicate>();
                 for (String currentValue : valueList) {
                     Predicate orPredicate = buildPredicate(tt, entry.getKey(), currentValue);
@@ -173,25 +156,25 @@ public abstract class AbstractFacade<T> {
         return predicate;
     }
 
-    private Predicate buildSimplePredicate(Path<T> tt, String name, String value) {
+    private Predicate buildSimplePredicate(Path<T> path, String name, String value) {
         Predicate predicate;
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         if (isMultipleOrValue(value)) {
-            // name=value1,value2,...,valueN
-            // => name=value1 OR name=value2 OR ... OR name=valueN
+            // name=value1,value,...,valueN
+            // => name=value1 OR name=value OR ... OR name=valueN
             List<String> valueList = convertMultipleOrValueToList(value);
             List<Predicate> orPredicates = new ArrayList<Predicate>();
             for (String currentValue : valueList) {
-                Predicate orPredicate = buildPredicateWithOperator(tt, name, currentValue);
+                Predicate orPredicate = buildPredicateWithOperator(path, name, currentValue);
                 orPredicates.add(orPredicate);
             }
             predicate = criteriaBuilder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
         } else if (isMultipleAndValue(value)) {
-            // name=(subname1=value1&subname2=value2&...&subnameN=valueN) 
-            // => name.subname1=value1 AND name.subname2=value2 AND ... AND name.subnameN=valueN
+            // name=(subname1=value1&subname2=value&...&subnameN=valueN) 
+            // => name.subname1=value1 AND name.subname2=value AND ... AND name.subnameN=valueN
             List<Map.Entry<String, String>> subFieldNameValue = convertMultipleAndValue(value);
             List<Predicate> andPredicates = new ArrayList<Predicate>();
-            Path<T> root = tt.get(name);
+            Path<T> root = path.get(name);
             for (Map.Entry<String, String> entry : subFieldNameValue) {
                 String currentsubFieldName = entry.getKey();
                 String currentValue = entry.getValue();
@@ -201,23 +184,23 @@ public abstract class AbstractFacade<T> {
             predicate = criteriaBuilder.and(andPredicates.toArray(new Predicate[andPredicates.size()]));
         } else {
             // name=value
-            predicate = buildPredicateWithOperator(tt, name, value);
+            predicate = buildPredicateWithOperator(path, name, value);
         }
         return predicate;
     }
 
-    // value has format value1,value2,...,valueN
+    // value has format value1,value,...,valueN
     private static boolean isMultipleOrValue(String value) {
         return (value.indexOf(",") > -1);
     }
 
-    // value has format (value1&value2&...&valueN)
+    // value has format (value1&value&...&valueN)
     private static boolean isMultipleAndValue(String value) {
         return (value.startsWith("(") && value.endsWith(")"));
     }
 
-    // convert String "value1,value2,...,valueN" 
-    // to List [value1, value2, ..., valueN]
+    // convert String "value1,value,...,valueN" 
+    // to List [value1, value, ..., valueN]
     private static List<String> convertMultipleOrValueToList(String value) {
         List<String> valueList = new ArrayList<String>();
         String[] tokenArray = value.split(",");
@@ -225,8 +208,8 @@ public abstract class AbstractFacade<T> {
         return valueList;
     }
 
-    // convert String "(name1=value1&name2=value2&...&nameN=valueN)" 
-    // to List of Entry [name1=value1, name2=value2, ..., nameN=valueN]
+    // convert String "(name1=value1&name2=value&...&nameN=valueN)" 
+    // to List of Entry [name1=value1, name2=value, ..., nameN=valueN]
     // Conversion is not to a Map since there can be a same name with differents values
     private static List<Map.Entry<String, String>> convertMultipleAndValue(String multipleValue) {
         List<Map.Entry<String, String>> nameValueList = new ArrayList<Map.Entry<String, String>>();
@@ -237,7 +220,7 @@ public abstract class AbstractFacade<T> {
                 if (split.length == 2) {
                     String name = split[0];
                     String value = split[1];
-                    
+
                     nameValueList.add(new AbstractMap.SimpleEntry<String, String>(name, value));
                 }
             }
@@ -245,34 +228,68 @@ public abstract class AbstractFacade<T> {
         return nameValueList;
     }
 
-    private Predicate buildPredicateWithOperator(Path<T> tt, String name, String value) {
+    protected Predicate buildPredicateWithOperator(Path<T> path, String name, String value) {
+
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         Operator operator = Operator.fromString(name);
         // perform operation, default operation is equal
         if (operator == null) {
-            return criteriaBuilder.equal(tt.get(name), value);
+            Path<T> attribute = path.get(name);
+            Object valueObject = convertStringValueToObject(attribute, value);
+            return criteriaBuilder.equal(attribute, valueObject);
         } else {
             switch (operator) {
                 case GT:
-                    return criteriaBuilder.greaterThan((Expression) tt, value);
+                    return criteriaBuilder.greaterThan((Expression) path, value);
                 case GTE:
-                    return criteriaBuilder.greaterThanOrEqualTo((Expression) tt, value);
+                    return criteriaBuilder.greaterThanOrEqualTo((Expression) path, value);
                 case LT:
-                    return criteriaBuilder.lessThan((Expression) tt, value);
+                    return criteriaBuilder.lessThan((Expression) path, value);
                 case LTE:
-                    return criteriaBuilder.lessThanOrEqualTo((Expression) tt, value);
-                case NE:
-                    return criteriaBuilder.notEqual(tt, value);
-                case EQ:
-                    return criteriaBuilder.equal(tt, value);
+                    return criteriaBuilder.lessThanOrEqualTo((Expression) path, value);
+                case NE: {
+                    Object valueObject = convertStringValueToObject(path, value);
+                    return criteriaBuilder.notEqual(path, valueObject);
+                }
+                case EQ: {
+                    Object valueObject = convertStringValueToObject(path, value);
+                    return criteriaBuilder.equal(path, valueObject);
+                }
                 case EX:
-                    return criteriaBuilder.like((Expression) tt, value.replace('*', '%'));
-                default:
-                    return criteriaBuilder.equal(tt.get(name), value);
+                    return criteriaBuilder.like((Expression) path, value.replace('*', '%'));
+                default: {
+                    Path<T> attribute = path.get(name);
+                    Object valueObject = convertStringValueToObject(attribute, value);
+                    return criteriaBuilder.equal(attribute, valueObject);
+                }
             }
+        }
+
+    }
+
+    private Enum safeEnumValueOf(Class enumType, String name) {
+        Enum enumValue = null;
+        if (name != null) {
+            try {
+                enumValue = Enum.valueOf(enumType, name);
+            } catch (Exception e) {
+                enumValue = null;
+            }
+        }
+        return enumValue;
+    }
+
+    private Object convertStringValueToObject(Path<T> tt, String value) {
+        Class javaType = tt.getJavaType();
+        if (javaType.isEnum()) {
+            Enum enumValue = safeEnumValueOf(javaType, value);
+            return enumValue;
+        } else {
+            return value;
         }
     }
 
+    //protected abstract Predicate buildPredicateForEnum(Path<T> path, String name, String value);
     enum Operator {
 
         EQ("eq"),

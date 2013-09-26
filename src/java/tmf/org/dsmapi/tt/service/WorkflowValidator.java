@@ -1,11 +1,11 @@
-package tmf.org.dsmapi.tt.facade;
+package tmf.org.dsmapi.tt.service;
 
-import tmf.org.dsmapi.tt.model.Status;
-import static tmf.org.dsmapi.tt.model.Status.Acknowledged;
-import static tmf.org.dsmapi.tt.model.Status.Cancelled;
-import static tmf.org.dsmapi.tt.model.Status.Rejected;
-import static tmf.org.dsmapi.tt.model.Status.Resolved;
-import static tmf.org.dsmapi.tt.model.Status.Submitted;
+import tmf.org.dsmapi.tt.Status;
+import static tmf.org.dsmapi.tt.Status.Acknowledged;
+import static tmf.org.dsmapi.tt.Status.Cancelled;
+import static tmf.org.dsmapi.tt.Status.Rejected;
+import static tmf.org.dsmapi.tt.Status.Resolved;
+import static tmf.org.dsmapi.tt.Status.Submitted;
 
 public class WorkflowValidator {
 

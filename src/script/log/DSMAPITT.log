@@ -1,0 +1,27 @@
+* About to connect() to localhost port 8081 (#0)
+*   Trying 127.0.0.1...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to localhost (127.0.0.1) port 8081 (#0)
+* Server auth using Basic with user 'user'
+> PATCH /DSMAPITT/api/troubleTicket/694 HTTP/1.1
+> Authorization: Basic dXNlcjp1c2Vy
+> User-Agent: curl/7.29.0
+> Host: localhost:8081
+> Content-Type:application/json
+> Accept:application/json
+> Content-Length: 303
+> 
+} [data not shown]
+* upload completely sent off: 303 out of 303 bytes
+< HTTP/1.1 400 Bad Request
+< X-Powered-By: Servlet/3.0 JSP/2.2 (GlassFish Server Open Source Edition 3.1.2.2 Java/Oracle Corporation/1.7)
+< Server: GlassFish Server Open Source Edition 3.1.2.2
+< Content-Type: application/json
+< Date: Thu, 26 Sep 2013 19:06:08 GMT
+< Transfer-Encoding: chunked
+< Connection: Close
+< 
+100   303    0     0  100   303      0   5070 --:--:-- --:--:-- --:--:--  5135{ [data not shown]
+100   425    0   122  100   303   1984   4929 --:--:-- --:--:-- --:--:--  4967
+* Closing connection 0

@@ -2,14 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.model;
+package tmf.org.dsmapi.tt;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -37,21 +42,15 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @XmlRootElement
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicket implements Serializable {
-    
+
     //Add other static strings as required....
     private static final long serialVersionUID = 1L;
-    
-    // Technical attribute used for partial update
-    @Deprecated
+    // Used for incremental update
     @Transient
     @JsonIgnore
-    private Set<TroubleTicketField> fields;
-    
-    @Transient
-    @JsonIgnore    
-    private Set<String> fieldSet;
-    
+    private Set<TroubleTicketField> fieldsIN;
     @Id
+    @Column(name="TT_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
@@ -63,7 +62,7 @@ public class TroubleTicket implements Serializable {
         this.id = id;
     }
     private String correlationId;
-    private String description;
+    private String description; 
     private Severity severity;
     private String type;
     private String creationDate;
@@ -73,9 +72,27 @@ public class TroubleTicket implements Serializable {
     private String statusChangeReason;
     private String statusChangeDate;
     private String resolutionDate;
-    private RelatedObject[] relatedObjects;
-    private Note[] notes;
-    private RelatedParty[] relatedParties;
+    
+    @ElementCollection
+    @CollectionTable(
+            name = "RELATED_OBJECT",
+            joinColumns =
+            @JoinColumn(name = "OWNER_ID"))
+    private List<RelatedObject> relatedObjects;
+    
+    @ElementCollection
+    @CollectionTable(
+            name = "NOTES",
+            joinColumns =
+            @JoinColumn(name = "OWNER_ID"))
+    private List<Note> notes;
+    
+    @ElementCollection
+    @CollectionTable(
+            name = "RELATED_PARTY",
+            joinColumns =
+            @JoinColumn(name = "OWNER_ID"))
+    private List<RelatedParty> relatedParties;
 
     public String getCorrelationId() {
         return correlationId;
@@ -165,27 +182,30 @@ public class TroubleTicket implements Serializable {
         this.resolutionDate = resolutionDate;
     }
 
-    public RelatedObject[] getRelatedObjects() {
-        return relatedObjects;
+    public List<RelatedObject> getRelatedObjects() {
+        if (relatedObjects.isEmpty()) return null;
+        else return relatedObjects;
     }
 
-    public void setRelatedObjects(RelatedObject[] relatedObjects) {
+    public void setRelatedObjects(List<RelatedObject> relatedObjects) {
         this.relatedObjects = relatedObjects;
     }
 
-    public Note[] getNotes() {
-        return notes;
+    public List<Note> getNotes() {
+        if (notes.isEmpty()) return null;
+        else return notes;
     }
 
-    public void setNotes(Note[] notes) {
+    public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
 
-    public RelatedParty[] getRelatedParties() {
-        return relatedParties;
+    public List<RelatedParty> getRelatedParties() {
+        if (relatedParties.isEmpty()) return null;
+        else return relatedParties;
     }
 
-    public void setRelatedParties(RelatedParty[] relatedParties) {
+    public void setRelatedParties(List<RelatedParty> relatedParties) {
         this.relatedParties = relatedParties;
     }
 
@@ -199,7 +219,7 @@ public class TroubleTicket implements Serializable {
     //this must be reimplemented
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // TODO: Warning - this method won't work in the case the id fieldsIN are not set
         if (!(object instanceof TroubleTicket)) {
             return false;
         }
@@ -216,30 +236,16 @@ public class TroubleTicket implements Serializable {
     }
 
     /**
-     * @return the fields
+     * @return the fieldsIN
      */
-    public Set<TroubleTicketField> getFields() {
-        return fields;
+    public Set<TroubleTicketField> getFieldsIN() {
+        return fieldsIN;
     }
 
     /**
-     * @param fields the fields to set
+     * @param fieldsIN the fieldsIN to set
      */
-    public void setFields(Set<TroubleTicketField> fields) {
-        this.fields = fields;
-    }
-
-    /**
-     * @return the fieldSet
-     */
-    public Set<String> getFieldSet() {
-        return fieldSet;
-    }
-
-    /**
-     * @param fieldSet the fieldSet to set
-     */
-    public void setFieldSet(Set<String> fieldSet) {
-        this.fieldSet = fieldSet;
+    public void setFieldsIN(Set<TroubleTicketField> fields) {
+        this.fieldsIN = fields;
     }
 }

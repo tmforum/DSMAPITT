@@ -12,7 +12,7 @@ import javax.ejb.Stateless;
 import tmf.org.dsmapi.hub.Hub;
 import tmf.org.dsmapi.hub.HubEvent;
 import tmf.org.dsmapi.hub.TroubleTicketEventTypeEnum;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
  *

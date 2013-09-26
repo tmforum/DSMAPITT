@@ -1,5 +1,6 @@
-package tmf.org.dsmapi.tt.jaxrs;
+package tmf.org.dsmapi.tt.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -15,14 +16,13 @@ import javax.ws.rs.core.Response;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
-import tmf.org.dsmapi.tt.facade.TroubleTicketFacade;
-import tmf.org.dsmapi.tt.jaxrs.model.Report;
-import tmf.org.dsmapi.tt.model.Note;
-import tmf.org.dsmapi.tt.model.RelatedObject;
-import tmf.org.dsmapi.tt.model.RelatedParty;
-import tmf.org.dsmapi.tt.model.Severity;
-import tmf.org.dsmapi.tt.model.Status;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
+import tmf.org.dsmapi.tt.Note;
+import tmf.org.dsmapi.tt.RelatedObject;
+import tmf.org.dsmapi.tt.RelatedParty;
+import tmf.org.dsmapi.tt.Severity;
+import tmf.org.dsmapi.tt.Status;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 @Stateless
 @Path("admin")
@@ -63,12 +63,11 @@ public class AdminFacadeREST {
     @Path("troubleTicket")
     public Report deleteAll() {
 
-        int previousRows = manager.count();
         int affectedRows = manager.removeAll();
 
         Report stat = new Report(manager.count());
         stat.setAffectedRows(affectedRows);
-        stat.setPreviousRows(previousRows);
+        stat.setPreviousRows(affectedRows);
 
         return stat;
     }
@@ -95,6 +94,14 @@ public class AdminFacadeREST {
     public Report count() {
         return new Report(manager.count());
     }
+    
+    @DELETE
+    @Path("troubleTicket/cache")
+    public void clearCache() {
+        manager.invalidCache();
+    }    
+    
+    
 
     @GET
     @Path("troubleTicket/mock")
@@ -117,28 +124,28 @@ public class AdminFacadeREST {
         RelatedObject ro = new RelatedObject();
         ro.setInvolvement("involvment");
         ro.setReference("referenceobject");
-
-        RelatedObject relatedObjects[] = new RelatedObject[2];
-        relatedObjects[0] = ro;
-        relatedObjects[1] = ro;
+        
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject> ();
+        relatedObjects.add(ro);
+        relatedObjects.add(ro);
         tt.setRelatedObjects(relatedObjects);
 
         RelatedParty rp = new RelatedParty();
         rp.setRole("role");
         rp.setReference("reference party");
 
-        RelatedParty relatedParties[] = new RelatedParty[2];
-        relatedParties[0] = rp;
-        relatedParties[1] = rp;
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty> ();
+        relatedParties.add(rp);
+        relatedParties.add(rp);        
         tt.setRelatedParties(relatedParties);
 
         Note note = new Note();
         note.setAuthor("author");
         note.setDate(dts);
         note.setText("text");
-        Note notes[] = new Note[2];
-        notes[0] = note;
-        notes[1] = note;
+        List<Note> notes = new ArrayList<Note> ();
+        notes.add(note);
+        notes.add(note);
         tt.setNotes(notes);
         return tt;
 

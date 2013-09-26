@@ -1,7 +1,7 @@
-package tmf.org.dsmapi.tt.jaxrs.mapping;
+package tmf.org.dsmapi.tt.service;
 
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicketField;
+import tmf.org.dsmapi.tt.TroubleTicket;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -75,7 +75,7 @@ public class TroubleTicketReader implements MessageBodyReader<TroubleTicket> {
         }
 
         tt = mapper.readValue(root, TroubleTicket.class);
-        tt.setFields(tokenList);
+        tt.setFieldsIN(tokenList);
 
         return tt;
     }

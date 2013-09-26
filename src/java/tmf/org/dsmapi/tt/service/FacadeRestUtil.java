@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.jaxrs.mapping;
+package tmf.org.dsmapi.tt.service;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.math.BigDecimal;

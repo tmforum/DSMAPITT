@@ -2,9 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.model;
+package tmf.org.dsmapi.tt;
 
 import java.io.Serializable;
+import javax.persistence.Embeddable;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  *
@@ -23,6 +25,8 @@ import java.io.Serializable;
             "reference": "Roger Collins"
         }
  */
+@Embeddable
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class RelatedParty implements Serializable {
     
     private String role;

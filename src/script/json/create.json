@@ -13,11 +13,11 @@
     "relatedObjects": [
         {
             "involvement": "involvment",
-            "reference": "referenceobject"
+            "reference": "referenceobject1"
         },
         {
             "involvement": "involvment",
-            "reference": "referenceobject"
+            "reference": "referenceobject3"
         }
     ],
     "notes": [

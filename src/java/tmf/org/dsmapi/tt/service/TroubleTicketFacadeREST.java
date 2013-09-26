@@ -2,14 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.jaxrs;
+package tmf.org.dsmapi.tt.service;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
 import tmf.org.dsmapi.commons.jaxrs.PATCH;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicket;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -20,15 +22,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import org.codehaus.jackson.node.ObjectNode;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
-import tmf.org.dsmapi.tt.facade.TroubleTicketFacade;
+import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
 
 /**
  *
@@ -56,16 +58,32 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response list(@Context UriInfo info) {
 
-        MultivaluedMap<String, String> map = info.getQueryParameters();
-        List<TroubleTicket> listTT = manager.find(map);
+        Response response = null;
+        // search queryParameters
+        MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
+        // fields to filter view
+        Set<String> fieldSet = FacadeRestUtil.getFieldSet(queryParameters);
 
-        // Uses GenericEntity for messageBodyWriter list oriented
-        // http://christopherhunt-software.blogspot.fr/2010/08/messagebodywriter-iswriteable-method.html
-        GenericEntity<List<TroubleTicket>> entity =
-                new GenericEntity<List<TroubleTicket>>(listTT) {
-        };
+        List<TroubleTicket> resultList = manager.find(queryParameters);
 
-        return Response.ok(entity).build();
+        if (fieldSet.isEmpty() || fieldSet.contains(FacadeRestUtil.ALL_FIELDS)) {
+
+            response = Response.ok(resultList).build();
+
+        } else {
+
+            fieldSet.add(FacadeRestUtil.ID_FIELD);
+            List<ObjectNode> nodeList = new ArrayList<ObjectNode>();
+            ObjectNode node;
+            for (TroubleTicket tt : resultList) {
+                node = FacadeRestUtil.createNodeViewWithFields(tt, fieldSet);
+                nodeList.add(node);
+            }
+            response = Response.ok(nodeList).build();
+
+        }
+
+        return response;
     }
 
     @POST
@@ -101,6 +119,7 @@ public class TroubleTicketFacadeREST {
 
         // Try to merge        
         entity = manager.edit(id, entity);
+
         publisher.publishTicketChangedNotification(entity);
         publisher.publishTicketStatusChangedNotification(entity);
 
@@ -119,10 +138,7 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
-        partialTT.setId(id);
-
-        TroubleTicket fullTT;
-        fullTT = manager.partialUpdate(partialTT);
+        TroubleTicket fullTT = manager.partialEdit(id, partialTT);
 
         publisher.publishTicketChangedNotification(partialTT);
         publisher.publishTicketStatusChangedNotification(partialTT);
@@ -141,20 +157,21 @@ public class TroubleTicketFacadeREST {
     @GET
     @Path("{id}")
     @Produces({"application/json"})
-    public Response get(@PathParam("id") String id) throws UnknownResourceException {
+    public Response get(@PathParam("id") String id, @Context UriInfo info) throws UnknownResourceException {
+        
+        Response response = null;
+        TroubleTicket tt = manager.find(id);
+        
+        MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
+        Set<String> fieldSet = FacadeRestUtil.getFieldSet(queryParameters);
 
-        // Go get
-        TroubleTicket responseTT = manager.find(id);
-
-        Response response;
-        // if troubleTicket exists
-        if (responseTT != null) {
-            // 200
-            response = Response.ok(responseTT).build();
+        if (fieldSet.isEmpty() || fieldSet.contains(FacadeRestUtil.ALL_FIELDS)) {
+            response = Response.ok(tt).build();
         } else {
-            // 404 not found
-            response = Response.status(404).build();
-        }
+            fieldSet.add(FacadeRestUtil.ID_FIELD);
+            ObjectNode root = FacadeRestUtil.createNodeViewWithFields(tt, fieldSet);
+            response = Response.ok(root).build();
+        }        
 
         return response;
     }
@@ -170,10 +187,8 @@ public class TroubleTicketFacadeREST {
             input = input.substring(0, input.length() - 1) + "GMT-00:00";
         } else {
             int inset = 6;
-
             String s0 = input.substring(0, input.length() - inset);
             String s1 = input.substring(input.length() - inset, input.length());
-
             input = s0 + "GMT" + s1;
         }
 

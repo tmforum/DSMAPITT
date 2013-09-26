@@ -6,7 +6,7 @@ package tmf.org.dsmapi.hub;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
  *

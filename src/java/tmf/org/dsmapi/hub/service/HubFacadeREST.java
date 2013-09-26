@@ -5,9 +5,9 @@
 package tmf.org.dsmapi.hub.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,18 +19,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.Hub;
 import tmf.org.dsmapi.hub.HubEvent;
 import tmf.org.dsmapi.hub.TroubleTicketEventTypeEnum;
-import tmf.org.dsmapi.tt.model.Note;
-import tmf.org.dsmapi.tt.model.RelatedObject;
-import tmf.org.dsmapi.tt.model.RelatedParty;
-import tmf.org.dsmapi.tt.model.Severity;
-import tmf.org.dsmapi.tt.model.Status;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.Note;
+import tmf.org.dsmapi.tt.RelatedObject;
+import tmf.org.dsmapi.tt.RelatedParty;
+import tmf.org.dsmapi.tt.Severity;
+import tmf.org.dsmapi.tt.Status;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
  *
@@ -153,27 +151,27 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         ro.setInvolvement("involvment");
         ro.setReference("referenceobject");
 
-        RelatedObject relatedObjects[] = new RelatedObject[2];
-        relatedObjects[0] = ro;
-        relatedObjects[1] = ro;
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject> ();
+        relatedObjects.add(ro);
+        relatedObjects.add(ro);
         tt.setRelatedObjects(relatedObjects);
 
         RelatedParty rp = new RelatedParty();
         rp.setRole("role");
         rp.setReference("reference party");
 
-        RelatedParty relatedParties[] = new RelatedParty[2];
-        relatedParties[0] = rp;
-        relatedParties[1] = rp;
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty> ();
+        relatedParties.add(rp);
+        relatedParties.add(rp);        
         tt.setRelatedParties(relatedParties);
 
         Note note = new Note();
         note.setAuthor("author");
         note.setDate(dts);
         note.setText("text");
-        Note notes[] = new Note[2];
-        notes[0] = note;
-        notes[1] = note;
+        List<Note> notes = new ArrayList<Note> ();
+        notes.add(note);
+        notes.add(note);
         tt.setNotes(notes);
         return tt;
 

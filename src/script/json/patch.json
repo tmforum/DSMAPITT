@@ -1,6 +1,7 @@
 {
    "status": "Acknowledged",
    "statusChangeReason": "trouble ticket is valid",
+   "relatedObjects": null,
    "relatedParties":    [
             {
          "role": "role",

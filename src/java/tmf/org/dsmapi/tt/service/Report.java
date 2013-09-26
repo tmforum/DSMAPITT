@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.jaxrs.model;
+package tmf.org.dsmapi.tt.service;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;

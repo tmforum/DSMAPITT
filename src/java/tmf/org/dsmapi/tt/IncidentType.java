@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.model;
+package tmf.org.dsmapi.tt;
 
 /**
  * none that i know

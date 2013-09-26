@@ -2,9 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.model;
+package tmf.org.dsmapi.tt;
 
 import java.io.Serializable;
+import javax.persistence.Embeddable;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  *
@@ -19,10 +21,13 @@ import java.io.Serializable;
             "reference": "/invoice/5678"
         }
  */
+
+@Embeddable
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class RelatedObject implements Serializable  {
     
-    private String involvement;
     private String reference;
+    private String involvement;    
 
     public String getInvolvement() {
         return involvement;

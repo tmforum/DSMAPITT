@@ -1,43 +1,35 @@
-package tmf.org.dsmapi.tt.facade;
+package tmf.org.dsmapi.tt.service;
 
-import java.util.ArrayList;
-import tmf.org.dsmapi.tt.model.TroubleTicketField;
+import tmf.org.dsmapi.tt.TroubleTicketField;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicket;
 import java.util.Set;
 import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
-import tmf.org.dsmapi.tt.model.Severity;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.CORRELATION_ID;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.CREATION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.DESCRIPTION;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.NOTES;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.RELATED_OBJECTS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.RELATED_PARTIES;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.SEVERITY;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.STATUS_CHANGE_REASON;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.SUB_STATUS;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.TARGET_RESOLUTION_DATE;
-import static tmf.org.dsmapi.tt.model.TroubleTicketField.TYPE;
-import tmf.org.dsmapi.tt.model.Status;
+import static tmf.org.dsmapi.tt.TroubleTicketField.CORRELATION_ID;
+import static tmf.org.dsmapi.tt.TroubleTicketField.CREATION_DATE;
+import static tmf.org.dsmapi.tt.TroubleTicketField.DESCRIPTION;
+import static tmf.org.dsmapi.tt.TroubleTicketField.NOTES;
+import static tmf.org.dsmapi.tt.TroubleTicketField.RELATED_OBJECTS;
+import static tmf.org.dsmapi.tt.TroubleTicketField.RELATED_PARTIES;
+import static tmf.org.dsmapi.tt.TroubleTicketField.RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.TroubleTicketField.SEVERITY;
+import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS;
+import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS_CHANGE_REASON;
+import static tmf.org.dsmapi.tt.TroubleTicketField.SUB_STATUS;
+import static tmf.org.dsmapi.tt.TroubleTicketField.TARGET_RESOLUTION_DATE;
+import static tmf.org.dsmapi.tt.TroubleTicketField.TYPE;
+import tmf.org.dsmapi.tt.Status;
 
 /**
  *
@@ -73,15 +65,15 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param partialTT
      * @return
      */
-    public TroubleTicket partialUpdate(TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
+    public TroubleTicket partialEdit(String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
-        TroubleTicket currentTT = this.find(partialTT.getId());
+        TroubleTicket currentTT = this.find(id);
 
         if (currentTT == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
         }
 
-        Set<TroubleTicketField> tokens = partialTT.getFields();
+        Set<TroubleTicketField> tokens = partialTT.getFieldsIN();
 
         if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "While updating 'status', please provide a 'statusChangeReason'");
@@ -169,6 +161,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         tt.setStatus(Status.Submitted);
         tt.setStatusChangeDate(Format.toString(new Date()));
         tt.setStatusChangeReason("Creation");
+
         super.create(tt);
     }
 
@@ -181,69 +174,24 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return em;
     }
 
-    public List<TroubleTicket> find(MultivaluedMap<String, String> map) {
+    public List<TroubleTicket> find(MultivaluedMap<String, String> queryParameters) {
 
-        List<TroubleTicket> tickets = null;
-
-        Iterator<Map.Entry<String, List<String>>> it = map.entrySet().iterator();
-
-        CriteriaQuery<TroubleTicket> cq = cb.createQuery(TroubleTicket.class);
-        List<Predicate> andPredicates = new ArrayList<Predicate>();
-        Root<TroubleTicket> tt = cq.from(TroubleTicket.class);
-        //adding multiple &
-        //adding oring 
-        //adding greater than 
-        //adding regular expression
-        //use Map as Entry
-        //Predicate predicate = cb.equal(tt.get(name), Severity.valueOf(value));
-
-        String attName = null;
-        List<String> value = null;
-
-        while (it.hasNext()) {
-            Map.Entry<String, List<String>> sv = it.next();
-            String key = sv.getKey();
-            System.out.println(key);
-            System.out.println(sv.getValue());
-            TroubleTicketField fieldName = TroubleTicketField.fromString(key);
-            if ((!key.equals("timestamp")) && (ReservedKeyword.fromString(key) == null) && fieldName != null) //timestamp : bug with netbeans test tool
-            {
-                Predicate predicate = buildPredicate(tt, sv.getKey(), sv.getValue().get(0));
-                andPredicates.add(predicate);
-            }
+        List<TroubleTicket> tickets;
+        if (queryParameters != null && !queryParameters.isEmpty()) {
+            tickets = findByCriteria(queryParameters, TroubleTicket.class);
+        } else {
+            tickets = this.findAll();
         }
-
-        cq.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
-        cq.select(tt);
-        TypedQuery<TroubleTicket> q = em.createQuery(cq);
-        tickets = q.getResultList();
         return tickets;
 
     }
 
-    Predicate buildPredicate(Root<TroubleTicket> tt, String name, String value) {
-
-        // Use .fromString not valueOf for Enum, to avoid case sensitive problem
-
-        if (name.equalsIgnoreCase("status")) {
-            return cb.equal(tt.get(name), Status.fromString(value));
-        }
-
-        if (name.equalsIgnoreCase("severity")) {
-            return cb.equal(tt.get(name), Severity.fromString(value));
-        }
-
-        return cb.equal(tt.get(name), value);
-
-    }
-
     public int removeAll() {
-        Query query = em.createQuery("DELETE FROM TroubleTicket tt");
-        return query.executeUpdate();
-    }
-
-    @Override
-    protected TroubleTicket getView(TroubleTicket fullElement, Set<String> fieldNames) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<TroubleTicket> tickets = this.findAll();
+        int size = tickets.size();
+        for (TroubleTicket tt : tickets) {
+            em.remove(tt);
+        }
+        return size;
     }
 }

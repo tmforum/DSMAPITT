@@ -5,7 +5,7 @@
 package tmf.org.dsmapi.hub.service;
 
 import javax.ejb.Local;
-import tmf.org.dsmapi.tt.model.TroubleTicket;
+import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
  *
