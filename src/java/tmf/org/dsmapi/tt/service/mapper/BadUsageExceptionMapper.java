@@ -4,11 +4,11 @@
  */
 package tmf.org.dsmapi.tt.service.mapper;
 
+import tmf.org.dsmapi.tt.service.JsonFault;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
-import tmf.org.dsmapi.tt.service.JsonFault;
 
 @Provider
 public class BadUsageExceptionMapper implements ExceptionMapper<BadUsageException> {

@@ -4,11 +4,11 @@
  */
 package tmf.org.dsmapi.tt.service.mapper;
 
+import tmf.org.dsmapi.tt.service.JsonFault;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.tt.service.JsonFault;
 
 @Provider
 public class UnknowResourceExceptionMapper implements ExceptionMapper<UnknownResourceException> {

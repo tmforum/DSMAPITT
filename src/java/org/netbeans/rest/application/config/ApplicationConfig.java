@@ -26,11 +26,11 @@ public class ApplicationConfig extends Application {
         Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
         resources.add(tmf.org.dsmapi.hub.service.HubFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.service.AdminFacadeREST.class);
-        resources.add(tmf.org.dsmapi.tt.service.JacksonConfigurator.class);
         resources.add(tmf.org.dsmapi.tt.service.TroubleTicketFacadeREST.class);
-        resources.add(tmf.org.dsmapi.tt.service.TroubleTicketReader.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.BadUsageExceptionMapper.class);
+        resources.add(tmf.org.dsmapi.tt.service.mapper.JacksonConfigurator.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.JsonMappingExceptionMapper.class);
+        resources.add(tmf.org.dsmapi.tt.service.mapper.TroubleTicketReader.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.UnknowResourceExceptionMapper.class);
         // following code can be used to customize Jersey 1.x JSON provider:
         try {

@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.service;
+package tmf.org.dsmapi.tt.service.mapper;
 
 import tmf.org.dsmapi.tt.TroubleTicketField;
 import tmf.org.dsmapi.tt.TroubleTicket;

@@ -22,8 +22,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import static tmf.org.dsmapi.tt.service.FacadeRestUtil.QUERY_KEY_FIELD;
-import static tmf.org.dsmapi.tt.service.FacadeRestUtil.QUERY_KEY_FIELD_ESCAPE;
+import static tmf.org.dsmapi.tt.service.mapper.FacadeRestUtil.QUERY_KEY_FIELD;
+import static tmf.org.dsmapi.tt.service.mapper.FacadeRestUtil.QUERY_KEY_FIELD_ESCAPE;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicket;
 
