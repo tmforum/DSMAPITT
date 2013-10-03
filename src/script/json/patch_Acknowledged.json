@@ -5,11 +5,11 @@
    "relatedParties":    [
             {
          "role": "role",
-         "reference": "reference party"
+         "reference": "ref 1"
       },
             {
          "role": "role",
-         "reference": "reference party"
+         "reference": "ref 2"
       }
    ]
 }

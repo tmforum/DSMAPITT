@@ -54,7 +54,7 @@ if [ $errOption == 3 ]; then usage >&2; exit $errOption; fi
 # CREATE
 if [ -n "$CREATE" ]; then
     if [ ! -n "$FILE" ]; then
-        FILE=list-large.json
+        FILE=json/post_10.json
     fi
     post "api/admin/troubleTicket" $FILE
     exit 2

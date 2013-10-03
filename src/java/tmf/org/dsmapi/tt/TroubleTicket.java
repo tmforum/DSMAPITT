@@ -92,7 +92,7 @@ public class TroubleTicket implements Serializable {
             name = "RELATED_PARTY",
             joinColumns =
             @JoinColumn(name = "OWNER_ID"))
-    private List<RelatedParty> relatedParties;
+    private List<RelatedParty> relatedParties;    
 
     public String getCorrelationId() {
         return correlationId;
@@ -183,7 +183,7 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<RelatedObject> getRelatedObjects() {
-        if (relatedObjects.isEmpty()) return null;
+        if (relatedObjects==null || relatedObjects.isEmpty()) return null;
         else return relatedObjects;
     }
 
@@ -192,7 +192,7 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<Note> getNotes() {
-        if (notes.isEmpty()) return null;
+        if (notes==null || notes.isEmpty()) return null;
         else return notes;
     }
 
@@ -201,7 +201,7 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<RelatedParty> getRelatedParties() {
-        if (relatedParties.isEmpty()) return null;
+        if (relatedParties==null || relatedParties.isEmpty()) return null;
         else return relatedParties;
     }
 

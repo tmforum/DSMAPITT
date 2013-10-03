@@ -31,7 +31,6 @@ import org.codehaus.jackson.node.ObjectNode;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
-import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
 
 /**
  *
@@ -45,8 +44,6 @@ public class TroubleTicketFacadeREST {
     UriInfo uriInfo;
     @EJB
     TroubleTicketFacade manager;
-    @EJB
-    PublisherLocal publisher;
 
     public TroubleTicketFacadeREST() {
     }
@@ -94,10 +91,6 @@ public class TroubleTicketFacadeREST {
 
         manager.create(entity);
 
-        System.out.println("Calling  Publish");
-        publisher.publishTicketCreateNotification(entity);
-        System.out.println("After Calling  Publish");
-
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
         String id = entity.getId();
@@ -121,9 +114,6 @@ public class TroubleTicketFacadeREST {
         // Try to merge        
         entity = manager.edit(id, entity);
 
-        publisher.publishTicketChangedNotification(entity);
-        publisher.publishTicketStatusChangedNotification(entity);
-
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
         uriBuilder.path("{id}");
@@ -140,9 +130,6 @@ public class TroubleTicketFacadeREST {
     public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
         TroubleTicket fullTT = manager.partialEdit(id, partialTT);
-
-        publisher.publishTicketChangedNotification(partialTT);
-        publisher.publishTicketStatusChangedNotification(partialTT);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());

@@ -6,16 +6,17 @@ import java.util.List;
 import tmf.org.dsmapi.tt.TroubleTicket;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.hub.service.PublisherLocal;
 import static tmf.org.dsmapi.tt.TroubleTicketField.CORRELATION_ID;
 import static tmf.org.dsmapi.tt.TroubleTicketField.CREATION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.DESCRIPTION;
@@ -30,6 +31,9 @@ import static tmf.org.dsmapi.tt.TroubleTicketField.SUB_STATUS;
 import static tmf.org.dsmapi.tt.TroubleTicketField.TARGET_RESOLUTION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.TYPE;
 import tmf.org.dsmapi.tt.Status;
+import tmf.org.dsmapi.tt.workflow.Flow;
+import tmf.org.dsmapi.tt.workflow.Transition;
+import tmf.org.dsmapi.tt.workflow.v1_0.TroubleTicketFlow;
 
 /**
  *
@@ -42,10 +46,15 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
     private CriteriaBuilder cb;
+    private Flow flow;
+    @EJB
+    PublisherLocal publisher;
 
     @PostConstruct
     private void init() {
         cb = em.getCriteriaBuilder();
+        flow = new TroubleTicketFlow();
+        int a = 3;
     }
 
     /**
@@ -55,9 +64,13 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         super(TroubleTicket.class);
     }
 
+    @Override
     public TroubleTicket edit(String id, TroubleTicket tt) throws UnknownResourceException {
         tt.setId(id);
-        return super.edit(id, tt);
+        tt = super.edit(id, tt);;
+        publisher.publishTicketChangedNotification(tt);
+        publisher.publishTicketStatusChangedNotification(tt);
+        return tt;
     }
 
     /**
@@ -80,13 +93,11 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
 
         if (tokens.contains(STATUS)) {
-            if (WorkflowValidator.isCorrect(currentTT.getStatus(), partialTT.getStatus())) {
-                currentTT.setStatus(partialTT.getStatus());
-                currentTT.setStatusChangeDate(Format.toString(new Date()));
-                currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-            } else {
-                throw new BadUsageException(ExceptionType.BAD_USAGE_STATUS_TRANSITION, "current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
-            }
+            // isValidTransition if this transition is allowed
+            flow.checkTransition(currentTT.getStatus(), partialTT.getStatus());
+            currentTT.setStatus(partialTT.getStatus());
+            currentTT.setStatusChangeDate(Format.toString(new Date()));
+            currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
         }
 
         for (TroubleTicketField token : tokens) {
@@ -133,6 +144,9 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             }
         }
 
+        publisher.publishTicketChangedNotification(partialTT);
+        publisher.publishTicketStatusChangedNotification(partialTT);
+
         return currentTT;
 
     }
@@ -158,11 +172,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, fieldName);
         }
 
-        tt.setStatus(Status.Submitted);
-        tt.setStatusChangeDate(Format.toString(new Date()));
-        tt.setStatusChangeReason("Creation");
-
         super.create(tt);
+
+        System.out.println("Calling  Publish");
+        publisher.publishTicketCreateNotification(tt);
+        System.out.println("After Calling  Publish");
+
     }
 
     /**

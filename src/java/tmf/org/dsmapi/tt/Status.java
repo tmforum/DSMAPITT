@@ -10,8 +10,8 @@ package tmf.org.dsmapi.tt;
  */
 public enum Status {
 
-    Submitted,
     Acknowledged,
+    InProgress,
     InProgress_Held,
     InProgress_Pending,
     Resolved,

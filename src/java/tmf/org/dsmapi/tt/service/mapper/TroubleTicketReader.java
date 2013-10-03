@@ -61,8 +61,6 @@ public class TroubleTicketReader implements MessageBodyReader<TroubleTicket> {
 
         TroubleTicket tt;
 
-        System.out.println("=== TroubleTicket MessageBodyReader ENABLE ===");
-
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readValue(entityStream, JsonNode.class);
         

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-JSON_HOME="json/"
-
 # xml or json...
 FORMAT=json
 
@@ -24,7 +22,7 @@ get() {
 
 post() {
     info_response
-    curl ${CURL_OPTS} -X POST -d @${JSON_HOME}${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
+    curl ${CURL_OPTS} -X POST -d @${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
     info_final "POST" $2
 }
 
@@ -36,13 +34,13 @@ delete() {
 
 put() {
     info_response       
-    curl ${CURL_OPTS} -X PUT -d @${JSON_HOME}${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
+    curl ${CURL_OPTS} -X PUT -d @${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
     info_final "PUT"
 }
 
 patch() {
     info_response        
-    curl ${CURL_OPTS} -X PATCH -d @${JSON_HOME}${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
+    curl ${CURL_OPTS} -X PATCH -d @${2} ${URL_BASE}/${1} >>$tmpfile 2>$logfile
     info_final "PATCH"
 }
 
@@ -61,7 +59,7 @@ info_response() {
 info_final() {
 	printf "   METHOD:${1}\n" >>$tmpfile 2>>$logfile
     if [ -n "$FILE" ]; then
-        printf "   INPUT FILE:$JSON_HOME$FILE\n" >>$tmpfile 2>>$logfile
+        printf "   INPUT FILE:$FILE\n" >>$tmpfile 2>>$logfile
     fi
     printf "\n" >>$tmpfile 2>>$logfile        
 	cat $tmpfile >> $outfile
