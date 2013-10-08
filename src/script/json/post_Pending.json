@@ -1,0 +1,37 @@
+{
+    "id": null,
+    "correlationId": null,
+    "description": "Description 1",
+    "severity": "Medium",
+    "type": "Bills, charges or payment",
+    "creationDate": "2013-08-20T18:18:40UTC",
+    "targetResolutionDate": null,
+    "resolutionDate": null,
+    "relatedObjects": [
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject1"
+        },
+        {
+            "involvement": "involvment",
+            "reference": "referenceobject3"
+        }
+    ],
+    "notes": [
+        {
+            "date": "date",
+            "author": "author",
+            "text": "To Pending"
+        }
+    ],
+    "relatedParties": [
+        {
+            "role": "role",
+            "reference": "reference party"
+        },
+        {
+            "role": "role",
+            "reference": "reference party"
+        }
+    ]
+}
