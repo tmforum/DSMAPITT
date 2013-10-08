@@ -9,13 +9,13 @@ import tmf.org.dsmapi.commons.exceptions.ExceptionType;
  *
  * @author maig7313
  */
-public abstract class BaseFlow<E extends Enum<E>> implements Flow<E> {
+public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E> {
 
     private Map<E, Transition> transitionMap;
     private Transition<E> firstTransition;
     private Class<E> type;
 
-    public BaseFlow(Class<E> type) {
+    public StateModelBase(Class<E> type) {
         this.type = type;
     }
 
@@ -74,10 +74,13 @@ public abstract class BaseFlow<E extends Enum<E>> implements Flow<E> {
         firstTransition = new Transition();
         return firstTransition;
     }
+    
+    protected Transition fromFirst(E e1) {
+        firstTransition = from(e1);
+        return firstTransition;
+    }    
 
     protected abstract void draw();
-
-    public abstract String getURN();
 
     /**
      * @return the transitionMap

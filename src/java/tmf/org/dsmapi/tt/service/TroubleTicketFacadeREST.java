@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -29,8 +31,14 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 import org.codehaus.jackson.node.ObjectNode;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.TechnicalException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
+import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
+import tmf.org.dsmapi.tt.Status;
+import tmf.org.dsmapi.tt.TroubleTicketField;
+import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS;
+import tmf.org.dsmapi.tt.workflow.WorkFlow;
 
 /**
  *
@@ -38,12 +46,17 @@ import tmf.org.dsmapi.hub.service.PublisherLocal;
  */
 @Stateless
 @Path("troubleTicket")
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class TroubleTicketFacadeREST {
 
     @Context
     UriInfo uriInfo;
     @EJB
     TroubleTicketFacade manager;
+    @EJB
+    PublisherLocal publisher;
+    @EJB
+    WorkFlow workflow;
 
     public TroubleTicketFacadeREST() {
     }
@@ -87,9 +100,17 @@ public class TroubleTicketFacadeREST {
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response post(TroubleTicket entity) throws BadUsageException {
+    public Response post(TroubleTicket entity) throws BadUsageException, TechnicalException {
 
+        entity.setStatus(Status.Submitted);
+        entity.setStatusChangeDate(Format.toString(new Date()));
         manager.create(entity);
+        
+        workflow.start(entity);
+
+        System.out.println("Calling  Publish");
+        publisher.createNotification(entity);
+        System.out.println("After Calling  Publish");
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -111,8 +132,9 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response put(@PathParam("id") String id, TroubleTicket entity) throws UnknownResourceException {
 
-        // Try to merge        
-        entity = manager.edit(id, entity);
+        // Try to updateAttributes
+        entity.setId(id);
+        entity = manager.edit(entity);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -129,7 +151,17 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
-        TroubleTicket fullTT = manager.partialEdit(id, partialTT);
+        // id is in URL
+        partialTT.setId(id);
+        
+        // Status is updated when correlationId==nul ( admin or demo purpose only)
+        TroubleTicket fullTT = manager.updateAttributes(partialTT);
+        
+        // When correlationId!=null
+        if ((partialTT.getCorrelationId()!=null) || !partialTT.getCorrelationId().isEmpty()) {
+            // should use correlationId to wakeUp, but as there is only one case in demo... for Pending..
+            workflow.wakeUp(fullTT);
+        }
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -138,18 +170,16 @@ public class TroubleTicketFacadeREST {
         return Response.created(uriBuilder.build(id)).
                 entity(fullTT).
                 build();
-
-
     }
 
     @GET
     @Path("{id}")
     @Produces({"application/json"})
     public Response get(@PathParam("id") String id, @Context UriInfo info) throws UnknownResourceException {
-        
+
         Response response = null;
         TroubleTicket tt = manager.find(id);
-        
+
         MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
         Set<String> fieldSet = FacadeRestUtil.getFieldSet(queryParameters);
 
@@ -159,7 +189,7 @@ public class TroubleTicketFacadeREST {
             fieldSet.add(FacadeRestUtil.ID_FIELD);
             ObjectNode root = FacadeRestUtil.createNodeViewWithFields(tt, fieldSet);
             response = Response.ok(root).build();
-        }        
+        }
 
         return response;
     }

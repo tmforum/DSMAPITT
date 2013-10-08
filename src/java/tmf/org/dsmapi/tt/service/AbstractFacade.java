@@ -26,6 +26,7 @@ import javax.persistence.criteria.Root;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
+import tmf.org.dsmapi.commons.exceptions.TechnicalException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 
 /**
@@ -55,11 +56,7 @@ public abstract class AbstractFacade<T> {
         getEntityManager().persist(entity);
     }
 
-    public T edit(String id, T entity) throws UnknownResourceException {
-        T targetEntity = this.find(id);
-        if (targetEntity == null) {
-            throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
-        }
+    public T edit(T entity) throws UnknownResourceException {
         getEntityManager().merge(entity);
         return entity;
     }
@@ -70,7 +67,7 @@ public abstract class AbstractFacade<T> {
     }
 
     public T find(Object id) throws UnknownResourceException {
-        T entity = getEntityManager().find(entityClass, id);
+        T entity = getEntityManager().find(entityClass, id);        
         if (entity == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
         }

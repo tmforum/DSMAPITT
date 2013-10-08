@@ -52,7 +52,7 @@ public class Publisher implements PublisherLocal {
     }
 
     @Override
-    public void publishTicketCreateNotification(TroubleTicket tt) {
+    public void createNotification(TroubleTicket tt) {
         HubEvent event = new HubEvent();
         event.setEvent(tt);
         event.setEventType(TroubleTicketEventTypeEnum.TicketCreateNotification);
@@ -61,7 +61,7 @@ public class Publisher implements PublisherLocal {
     }
 
     @Override
-    public void publishTicketStatusChangedNotification(TroubleTicket tt) {
+    public void statusChangedNotification(TroubleTicket tt) {
 
         HubEvent event = new HubEvent();
         event.setEvent(tt);
@@ -71,7 +71,7 @@ public class Publisher implements PublisherLocal {
     }
 
     @Override
-    public void publishTicketChangedNotification(TroubleTicket tt) {
+    public void changedNotification(TroubleTicket tt) {
 
         HubEvent event = new HubEvent();
         event.setEvent(tt);
@@ -81,7 +81,7 @@ public class Publisher implements PublisherLocal {
     }
 
     @Override
-    public void publishTicketClearanceRequestNotification(TroubleTicket tt) {
+    public void clearanceRequestNotification(TroubleTicket tt) {
 
         HubEvent event = new HubEvent();
         event.setEvent(tt);
@@ -91,7 +91,7 @@ public class Publisher implements PublisherLocal {
     }
 
     @Override
-    public void publishInformationRequiredNotification(TroubleTicket tt) {
+    public void informationRequiredNotification(TroubleTicket tt) {
 
         HubEvent event = new HubEvent();
         event.setEvent(tt);

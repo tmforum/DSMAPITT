@@ -1,9 +1,10 @@
 package tmf.org.dsmapi.tt.workflow;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import static java.util.EnumSet.noneOf;
 
-public class Transition<E extends Enum<E>> {
+public class Transition<E extends Enum<E>> implements Serializable, Cloneable{
 
     private E from;
     private EnumSet<E> to;

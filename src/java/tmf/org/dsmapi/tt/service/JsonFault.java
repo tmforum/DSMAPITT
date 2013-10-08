@@ -9,7 +9,7 @@ import tmf.org.dsmapi.commons.exceptions.ExceptionBean;
 public class JsonFault {
 
     private ExceptionBean error;
-    private String detail;
+    private String detail;    
 
     public JsonFault(ExceptionBean error) {
         this.error = error;

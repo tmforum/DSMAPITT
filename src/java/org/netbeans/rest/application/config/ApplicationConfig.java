@@ -30,6 +30,7 @@ public class ApplicationConfig extends Application {
         resources.add(tmf.org.dsmapi.tt.service.mapper.BadUsageExceptionMapper.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.JacksonConfigurator.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.JsonMappingExceptionMapper.class);
+        resources.add(tmf.org.dsmapi.tt.service.mapper.TechnicalExceptionMapper.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.TroubleTicketReader.class);
         resources.add(tmf.org.dsmapi.tt.service.mapper.UnknowResourceExceptionMapper.class);
         // following code can be used to customize Jersey 1.x JSON provider:

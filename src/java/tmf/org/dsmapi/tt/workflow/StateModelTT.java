@@ -1,28 +1,22 @@
-package tmf.org.dsmapi.tt.workflow.v1_0;
+package tmf.org.dsmapi.tt.workflow;
 
 import tmf.org.dsmapi.tt.Status;
-import tmf.org.dsmapi.tt.workflow.BaseFlow;
 
 /**
  *
  * @author maig7313
  */
-public class TroubleTicketFlow extends BaseFlow<Status> {
+public class StateModelTT extends StateModelBase<Status> {
 
-    public TroubleTicketFlow() {
-        // The functional enum, here the TT Status, used to build EnumMap
+    public StateModelTT() {
+        // Use troubleTicket Status
         super(Status.class);
-    }
-
-    @Override
-    public String getURN() {
-        return "troubleTicket/1.0";
     }
 
     @Override
     protected void draw() {
         // First
-        fromFirst().to(
+        fromFirst(Status.Submitted).to(
                 Status.Rejected,
                 Status.Acknowledged);
 

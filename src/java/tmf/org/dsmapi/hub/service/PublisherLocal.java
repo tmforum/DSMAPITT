@@ -16,15 +16,15 @@ public interface PublisherLocal {
 
    void publish(Object event);
 
-    public void publishTicketCreateNotification(TroubleTicket tt);
+    public void createNotification(TroubleTicket tt);
 
-    public void publishTicketStatusChangedNotification(TroubleTicket tt);
+    public void statusChangedNotification(TroubleTicket tt);
 
-    public void publishTicketChangedNotification(TroubleTicket tt);
+    public void changedNotification(TroubleTicket tt);
 
-    public void publishTicketClearanceRequestNotification(TroubleTicket tt);
+    public void clearanceRequestNotification(TroubleTicket tt);
 
-    public void publishInformationRequiredNotification(TroubleTicket tt);
+    public void informationRequiredNotification(TroubleTicket tt);
    
     
 }

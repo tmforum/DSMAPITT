@@ -5,6 +5,7 @@
 package tmf.org.dsmapi.tt;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.persistence.CollectionTable;
@@ -192,8 +193,8 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<Note> getNotes() {
-        if (notes==null || notes.isEmpty()) return null;
-        else return notes;
+        if (notes==null) notes = new ArrayList<Note>();
+        return notes;
     }
 
     public void setNotes(List<Note> notes) {

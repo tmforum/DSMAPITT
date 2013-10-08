@@ -9,7 +9,8 @@ public enum ExceptionType {
     BAD_USAGE_MANDATORY_FIELDS(new ExceptionBean("4003", "Missing mandatory field")),
     BAD_USAGE_UNKNOWN_VALUE(new ExceptionBean("E160", "Unknown value")),
     BAD_USAGE_OPERATOR(new ExceptionBean("4011", "Wrong operator usage")),
-    BAD_USAGE_FORMAT(new ExceptionBean("4012", "Wrong format")),    
+    BAD_USAGE_FORMAT(new ExceptionBean("4012", "Wrong format")),
+    TECHNICAL(new ExceptionBean("9000", "Technical error")),
     UNKNOWN_RESOURCE(new ExceptionBean("4041", "Unknown resource"));
     private ExceptionBean info;
 

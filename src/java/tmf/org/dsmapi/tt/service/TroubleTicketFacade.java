@@ -6,7 +6,6 @@ import java.util.List;
 import tmf.org.dsmapi.tt.TroubleTicket;
 import java.util.Set;
 import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,8 +15,7 @@ import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
-import tmf.org.dsmapi.hub.service.PublisherLocal;
-import static tmf.org.dsmapi.tt.TroubleTicketField.CORRELATION_ID;
+import tmf.org.dsmapi.tt.Status;
 import static tmf.org.dsmapi.tt.TroubleTicketField.CREATION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.DESCRIPTION;
 import static tmf.org.dsmapi.tt.TroubleTicketField.NOTES;
@@ -27,13 +25,10 @@ import static tmf.org.dsmapi.tt.TroubleTicketField.RESOLUTION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.SEVERITY;
 import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS;
 import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS_CHANGE_REASON;
-import static tmf.org.dsmapi.tt.TroubleTicketField.SUB_STATUS;
 import static tmf.org.dsmapi.tt.TroubleTicketField.TARGET_RESOLUTION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.TYPE;
-import tmf.org.dsmapi.tt.Status;
-import tmf.org.dsmapi.tt.workflow.Flow;
-import tmf.org.dsmapi.tt.workflow.Transition;
-import tmf.org.dsmapi.tt.workflow.v1_0.TroubleTicketFlow;
+import tmf.org.dsmapi.tt.workflow.StateModel;
+import tmf.org.dsmapi.tt.workflow.StateModelTT;
 
 /**
  *
@@ -46,14 +41,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
     private CriteriaBuilder cb;
-    private Flow flow;
-    @EJB
-    PublisherLocal publisher;
+    private StateModel stateModel;
 
     @PostConstruct
     private void init() {
         cb = em.getCriteriaBuilder();
-        flow = new TroubleTicketFlow();
+        stateModel = new StateModelTT();
         int a = 3;
     }
 
@@ -65,11 +58,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     }
 
     @Override
-    public TroubleTicket edit(String id, TroubleTicket tt) throws UnknownResourceException {
-        tt.setId(id);
-        tt = super.edit(id, tt);;
-        publisher.publishTicketChangedNotification(tt);
-        publisher.publishTicketStatusChangedNotification(tt);
+    public TroubleTicket edit(TroubleTicket tt) throws UnknownResourceException {
+        TroubleTicket targetEntity = this.find(tt.getId());
+        if (targetEntity == null) {
+            throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
+        }
+        tt = super.edit(tt);
         return tt;
     }
 
@@ -78,9 +72,9 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param partialTT
      * @return
      */
-    public TroubleTicket partialEdit(String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
+    public TroubleTicket updateAttributes(TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
 
-        TroubleTicket currentTT = this.find(id);
+        TroubleTicket currentTT = this.find(partialTT.getId());
 
         if (currentTT == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
@@ -91,20 +85,18 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "While updating 'status', please provide a 'statusChangeReason'");
         }
-
-        if (tokens.contains(STATUS)) {
+        
+        // Allow status update when there is no correlationId, for demo or admin purpose
+        if (tokens.contains(STATUS) && (partialTT.getCorrelationId()!=null)) {
             // isValidTransition if this transition is allowed
-            flow.checkTransition(currentTT.getStatus(), partialTT.getStatus());
+            stateModel.checkTransition(currentTT.getStatus(), partialTT.getStatus());
             currentTT.setStatus(partialTT.getStatus());
             currentTT.setStatusChangeDate(Format.toString(new Date()));
             currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-        }
+        }        
 
         for (TroubleTicketField token : tokens) {
             switch (token) {
-                case CORRELATION_ID:
-                    currentTT.setCorrelationId(partialTT.getCorrelationId());
-                    break;
                 case CREATION_DATE:
                     currentTT.setCreationDate(partialTT.getCreationDate());
                     break;
@@ -114,7 +106,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                     }
                     break;
                 case NOTES:
-                    currentTT.setNotes(partialTT.getNotes());
+                    currentTT.getNotes().addAll(partialTT.getNotes());  // Add Notes
                     break;
                 case RELATED_OBJECTS:
                     currentTT.setRelatedObjects(partialTT.getRelatedObjects());
@@ -130,9 +122,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                         currentTT.setSeverity(partialTT.getSeverity());
                     }
                     break;
-                case SUB_STATUS:
-                    currentTT.setSubStatus(partialTT.getSubStatus());
-                    break;
                 case TARGET_RESOLUTION_DATE:
                     currentTT.setResolutionDate(partialTT.getResolutionDate());
                     break;
@@ -143,10 +132,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                     break;
             }
         }
-
-        publisher.publishTicketChangedNotification(partialTT);
-        publisher.publishTicketStatusChangedNotification(partialTT);
-
+        em.merge(currentTT);
         return currentTT;
 
     }
@@ -174,10 +160,14 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         super.create(tt);
 
-        System.out.println("Calling  Publish");
-        publisher.publishTicketCreateNotification(tt);
-        System.out.println("After Calling  Publish");
+    }
 
+    public TroubleTicket updateStatus(TroubleTicket troubleTicket, Status status, String reason) {
+        troubleTicket.setStatus(status);
+        troubleTicket.setStatusChangeDate(Format.toString(new Date()));
+        troubleTicket.setStatusChangeReason(reason);
+        em.merge(troubleTicket);
+        return troubleTicket;
     }
 
     /**
