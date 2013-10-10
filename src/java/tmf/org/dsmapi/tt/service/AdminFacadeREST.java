@@ -16,7 +16,7 @@ import javax.ws.rs.core.Response;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
-import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
+import tmf.org.dsmapi.hub.service.HubFacade;
 import tmf.org.dsmapi.tt.Note;
 import tmf.org.dsmapi.tt.RelatedObject;
 import tmf.org.dsmapi.tt.RelatedParty;
@@ -29,7 +29,10 @@ import tmf.org.dsmapi.tt.TroubleTicket;
 public class AdminFacadeREST {
 
     @EJB
-    TroubleTicketFacade manager;
+    TroubleTicketFacade ttManager;
+    
+    @EJB
+    HubFacade hubManager;    
 
     @POST
     @Path("troubleTicket")
@@ -39,17 +42,17 @@ public class AdminFacadeREST {
         
         if (entities==null) return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build(); 
 
-        int previousRows = manager.count();
+        int previousRows = ttManager.count();
         int affectedRows;
 
         // Try to persist entities
         try {
-            affectedRows = manager.create(entities);
+            affectedRows = ttManager.create(entities);
         } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        Report stat = new Report(manager.count());
+        Report stat = new Report(ttManager.count());
         stat.setAffectedRows(affectedRows);
         stat.setPreviousRows(previousRows);
 
@@ -61,27 +64,40 @@ public class AdminFacadeREST {
 
     @DELETE
     @Path("troubleTicket")
-    public Report deleteAll() {
+    public Report deleteAllTT() {
 
-        int affectedRows = manager.removeAll();
+        int affectedRows = ttManager.removeAll();
 
-        Report stat = new Report(manager.count());
+        Report stat = new Report(ttManager.count());
         stat.setAffectedRows(affectedRows);
         stat.setPreviousRows(affectedRows);
 
         return stat;
     }
+    
+    @DELETE
+    @Path("hub")
+    public Report deleteAllHub() {
+
+        int affectedRows = hubManager.removeAll();
+
+        Report stat = new Report(hubManager.count());
+        stat.setAffectedRows(affectedRows);
+        stat.setPreviousRows(affectedRows);
+
+        return stat;
+    }    
 
     @DELETE
     @Path("troubleTicket/{id}")
     public Report delete(@PathParam("id") String id) throws UnknownResourceException {
 
-        int previousRows = manager.count();
+        int previousRows = ttManager.count();
 
-        manager.remove(id);
+        ttManager.remove(id);
         int affectedRows = 1;
 
-        Report stat = new Report(manager.count());
+        Report stat = new Report(ttManager.count());
         stat.setAffectedRows(affectedRows);
         stat.setPreviousRows(previousRows);
 
@@ -92,13 +108,13 @@ public class AdminFacadeREST {
     @Path("troubleTicket/count")
     @Produces({"application/json"})
     public Report count() {
-        return new Report(manager.count());
+        return new Report(ttManager.count());
     }
     
     @DELETE
     @Path("troubleTicket/cache")
     public void clearCache() {
-        manager.invalidCache();
+        ttManager.invalidCache();
     }    
     
     

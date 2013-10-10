@@ -6,6 +6,7 @@ package tmf.org.dsmapi.hub;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
@@ -13,6 +14,7 @@ import tmf.org.dsmapi.tt.TroubleTicket;
  * @author pierregauthier
  */
 @XmlRootElement
+@JsonPropertyOrder({ "eventType", "event" })
 public class HubEvent implements Serializable {
 
     private TroubleTicket event; //checl for object

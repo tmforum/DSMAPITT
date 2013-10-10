@@ -72,7 +72,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      * @param partialTT
      * @return
      */
-    public TroubleTicket updateAttributes(TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
+    public TroubleTicket updateAttributes(TroubleTicket partialTT, Set<TroubleTicketField> fields) throws BadUsageException, UnknownResourceException {
 
         TroubleTicket currentTT = this.find(partialTT.getId());
 
@@ -80,14 +80,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
         }
 
-        Set<TroubleTicketField> tokens = partialTT.getFieldsIN();
-
-        if (tokens.contains(STATUS) & !(tokens.contains(STATUS_CHANGE_REASON))) {
+        if (fields.contains(STATUS) & !(fields.contains(STATUS_CHANGE_REASON))) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "While updating 'status', please provide a 'statusChangeReason'");
         }
         
         // Allow status update when there is no correlationId, for demo or admin purpose
-        if (tokens.contains(STATUS) && (partialTT.getCorrelationId()!=null)) {
+        if (fields.contains(STATUS) && (partialTT.getCorrelationId()==null)) {
             // isValidTransition if this transition is allowed
             stateModel.checkTransition(currentTT.getStatus(), partialTT.getStatus());
             currentTT.setStatus(partialTT.getStatus());
@@ -95,7 +93,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
         }        
 
-        for (TroubleTicketField token : tokens) {
+        for (TroubleTicketField token : fields) {
             switch (token) {
                 case CREATION_DATE:
                     currentTT.setCreationDate(partialTT.getCreationDate());
@@ -106,7 +104,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
                     }
                     break;
                 case NOTES:
-                    currentTT.getNotes().addAll(partialTT.getNotes());  // Add Notes
+                    currentTT.setNotes(partialTT.getNotes());  // Replace Notes
                     break;
                 case RELATED_OBJECTS:
                     currentTT.setRelatedObjects(partialTT.getRelatedObjects());

@@ -1,0 +1,12 @@
+{
+    "relatedParties": [
+        {
+            "role": "role",
+            "reference": "reference party"
+        },
+        {
+            "role": "role",
+            "reference": "reference party"
+        }
+    ]
+}

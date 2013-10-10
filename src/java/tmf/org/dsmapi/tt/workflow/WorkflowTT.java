@@ -11,8 +11,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import tmf.org.dsmapi.commons.exceptions.BadUsageException;
-import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Note;
@@ -29,7 +27,7 @@ import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
 @Asynchronous
 public class WorkflowTT implements WorkFlow<TroubleTicket> {
 
-    private final static long PAUSE = 1000;
+    private final static long PAUSE = 3000;
     @EJB
     TroubleTicketFacade manager;
     @EJB
@@ -153,11 +151,10 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
             note.setText("To Resolved");
             partialTT.getNotes().add(note); // Set Note
 
-            Set<TroubleTicketField> tokenList = new HashSet<TroubleTicketField>();
-            tokenList.add(TroubleTicketField.NOTES);
-            partialTT.setFieldsIN(tokenList);
+            Set<TroubleTicketField> fields = new HashSet<TroubleTicketField>();
+            fields.add(TroubleTicketField.NOTES);
             try {
-                tt = manager.updateAttributes(partialTT);
+                tt = manager.updateAttributes(partialTT, fields);
             } catch (Exception ex) {
                 Logger.getLogger(WorkflowTT.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -165,7 +162,7 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
         }
 
         if (Status.Resolved == tt.getStatus()) { // > Resolved
-            this.wakeUp(tt);
+            this.wakeUp(tt); // Internal wakeUp
         }
 
         if (Status.InProgress_Pending == tt.getStatus()) { // > In Progress Pending

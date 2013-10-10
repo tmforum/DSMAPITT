@@ -35,7 +35,7 @@ import tmf.org.dsmapi.tt.TroubleTicket;
  * @author pierregauthier
  */
 @Stateless
-@Path("tmf.org.dsmapi.hub.hub")
+@Path("hub")
 public class HubFacadeREST extends AbstractFacade<Hub> {
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;

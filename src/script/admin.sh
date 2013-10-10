@@ -54,7 +54,8 @@ if [ $errOption == 3 ]; then usage >&2; exit $errOption; fi
 # CREATE
 if [ -n "$CREATE" ]; then
     if [ ! -n "$FILE" ]; then
-        FILE=json/post_10.json
+        echo "Please provide [-f file]" >&2
+        exit 4        
     fi
     post "api/admin/troubleTicket" $FILE
     exit 2

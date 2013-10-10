@@ -5,14 +5,19 @@
 package tmf.org.dsmapi.tt.service;
 //changes22222 now look agan too much bbbbb cccc vvvvv last vvv mo
 
+import java.io.IOException;
 import tmf.org.dsmapi.tt.service.mapper.FacadeRestUtil;
 import tmf.org.dsmapi.commons.jaxrs.PATCH;
 import tmf.org.dsmapi.tt.TroubleTicket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -29,6 +34,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.TechnicalException;
@@ -37,7 +46,6 @@ import tmf.org.dsmapi.commons.utils.Format;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicketField;
-import static tmf.org.dsmapi.tt.TroubleTicketField.STATUS;
 import tmf.org.dsmapi.tt.workflow.WorkFlow;
 
 /**
@@ -105,12 +113,8 @@ public class TroubleTicketFacadeREST {
         entity.setStatus(Status.Submitted);
         entity.setStatusChangeDate(Format.toString(new Date()));
         manager.create(entity);
-        
-        workflow.start(entity);
 
-        System.out.println("Calling  Publish");
-        publisher.createNotification(entity);
-        System.out.println("After Calling  Publish");
+        workflow.start(entity);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -149,16 +153,33 @@ public class TroubleTicketFacadeREST {
     @Path("{id}")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response patch(@PathParam("id") String id, TroubleTicket partialTT) throws BadUsageException, UnknownResourceException {
+    public Response patch(@PathParam("id") String id, JsonNode jsonNode) throws BadUsageException, UnknownResourceException {
+
+        Set<TroubleTicketField> fields = new HashSet<TroubleTicketField>();
+
+        // Iterate over first level to set received tokens
+        Iterator<String> it = jsonNode.getFieldNames();
+        while (it.hasNext()) {
+            fields.add(TroubleTicketField.fromString(it.next()));
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        TroubleTicket partialTT;
+        try {
+            partialTT = mapper.readValue(jsonNode, TroubleTicket.class);
+        } catch (Exception ex) {
+            Logger.getLogger(TroubleTicketFacadeREST.class.getName()).log(Level.SEVERE, null, ex);
+            throw new TechnicalException();
+        }
 
         // id is in URL
         partialTT.setId(id);
-        
+
         // Status is updated when correlationId==nul ( admin or demo purpose only)
-        TroubleTicket fullTT = manager.updateAttributes(partialTT);
-        
+        TroubleTicket fullTT = manager.updateAttributes(partialTT, fields);
+
         // When correlationId!=null
-        if ((partialTT.getCorrelationId()!=null) || !partialTT.getCorrelationId().isEmpty()) {
+        if ((partialTT.getCorrelationId() != null) && !partialTT.getCorrelationId().isEmpty()) {
             // should use correlationId to wakeUp, but as there is only one case in demo... for Pending..
             workflow.wakeUp(fullTT);
         }

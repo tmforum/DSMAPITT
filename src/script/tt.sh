@@ -43,11 +43,11 @@ do
         l)  GET=OK
 			;;
         g)  GET=OK
-			;;
+			;;          
         i)  ID="${OPTARG}"
             ;;
         q)  QUERY="${OPTARG}"
-			;;           
+			;;
         f)  FILE="${OPTARG}"
 			;;
 		\?) echo " option $OPTARG INVALIDE" >&2
@@ -60,7 +60,8 @@ if [ $errOption == 3 ]; then usage >&2; exit $errOption; fi
 # CREATE
 if [ -n "$CREATE" ]; then
     if [ ! -n "$FILE" ]; then
-        FILE=json/post_1_Held.json
+        echo "Please provide [-f file]" >&2
+        exit 4
     fi
     post "api/troubleTicket" $FILE
     exit 2
@@ -69,7 +70,8 @@ fi
 # PUT
 if [ -n "$PUT" ]; then
     if [ ! -n "$FILE" ]; then
-        FILE=json/put.json
+        echo "Please provide [-f file]" >&2
+        exit 4        
     fi
     if [ ! -n "$ID" ]; then
         echo "Please provide [-i id]" >&2
@@ -86,7 +88,8 @@ if [ -n "$PATCH" ]; then
         exit 4
     fi
     if [ ! -n "$FILE" ]; then
-        FILE=json/patch_Acknowledged.json
+        echo "Please provide [-f file]" >&2
+        exit 4        
     fi
     patch "api/troubleTicket/${ID}" $FILE
     exit 2

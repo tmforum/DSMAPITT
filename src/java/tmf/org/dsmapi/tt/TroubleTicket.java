@@ -7,7 +7,6 @@ package tmf.org.dsmapi.tt;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -16,9 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
@@ -46,12 +43,8 @@ public class TroubleTicket implements Serializable {
 
     //Add other static strings as required....
     private static final long serialVersionUID = 1L;
-    // Used for incremental update
-    @Transient
-    @JsonIgnore
-    private Set<TroubleTicketField> fieldsIN;
     @Id
-    @Column(name="TT_ID")
+    @Column(name = "TT_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
@@ -63,7 +56,7 @@ public class TroubleTicket implements Serializable {
         this.id = id;
     }
     private String correlationId;
-    private String description; 
+    private String description;
     private Severity severity;
     private String type;
     private String creationDate;
@@ -73,27 +66,24 @@ public class TroubleTicket implements Serializable {
     private String statusChangeReason;
     private String statusChangeDate;
     private String resolutionDate;
-    
     @ElementCollection
     @CollectionTable(
             name = "RELATED_OBJECT",
             joinColumns =
             @JoinColumn(name = "OWNER_ID"))
     private List<RelatedObject> relatedObjects;
-    
     @ElementCollection
     @CollectionTable(
             name = "NOTES",
             joinColumns =
             @JoinColumn(name = "OWNER_ID"))
     private List<Note> notes;
-    
     @ElementCollection
     @CollectionTable(
             name = "RELATED_PARTY",
             joinColumns =
             @JoinColumn(name = "OWNER_ID"))
-    private List<RelatedParty> relatedParties;    
+    private List<RelatedParty> relatedParties;
 
     public String getCorrelationId() {
         return correlationId;
@@ -184,8 +174,11 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<RelatedObject> getRelatedObjects() {
-        if (relatedObjects==null || relatedObjects.isEmpty()) return null;
-        else return relatedObjects;
+        if (relatedObjects == null || relatedObjects.isEmpty()) {
+            return null;
+        } else {
+            return relatedObjects;
+        }
     }
 
     public void setRelatedObjects(List<RelatedObject> relatedObjects) {
@@ -193,7 +186,9 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<Note> getNotes() {
-        if (notes==null) notes = new ArrayList<Note>();
+        if (notes == null) {
+            notes = new ArrayList<Note>();
+        }
         return notes;
     }
 
@@ -202,8 +197,11 @@ public class TroubleTicket implements Serializable {
     }
 
     public List<RelatedParty> getRelatedParties() {
-        if (relatedParties==null || relatedParties.isEmpty()) return null;
-        else return relatedParties;
+        if (relatedParties == null || relatedParties.isEmpty()) {
+            return null;
+        } else {
+            return relatedParties;
+        }
     }
 
     public void setRelatedParties(List<RelatedParty> relatedParties) {
@@ -236,17 +234,4 @@ public class TroubleTicket implements Serializable {
         return "tmf.org.dsmtt.TroubleTicket[ id=" + id + " ]";
     }
 
-    /**
-     * @return the fieldsIN
-     */
-    public Set<TroubleTicketField> getFieldsIN() {
-        return fieldsIN;
-    }
-
-    /**
-     * @param fieldsIN the fieldsIN to set
-     */
-    public void setFieldsIN(Set<TroubleTicketField> fields) {
-        this.fieldsIN = fields;
-    }
 }
