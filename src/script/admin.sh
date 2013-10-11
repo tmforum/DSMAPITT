@@ -5,7 +5,8 @@ set -e
 usage() {
 	nom=`basename $0`
 	echo "+"
-    echo "+ +  ${nom} [-n] Count TT"    
+    echo "+ +  ${nom} [-n] Count TT"
+    echo "+ +  ${nom} [-m] Get Mock"  
 	echo "+ +  ${nom} [-c] Create list of TT with default file"
 	echo "+ +  ${nom} [-c -f file ] Create list of TT with specified file"    
     echo "+ +  ${nom} [-d] Delete all TT"
@@ -57,7 +58,7 @@ if [ -n "$CREATE" ]; then
         echo "Please provide [-f file]" >&2
         exit 4        
     fi
-    post "api/admin/troubleTicket" $FILE
+    mycurl "POST" "api/admin/troubleTicket"
     exit 2
 fi
 
@@ -67,25 +68,25 @@ if [ -n "$DELETE" ]; then
         echo "WARN: Delete all TT ? ctrl+c to break" >&2
         wait
     fi
-    delete "api/admin/troubleTicket/${ID}"
+    mycurl "DELETE" "api/admin/troubleTicket/${ID}"
     exit 2
 fi
 
 # COUNT
 if [ -n "$COUNT" ]; then
-    get "api/admin/troubleTicket/count"
+    mycurl "GET" "api/admin/troubleTicket/count"
     exit 2
 fi
 
-# COUNT
+# MOCK
 if [ -n "$MOCK" ]; then
-    get "api/admin/troubleTicket/mock"
+    mycurl "GET" "api/admin/troubleTicket/mock"
     exit 2
 fi
 
 # CACHE
 if [ -n "$CACHE" ]; then
-    delete "api/admin/troubleTicket/cache"
+    mycurl "DELETE" "api/admin/troubleTicket/cache"
     exit 2
 fi
 

@@ -10,16 +10,48 @@ package tmf.org.dsmapi.tt;
  */
 public enum Status {
 
+    /**
+     *
+     */
     Submitted,
+    /**
+     *
+     */
     Acknowledged,
+    /**
+     *
+     */
     InProgress,
+    /**
+     *
+     */
     InProgress_Held,
+    /**
+     *
+     */
     InProgress_Pending,
+    /**
+     *
+     */
     Resolved,
+    /**
+     *
+     */
     Closed,
+    /**
+     *
+     */
     Rejected,
+    /**
+     *
+     */
     Cancelled;  //; is optional
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public static Status fromString(String text) {
         if (text != null) {
             for (Status b : Status.values()) {

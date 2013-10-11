@@ -33,6 +33,10 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
     @EJB
     PublisherLocal publisher;
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void start(TroubleTicket tt) {
@@ -59,6 +63,10 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
         }
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void wakeUp(TroubleTicket tt) {
@@ -95,16 +103,28 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
         }
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterCreateExecute(TroubleTicket tt) {
         manager.updateStatus(tt, Status.Acknowledged, "The ticket is valid, will be proceed soon");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterAcknowledged(TroubleTicket tt) {
         manager.updateStatus(tt, Status.InProgress, "Analysing Ticket");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterInProgress(TroubleTicket tt) {
 
@@ -124,21 +144,37 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
         }
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterInProgressHeld(TroubleTicket tt) {
         manager.updateStatus(tt, Status.InProgress, "Analysing Ticket");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterInProgressPending(TroubleTicket tt) {
         manager.updateStatus(tt, Status.InProgress, "Analysing Ticket");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void afterResolved(TroubleTicket tt) {
         manager.updateStatus(tt, Status.Closed, "Closed");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void route(TroubleTicket tt) {
         if (Status.InProgress_Held == tt.getStatus()) { // > In Progress Held

@@ -8,11 +8,17 @@ import tmf.org.dsmapi.tt.Status;
  */
 public class StateModelTT extends StateModelBase<Status> {
 
+    /**
+     *
+     */
     public StateModelTT() {
         // Use troubleTicket Status
         super(Status.class);
     }
 
+    /**
+     *
+     */
     @Override
     protected void draw() {
         // First

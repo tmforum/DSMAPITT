@@ -30,11 +30,19 @@ public class HubFacade extends AbstractFacade<Hub>{
     }
 
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
     
+    /**
+     *
+     * @return
+     */
     public int removeAll() {
         List<Hub> entities = this.findAll();
         int size = entities.size();

@@ -26,16 +26,28 @@ public class PostEventClient {
     private WebResource webResource;
     private Client client;
 
+    /**
+     *
+     * @param callbackURL
+     */
     public PostEventClient(String callbackURL) {
         com.sun.jersey.api.client.config.ClientConfig config = new com.sun.jersey.api.client.config.DefaultClientConfig();
         client = Client.create(config);
         webResource = client.resource(callbackURL).path("");
     }
 
+    /**
+     *
+     * @param requestEntity
+     * @throws UniformInterfaceException
+     */
     public void publishEvent(Object requestEntity) throws UniformInterfaceException {
         webResource.path("").type(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(requestEntity);
     }
 
+    /**
+     *
+     */
     public void close() {
         client.destroy();
     }

@@ -48,10 +48,18 @@ public class TroubleTicket implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
@@ -85,94 +93,186 @@ public class TroubleTicket implements Serializable {
             @JoinColumn(name = "OWNER_ID"))
     private List<RelatedParty> relatedParties;
 
+    /**
+     *
+     * @return
+     */
     public String getCorrelationId() {
         return correlationId;
     }
 
+    /**
+     *
+     * @param correlationId
+     */
     public void setCorrelationId(String correlationId) {
         this.correlationId = correlationId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     *
+     * @param description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     *
+     * @return
+     */
     public Severity getSeverity() {
         return severity;
     }
 
+    /**
+     *
+     * @param severity
+     */
     public void setSeverity(Severity severity) {
         this.severity = severity;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     *
+     * @param type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCreationDate() {
         return creationDate;
     }
 
+    /**
+     *
+     * @param creationDate
+     */
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTargetResolutionDate() {
         return targetResolutionDate;
     }
 
+    /**
+     *
+     * @param targetResolutionDate
+     */
     public void setTargetResolutionDate(String targetResolutionDate) {
         this.targetResolutionDate = targetResolutionDate;
     }
 
+    /**
+     *
+     * @return
+     */
     public Status getStatus() {
         return status;
     }
 
+    /**
+     *
+     * @param status
+     */
     public void setStatus(Status status) {
         this.status = status;
     }
 
+    /**
+     *
+     * @return
+     */
     public SubStatus getSubStatus() {
         return subStatus;
     }
 
+    /**
+     *
+     * @param subStatus
+     */
     public void setSubStatus(SubStatus subStatus) {
         this.subStatus = subStatus;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getStatusChangeReason() {
         return statusChangeReason;
     }
 
+    /**
+     *
+     * @param statusChangeReason
+     */
     public void setStatusChangeReason(String statusChangeReason) {
         this.statusChangeReason = statusChangeReason;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getStatusChangeDate() {
         return statusChangeDate;
     }
 
+    /**
+     *
+     * @param statusChangeDate
+     */
     public void setStatusChangeDate(String statusChangeDate) {
         this.statusChangeDate = statusChangeDate;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getResolutionDate() {
         return resolutionDate;
     }
 
+    /**
+     *
+     * @param resolutionDate
+     */
     public void setResolutionDate(String resolutionDate) {
         this.resolutionDate = resolutionDate;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<RelatedObject> getRelatedObjects() {
         if (relatedObjects == null || relatedObjects.isEmpty()) {
             return null;
@@ -181,10 +281,18 @@ public class TroubleTicket implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param relatedObjects
+     */
     public void setRelatedObjects(List<RelatedObject> relatedObjects) {
         this.relatedObjects = relatedObjects;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Note> getNotes() {
         if (notes == null) {
             notes = new ArrayList<Note>();
@@ -192,10 +300,18 @@ public class TroubleTicket implements Serializable {
         return notes;
     }
 
+    /**
+     *
+     * @param notes
+     */
     public void setNotes(List<Note> notes) {
         this.notes = notes;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<RelatedParty> getRelatedParties() {
         if (relatedParties == null || relatedParties.isEmpty()) {
             return null;
@@ -204,6 +320,10 @@ public class TroubleTicket implements Serializable {
         }
     }
 
+    /**
+     *
+     * @param relatedParties
+     */
     public void setRelatedParties(List<RelatedParty> relatedParties) {
         this.relatedParties = relatedParties;
     }

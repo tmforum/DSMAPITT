@@ -10,10 +10,25 @@ package tmf.org.dsmapi.hub;
  */
 public enum TroubleTicketEventTypeEnum {
 
+    /**
+     *
+     */
     TicketCreateNotification("TicketCreateNotification"),
+    /**
+     *
+     */
     TicketStatusChangedNotification("TicketStatusChangedNotification"),
+    /**
+     *
+     */
     TicketChangedNotification("TicketStatusChangedNotification"),
+    /**
+     *
+     */
     TicketClearanceRequestNotification("TicketClearanceRequestNotification"),
+    /**
+     *
+     */
     InformationRequiredNotification("InformationRequiredNotification");
     
     
@@ -23,10 +38,19 @@ public enum TroubleTicketEventTypeEnum {
         this.text = text;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return this.text;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public static tmf.org.dsmapi.hub.TroubleTicketEventTypeEnum fromString(String text) {
         if (text != null) {
             for (TroubleTicketEventTypeEnum b : TroubleTicketEventTypeEnum.values()) {

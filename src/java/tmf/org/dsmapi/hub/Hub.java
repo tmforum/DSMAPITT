@@ -24,28 +24,52 @@ public class Hub implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
     private String callback;
     private String query;
 
+    /**
+     *
+     * @return
+     */
     public String getCallback() {
         return callback;
     }
 
+    /**
+     *
+     * @param callback
+     */
     public void setCallback(String callback) {
         this.callback = callback;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getQuery() {
         return query;
     }
 
+    /**
+     *
+     * @param query
+     */
     public void setQuery(String query) {
         this.query = query;
     }

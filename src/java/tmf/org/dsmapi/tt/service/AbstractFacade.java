@@ -26,11 +26,11 @@ import javax.persistence.criteria.Root;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
-import tmf.org.dsmapi.commons.exceptions.TechnicalException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 
 /**
  *
+ * @param <T> 
  * @author pierregauthier
  */
 public abstract class AbstractFacade<T> {
@@ -39,12 +39,26 @@ public abstract class AbstractFacade<T> {
     private static final String pattern = "yyyy-MM-dd'T'HH:mm:ssZ";
     private static SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 
+    /**
+     *
+     * @param entityClass
+     */
     public AbstractFacade(Class<T> entityClass) {
         this.entityClass = entityClass;
     }
 
+    /**
+     *
+     * @return
+     */
     protected abstract EntityManager getEntityManager();
 
+    /**
+     *
+     * @param entities
+     * @return
+     * @throws BadUsageException
+     */
     public int create(List<T> entities) throws BadUsageException {
         for (T entity : entities) {
             this.create(entity);
@@ -52,20 +66,42 @@ public abstract class AbstractFacade<T> {
         return entities.size();
     }
 
+    /**
+     *
+     * @param entity
+     * @throws BadUsageException
+     */
     public void create(T entity) throws BadUsageException {
         getEntityManager().persist(entity);
     }
 
+    /**
+     *
+     * @param entity
+     * @return
+     * @throws UnknownResourceException
+     */
     public T edit(T entity) throws UnknownResourceException {
         getEntityManager().merge(entity);
         return entity;
     }
 
+    /**
+     *
+     * @param id
+     * @throws UnknownResourceException
+     */
     public void remove(Object id) throws UnknownResourceException {
         T entity = getEntityManager().find(entityClass, id);
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws UnknownResourceException
+     */
     public T find(Object id) throws UnknownResourceException {
         T entity = getEntityManager().find(entityClass, id);        
         if (entity == null) {
@@ -74,20 +110,36 @@ public abstract class AbstractFacade<T> {
         return entity;
     }
 
+    /**
+     *
+     * @param entity
+     */
     public void detach(T entity) {
         getEntityManager().detach(entity);
     }
 
+    /**
+     *
+     */
     public void invalidCache() {
         getEntityManager().clear();
     }
 
+    /**
+     *
+     * @return
+     */
     public List<T> findAll() {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
         return getEntityManager().createQuery(cq).getResultList();
     }
 
+    /**
+     *
+     * @param range
+     * @return
+     */
     public List<T> findRange(int[] range) {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
@@ -97,6 +149,10 @@ public abstract class AbstractFacade<T> {
         return q.getResultList();
     }
 
+    /**
+     *
+     * @return
+     */
     public int count() {
         javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
         javax.persistence.criteria.Root<T> rt = cq.from(entityClass);
@@ -105,6 +161,12 @@ public abstract class AbstractFacade<T> {
         return ((Long) q.getSingleResult()).intValue();
     }
 
+    /**
+     *
+     * @param map
+     * @param clazz
+     * @return
+     */
     public List<T> findByCriteria(MultivaluedMap<String, String> map, Class<T> clazz) {
         List<T> resultsList = null;
         try {
@@ -299,6 +361,14 @@ public abstract class AbstractFacade<T> {
         }
     }
 
+    /**
+     *
+     * @param tt
+     * @param name
+     * @param value
+     * @return
+     * @throws BadUsageException
+     */
     protected Predicate buildPredicateWithOperator(Path<T> tt, String name, String value) throws BadUsageException {
         CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         Operator operator = Operator.fromString(name);

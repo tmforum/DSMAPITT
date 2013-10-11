@@ -4,18 +4,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import tmf.org.dsmapi.commons.exceptions.ExceptionBean;
 
+/**
+ *
+ * @author maig7313
+ */
 @XmlRootElement
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class JsonFault {
+public class Fault {
 
     private ExceptionBean error;
     private String detail;    
 
-    public JsonFault(ExceptionBean error) {
+    /**
+     *
+     * @param error
+     */
+    public Fault(ExceptionBean error) {
         this.error = error;
     }
 
-    public JsonFault(ExceptionBean error, String detail) {
+    /**
+     *
+     * @param error
+     * @param detail
+     */
+    public Fault(ExceptionBean error, String detail) {
         this.error = error;
         this.detail = detail;
     }   
@@ -28,7 +41,7 @@ public class JsonFault {
     }
 
     /**
-     * @param type the type to set
+     * @param error 
      */
     public void setError(ExceptionBean error) {
         this.error = error;

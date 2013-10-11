@@ -3,6 +3,10 @@ package tmf.org.dsmapi.tt.service;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+/**
+ *
+ * @author maig7313
+ */
 @XmlRootElement
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Report {

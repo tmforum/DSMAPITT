@@ -40,10 +40,17 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
 
+    /**
+     *
+     */
     public HubFacadeREST() {
         super(Hub.class);
     }
 
+    /**
+     *
+     * @param entity
+     */
     @POST
     @Override
     @Consumes({"application/json"})
@@ -51,6 +58,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         super.create(entity);
     }
 
+    /**
+     *
+     * @param entity
+     */
     @PUT
     @Override
     @Consumes({"application/xml", "application/json"})
@@ -58,12 +69,21 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         super.edit(entity);
     }
 
+    /**
+     *
+     * @param id
+     */
     @DELETE
     @Path("{id}")
     public void remove(@PathParam("id") String id) {
         super.remove(super.find(id));
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @GET
     @Path("{id}")
     @Produces({ "application/json"})
@@ -71,6 +91,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return super.find(id);
     }
 
+    /**
+     *
+     * @return
+     */
     @GET
     @Override
     @Produces({"application/json"})
@@ -78,6 +102,12 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return super.findAll();
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @return
+     */
     @GET
     @Path("{from}/{to}")
     @Produces({"application/json"})
@@ -85,6 +115,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return super.findRange(new int[]{from, to});
     }
 
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("count")
     @Produces("text/plain")
@@ -92,11 +126,19 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return String.valueOf(super.count());
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
     
+    /**
+     *
+     * @param event
+     */
     @POST
     @Path("listener")
     @Consumes({"application/json"})
@@ -109,6 +151,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         
     }
     
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("proto")
     @Produces({ "application/json"})
@@ -120,6 +166,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return hub;
     }
     
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("eventProto")
     @Produces({ "application/json"})
@@ -132,6 +182,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         return event;
     }
     
+    /**
+     *
+     * @return
+     */
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
         tt.setId("id");
@@ -177,6 +231,12 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
 
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     * @throws java.text.ParseException
+     */
     public static Date parse(String input) throws java.text.ParseException {
 
         //NOTE: SimpleDateFormat uses GMT[-+]hh:mm for the TZ which breaks

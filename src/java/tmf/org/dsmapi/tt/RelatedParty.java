@@ -32,18 +32,34 @@ public class RelatedParty implements Serializable {
     private String role;
     private String reference;
 
+    /**
+     *
+     * @return
+     */
     public String getRole() {
         return role;
     }
 
+    /**
+     *
+     * @param role
+     */
     public void setRole(String role) {
         this.role = role;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getReference() {
         return reference;
     }
 
+    /**
+     *
+     * @param reference
+     */
     public void setReference(String reference) {
         this.reference = reference;
     }

@@ -10,11 +10,28 @@ package tmf.org.dsmapi.tt;
  */
 public enum Severity {
 
+    /**
+     *
+     */
     Low,
+    /**
+     *
+     */
     Critical,
+    /**
+     *
+     */
     Medium,
+    /**
+     *
+     */
     High;  //; is optional
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public static Severity fromString(String text) {
         if (text != null) {
             for (Severity b : Severity.values()) {

@@ -24,6 +24,10 @@ import tmf.org.dsmapi.tt.Severity;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicket;
 
+/**
+ *
+ * @author maig7313
+ */
 @Stateless
 @Path("admin")
 public class AdminFacadeREST {
@@ -34,6 +38,11 @@ public class AdminFacadeREST {
     @EJB
     HubFacade hubManager;    
 
+    /**
+     *
+     * @param entities
+     * @return
+     */
     @POST
     @Path("troubleTicket")
     @Consumes({"application/json"})
@@ -62,6 +71,10 @@ public class AdminFacadeREST {
                 build();
     }
 
+    /**
+     *
+     * @return
+     */
     @DELETE
     @Path("troubleTicket")
     public Report deleteAllTT() {
@@ -75,6 +88,10 @@ public class AdminFacadeREST {
         return stat;
     }
     
+    /**
+     *
+     * @return
+     */
     @DELETE
     @Path("hub")
     public Report deleteAllHub() {
@@ -88,6 +105,12 @@ public class AdminFacadeREST {
         return stat;
     }    
 
+    /**
+     *
+     * @param id
+     * @return
+     * @throws UnknownResourceException
+     */
     @DELETE
     @Path("troubleTicket/{id}")
     public Report delete(@PathParam("id") String id) throws UnknownResourceException {
@@ -104,6 +127,10 @@ public class AdminFacadeREST {
         return stat;
     }
 
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("troubleTicket/count")
     @Produces({"application/json"})
@@ -111,6 +138,9 @@ public class AdminFacadeREST {
         return new Report(ttManager.count());
     }
     
+    /**
+     *
+     */
     @DELETE
     @Path("troubleTicket/cache")
     public void clearCache() {
@@ -119,6 +149,10 @@ public class AdminFacadeREST {
     
     
 
+    /**
+     *
+     * @return
+     */
     @GET
     @Path("troubleTicket/mock")
     @Produces({"application/json"})

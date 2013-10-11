@@ -7,6 +7,7 @@ import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 
 /**
  *
+ * @param <E> 
  * @author maig7313
  */
 public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E> {
@@ -15,6 +16,10 @@ public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E>
     private Transition<E> firstTransition;
     private Class<E> type;
 
+    /**
+     *
+     * @param type
+     */
     public StateModelBase(Class<E> type) {
         this.type = type;
     }
@@ -44,6 +49,12 @@ public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E>
         return firstTransition;
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @throws BadUsageException
+     */
     @Override
     public void checkTransition(E from, E to) throws BadUsageException {
         if (firstTransition == null) {
@@ -59,6 +70,11 @@ public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E>
 
     }
 
+    /**
+     *
+     * @param e1
+     * @return
+     */
     protected Transition from(E e1) {
         Transition transition;
         if (!getTransitionMap().containsKey(e1)) {
@@ -70,16 +86,28 @@ public abstract class StateModelBase<E extends Enum<E>> implements StateModel<E>
         return transition;
     }
 
+    /**
+     *
+     * @return
+     */
     protected Transition fromFirst() {
         firstTransition = new Transition();
         return firstTransition;
     }
     
+    /**
+     *
+     * @param e1
+     * @return
+     */
     protected Transition fromFirst(E e1) {
         firstTransition = from(e1);
         return firstTransition;
     }    
 
+    /**
+     *
+     */
     protected abstract void draw();
 
     /**

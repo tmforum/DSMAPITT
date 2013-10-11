@@ -22,26 +22,50 @@ public class Note implements Serializable {
     private String author;
     private String text;
 
+    /**
+     *
+     * @return
+     */
     public String getDate() {
         return date;
     }
 
+    /**
+     *
+     * @param date
+     */
     public void setDate(String date) {
         this.date = date;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     *
+     * @param author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return text;
     }
 
+    /**
+     *
+     * @param text
+     */
     public void setText(String text) {
         this.text = text;
     }

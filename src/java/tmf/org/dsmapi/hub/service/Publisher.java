@@ -35,6 +35,10 @@ public class Publisher implements PublisherLocal {
     //Loop into array of Hubs
     //Call RestEventPublisher - Need to implement resend policy plus eviction
     //Filtering is done in RestEventPublisher based on query expression
+    /**
+     *
+     * @param event
+     */
     @Override
     public void publish(Object event) {
         System.out.println("Sending Event");
@@ -51,6 +55,10 @@ public class Publisher implements PublisherLocal {
         System.out.println("Sending Event After");
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     public void createNotification(TroubleTicket tt) {
         HubEvent event = new HubEvent();
@@ -60,6 +68,10 @@ public class Publisher implements PublisherLocal {
 
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     public void statusChangedNotification(TroubleTicket tt) {
 
@@ -70,6 +82,10 @@ public class Publisher implements PublisherLocal {
 
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     public void changedNotification(TroubleTicket tt) {
 
@@ -80,6 +96,10 @@ public class Publisher implements PublisherLocal {
 
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     public void clearanceRequestNotification(TroubleTicket tt) {
 
@@ -90,6 +110,10 @@ public class Publisher implements PublisherLocal {
 
     }
 
+    /**
+     *
+     * @param tt
+     */
     @Override
     public void informationRequiredNotification(TroubleTicket tt) {
 

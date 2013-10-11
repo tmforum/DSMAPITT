@@ -10,16 +10,28 @@ import javax.ws.rs.ext.Provider;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
+/**
+ *
+ * @author maig7313
+ */
 @Provider
 @Produces("application/json")
 public class JacksonConfigurator implements ContextResolver<ObjectMapper> {
 
     private ObjectMapper mapper = new ObjectMapper();
     
+    /**
+     *
+     */
     public JacksonConfigurator() {
         mapper.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
+    /**
+     *
+     * @param arg0
+     * @return
+     */
     @Override
     public ObjectMapper getContext(Class<?> arg0) {
         return mapper;

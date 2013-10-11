@@ -3,23 +3,75 @@ package tmf.org.dsmapi.tt;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ *
+ * @author maig7313
+ */
 public enum TroubleTicketField {
 
+    /**
+     *
+     */
     ALL("all"),
+    /**
+     *
+     */
     ID("id"),
+    /**
+     *
+     */
     CORRELATION_ID("correlationId"),
+    /**
+     *
+     */
     CREATION_DATE("creationDate"),
+    /**
+     *
+     */
     DESCRIPTION("description"),
+    /**
+     *
+     */
     NOTES("notes"),
+    /**
+     *
+     */
     RELATED_OBJECTS("relatedObjects"),
+    /**
+     *
+     */
     RELATED_PARTIES("relatedParties"),
+    /**
+     *
+     */
     RESOLUTION_DATE("resolutionDate"),
+    /**
+     *
+     */
     SEVERITY("severity"),
+    /**
+     *
+     */
     STATUS("status"),
+    /**
+     *
+     */
     STATUS_CHANGE_DATE("statusChangeDate"),
+    /**
+     *
+     */
     STATUS_CHANGE_REASON("statusChangeReason"),
+    /**
+     *
+     */
     SUB_STATUS("subStatus"),
+    /**
+     *
+     */
     TARGET_RESOLUTION_DATE("targetResolutionDate"),
+    /**
+     *
+     */
     TYPE("type");
     private String text;
 
@@ -27,10 +79,19 @@ public enum TroubleTicketField {
         this.text = text;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getText() {
         return this.text;
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     */
     public static TroubleTicketField fromString(String text) {
         if (text != null) {
             for (TroubleTicketField b : TroubleTicketField.values()) {
@@ -42,6 +103,11 @@ public enum TroubleTicketField {
         return null;
     }
 
+    /**
+     *
+     * @param fields
+     * @return
+     */
     public static Set<TroubleTicketField> fromStringToSet(String fields) {
         // Convert fields parameter to a set of TroubleTicketField
         Set<TroubleTicketField> fieldsSet = new HashSet<TroubleTicketField>();

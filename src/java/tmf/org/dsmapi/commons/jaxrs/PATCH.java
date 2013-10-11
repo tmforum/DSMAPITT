@@ -13,6 +13,10 @@ package tmf.org.dsmapi.commons.jaxrs;
 import javax.ws.rs.HttpMethod;
 import java.lang.annotation.*;
 
+/**
+ *
+ * @author maig7313
+ */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @HttpMethod("PATCH")

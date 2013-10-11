@@ -29,18 +29,34 @@ public class RelatedObject implements Serializable  {
     private String reference;
     private String involvement;    
 
+    /**
+     *
+     * @return
+     */
     public String getInvolvement() {
         return involvement;
     }
 
+    /**
+     *
+     * @param involvement
+     */
     public void setInvolvement(String involvement) {
         this.involvement = involvement;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getReference() {
         return reference;
     }
 
+    /**
+     *
+     * @param reference
+     */
     public void setReference(String reference) {
         this.reference = reference;
     }

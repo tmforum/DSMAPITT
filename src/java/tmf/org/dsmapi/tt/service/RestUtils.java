@@ -2,31 +2,31 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tmf.org.dsmapi.tt.service.mapper;
+package tmf.org.dsmapi.tt.service;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.core.MultivaluedMap;
-import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
+import tmf.org.dsmapi.commons.utils.BeanUtils;
 
 /**
  *
  * @author jyus7291
  */
-public class FacadeRestUtil {
+public class RestUtils {
 
-    private static PropertyUtilsBean pub = new PropertyUtilsBean();
     /**
      *
      */
@@ -35,41 +35,35 @@ public class FacadeRestUtil {
      *
      */
     public static final String ID_FIELD = "id";
-    /**
-     *
-     */
-    public static final String QUERY_KEY_FIELD = "fields";
-    /**
-     *
-     */
-    public static final String QUERY_KEY_FIELD_ESCAPE = ":";
+    private static final String QUERY_KEY_FIELD = "fields";
+    private static final String QUERY_KEY_FIELD_ESCAPE = ":";
 
     /**
      *
      * @param bean
-     * @param fieldNames
+     * @param names 
      * @return
      */
-    public static ObjectNode createNodeViewWithFields(Object bean, Set<String> fieldNames) {
+    public static ObjectNode createNodeViewWithFields(Object bean, Set<String> names) {
         ObjectMapper mapper = new ObjectMapper();
-        return createNodeViewWithFields(mapper, bean, fieldNames);
+        return createNodeViewWithFields(mapper, bean, names);
     }
 
-    private static ObjectNode createNodeViewWithFields(ObjectMapper mapper, Object bean, Set<String> fieldNames) {
-        // split fieldNames in 2 categories : 
-        // simpleFields for simple property names with no '.'
-        // nestedFields for nested property names with a '.'
+    private static ObjectNode createNodeViewWithFields(ObjectMapper mapper, Object bean, Set<String> names) {
+        // split names in 2 categories : 
+        // simpleFields for simple value names with no '.'
+        // nestedFields for nested value names with a '.'
         Set<String> simpleFields = new HashSet<String>();
         MultivaluedMapImpl nestedFields = new MultivaluedMapImpl();
-        for (String fieldName : fieldNames) {
-            int index = fieldName.indexOf('.');
-            boolean isNestedField = index > 0 && index < fieldName.length();
+        for (String name : names) {
+            int index = name.indexOf('.');
+            boolean isNestedField = index > 0 && index < name.length();
             if (isNestedField) {
-                String rootFieldName = fieldName.substring(0, index);
-                String subFieldName = fieldName.substring(index + 1);
+                String rootFieldName = name.substring(0, index);
+                String subFieldName = name.substring(index + 1);
                 nestedFields.add(rootFieldName, subFieldName);
             } else {
-                simpleFields.add(fieldName);
+                simpleFields.add(name);
             }
         }
 
@@ -78,12 +72,12 @@ public class FacadeRestUtil {
 
         // create nested nodes with deeper levels
         Set<Map.Entry<String, List<String>>> entrySet = nestedFields.entrySet();
-        // for each nested property, create recursively a node        
+        // for each nested value, create recursively a node        
         for (Map.Entry<String, List<String>> entry : entrySet) {
             String rootFieldName = entry.getKey();
-            // add in current node only if full property is not already present in 1st level
+            // add in current node only if full value is not already present in 1st level
             if (!simpleFields.contains(rootFieldName)) {
-                Object nestedBean = getField(bean, rootFieldName);
+                Object nestedBean = BeanUtils.getNestedProperty(bean, rootFieldName);
                 // add only non null fields
                 if (nestedBean == null) {
                     break;
@@ -115,51 +109,35 @@ public class FacadeRestUtil {
     }
 
     // create a simple flat node with only one-level fields
-    private static ObjectNode createNodeWithSimpleFields(ObjectMapper mapper, Object bean, Set<String> fieldNames) {
+    private static ObjectNode createNodeWithSimpleFields(ObjectMapper mapper, Object bean, Set<String> names) {
         ObjectNode node = mapper.createObjectNode();
-        for (String fieldName : fieldNames) {
-            Object fieldValue = getField(bean, fieldName);
-            if (fieldValue != null) {
-                nodePut(node, fieldName, fieldValue);
+        for (String name : names) {
+            Object value = BeanUtils.getNestedProperty(bean, name);
+            if (value != null) {
+                nodePut(node, name, value);
             }
         }
         return node;
     }
 
     // generic node.put for any Object
-    private static void nodePut(ObjectNode node, String fieldName, Object value) {
+    private static void nodePut(ObjectNode node, String name, Object value) {
         if (value instanceof Boolean) {
-            node.put(fieldName, (Boolean) value);
+            node.put(name, (Boolean) value);
         } else if (value instanceof Integer) {
-            node.put(fieldName, (Integer) value);
+            node.put(name, (Integer) value);
         } else if (value instanceof Long) {
-            node.put(fieldName, (Long) value);
+            node.put(name, (Long) value);
         } else if (value instanceof Float) {
-            node.put(fieldName, (Float) value);
+            node.put(name, (Float) value);
         } else if (value instanceof Double) {
-            node.put(fieldName, (Double) value);
+            node.put(name, (Double) value);
         } else if (value instanceof BigDecimal) {
-            node.put(fieldName, (BigDecimal) value);
+            node.put(name, (BigDecimal) value);
         } else if (value instanceof String) {
-            node.put(fieldName, (String) value);
+            node.put(name, (String) value);
         } else {
-            node.putPOJO(fieldName, value);
-        }
-
-    }
-
-    // get value of field named "name" in bean
-    /**
-     *
-     * @param bean
-     * @param name
-     * @return
-     */
-    public static Object getField(Object bean, String name) {
-        try {
-            return pub.getNestedProperty(bean, name);
-        } catch (Exception e) {
-            return null;
+            node.putPOJO(name, value);
         }
     }
 
@@ -184,5 +162,35 @@ public class FacadeRestUtil {
             }
         }
         return fieldSet;
+    }
+
+    /**
+     *
+     * @param bean
+     * @param patchBean
+     * @param node
+     */
+    public static void patch(Object bean, Object patchBean, JsonNode node) {
+        String name;
+        JsonNode child;
+        Object value;
+        Object patchValue;
+        Iterator<String> it = node.getFieldNames();
+        while (it.hasNext()) {
+            name = it.next();
+            patchValue = BeanUtils.getNestedProperty(patchBean, name);
+            child = node.get(name);
+            if (child.isObject()) {
+                value = BeanUtils.getNestedProperty(bean, name);
+                if (value != null) {
+                    patch(value, patchValue, child);
+                    BeanUtils.setNestedProperty(bean, name, value);
+                } else {
+                    BeanUtils.setNestedProperty(bean, name, patchValue);
+                }
+            } else {
+                BeanUtils.setNestedProperty(bean, name, patchValue);
+            }
+        }
     }
 }

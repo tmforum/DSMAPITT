@@ -63,7 +63,7 @@ if [ -n "$CREATE" ]; then
         echo "Please provide [-f file]" >&2
         exit 4
     fi
-    post "api/troubleTicket" $FILE
+    mycurl "POST" "api/troubleTicket"
     exit 2
 fi
 
@@ -77,7 +77,7 @@ if [ -n "$PUT" ]; then
         echo "Please provide [-i id]" >&2
         exit 4
     fi    
-    put "api/troubleTicket/${ID}" $FILE
+    mycurl "PUT" "api/troubleTicket/${ID}"
     exit 2
 fi
 
@@ -91,7 +91,7 @@ if [ -n "$PATCH" ]; then
         echo "Please provide [-f file]" >&2
         exit 4        
     fi
-    patch "api/troubleTicket/${ID}" $FILE
+    mycurl "PATCH" "api/troubleTicket/${ID}"
     exit 2
 fi
 
@@ -100,7 +100,7 @@ if [ -n "$GET" ]; then
     if [ -n "$QUERY" ]; then
         QUERY="?$QUERY"
     fi
-    get "api/troubleTicket/${ID}${QUERY}"
+    mycurl "GET" "api/troubleTicket/${ID}${QUERY}"
     exit 2
 fi
 

@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
@@ -40,14 +39,11 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
-    private CriteriaBuilder cb;
     private StateModel stateModel;
 
     @PostConstruct
     private void init() {
-        cb = em.getCriteriaBuilder();
         stateModel = new StateModelTT();
-        int a = 3;
     }
 
     /**
@@ -57,6 +53,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         super(TroubleTicket.class);
     }
 
+    /**
+     *
+     * @param tt
+     * @return
+     * @throws UnknownResourceException
+     */
     @Override
     public TroubleTicket edit(TroubleTicket tt) throws UnknownResourceException {
         TroubleTicket targetEntity = this.find(tt.getId());
@@ -69,12 +71,15 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
     /**
      *
-     * @param partialTT
+     * @param patchTT
+     * @param fields 
      * @return
+     * @throws BadUsageException
+     * @throws UnknownResourceException  
      */
-    public TroubleTicket updateAttributes(TroubleTicket partialTT, Set<TroubleTicketField> fields) throws BadUsageException, UnknownResourceException {
+    public TroubleTicket updateAttributes(TroubleTicket patchTT, Set<TroubleTicketField> fields) throws BadUsageException, UnknownResourceException {
 
-        TroubleTicket currentTT = this.find(partialTT.getId());
+        TroubleTicket currentTT = this.find(patchTT.getId());
 
         if (currentTT == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
@@ -85,56 +90,75 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
         
         // Allow status update when there is no correlationId, for demo or admin purpose
-        if (fields.contains(STATUS) && (partialTT.getCorrelationId()==null)) {
+        if (fields.contains(STATUS) && (patchTT.getCorrelationId()==null)) {
             // isValidTransition if this transition is allowed
-            stateModel.checkTransition(currentTT.getStatus(), partialTT.getStatus());
-            currentTT.setStatus(partialTT.getStatus());
+            stateModel.checkTransition(currentTT.getStatus(), patchTT.getStatus());
+            currentTT.setStatus(patchTT.getStatus());
             currentTT.setStatusChangeDate(Format.toString(new Date()));
-            currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-        }        
+            currentTT.setStatusChangeReason(patchTT.getStatusChangeReason());
+        }                
 
         for (TroubleTicketField token : fields) {
             switch (token) {
                 case CREATION_DATE:
-                    currentTT.setCreationDate(partialTT.getCreationDate());
+                    currentTT.setCreationDate(patchTT.getCreationDate());
                     break;
                 case DESCRIPTION:
-                    if (partialTT.getDescription() != null) {
-                        currentTT.setDescription(partialTT.getDescription());
+                    if (patchTT.getDescription() != null) {
+                        currentTT.setDescription(patchTT.getDescription());
                     }
                     break;
                 case NOTES:
-                    currentTT.setNotes(partialTT.getNotes());  // Replace Notes
+                    currentTT.setNotes(patchTT.getNotes());  // Replace Notes
                     break;
                 case RELATED_OBJECTS:
-                    currentTT.setRelatedObjects(partialTT.getRelatedObjects());
+                    currentTT.setRelatedObjects(patchTT.getRelatedObjects());
                     break;
                 case RELATED_PARTIES:
-                    currentTT.setRelatedParties(partialTT.getRelatedParties());
+                    currentTT.setRelatedParties(patchTT.getRelatedParties());
                     break;
                 case RESOLUTION_DATE:
-                    currentTT.setResolutionDate(partialTT.getResolutionDate());
+                    currentTT.setResolutionDate(patchTT.getResolutionDate());
                     break;
                 case SEVERITY:
-                    if (partialTT.getSeverity() != null) {
-                        currentTT.setSeverity(partialTT.getSeverity());
+                    if (patchTT.getSeverity() != null) {
+                        currentTT.setSeverity(patchTT.getSeverity());
                     }
                     break;
                 case TARGET_RESOLUTION_DATE:
-                    currentTT.setResolutionDate(partialTT.getResolutionDate());
+                    currentTT.setResolutionDate(patchTT.getResolutionDate());
                     break;
                 case TYPE:
-                    if (partialTT.getDescription() != null) {
-                        currentTT.setType(partialTT.getType());
+                    if (patchTT.getType() != null) {
+                        currentTT.setType(patchTT.getType());
                     }
                     break;
             }
         }
         em.merge(currentTT);
         return currentTT;
-
     }
+    
+    /**
+     *
+     * @param troubleTicket
+     * @param status
+     * @param reason
+     * @return
+     */
+    public TroubleTicket updateStatus(TroubleTicket troubleTicket, Status status, String reason) {
+        troubleTicket.setStatus(status);
+        troubleTicket.setStatusChangeDate(Format.toString(new Date()));
+        troubleTicket.setStatusChangeReason(reason);
+        em.merge(troubleTicket);
+        return troubleTicket;
+    }    
 
+    /**
+     *
+     * @param tt
+     * @throws BadUsageException
+     */
     @Override
     public void create(TroubleTicket tt) throws BadUsageException {
 
@@ -160,14 +184,6 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
     }
 
-    public TroubleTicket updateStatus(TroubleTicket troubleTicket, Status status, String reason) {
-        troubleTicket.setStatus(status);
-        troubleTicket.setStatusChangeDate(Format.toString(new Date()));
-        troubleTicket.setStatusChangeReason(reason);
-        em.merge(troubleTicket);
-        return troubleTicket;
-    }
-
     /**
      *
      * @return
@@ -177,6 +193,11 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return em;
     }
 
+    /**
+     *
+     * @param queryParameters
+     * @return
+     */
     public List<TroubleTicket> find(MultivaluedMap<String, String> queryParameters) {
 
         List<TroubleTicket> tickets;
@@ -189,6 +210,10 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public int removeAll() {
         List<TroubleTicket> tickets = this.findAll();
         int size = tickets.size();

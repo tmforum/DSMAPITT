@@ -22,6 +22,11 @@ public class RESTEventPublisher implements RESTEventPublisherLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     
+    /**
+     *
+     * @param hub
+     * @param event
+     */
     @Override
    @Asynchronous
    public void publish( Hub hub, Object event) {

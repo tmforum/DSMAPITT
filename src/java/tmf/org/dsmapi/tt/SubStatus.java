@@ -9,5 +9,12 @@ package tmf.org.dsmapi.tt;
  * @author pierregauthier
  */
 public enum SubStatus {
- Pending, Held;  //; is optional
+    /**
+     *
+     */
+    Pending,
+    /**
+     *
+     */
+    Held;  //; is optional
 }

@@ -4,17 +4,26 @@
  */
 package tmf.org.dsmapi.tt.service.mapper;
 
-import tmf.org.dsmapi.tt.service.JsonFault;
+import tmf.org.dsmapi.tt.service.Fault;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 
+/**
+ *
+ * @author maig7313
+ */
 @Provider
 public class BadUsageExceptionMapper implements ExceptionMapper<BadUsageException> {
+    /**
+     *
+     * @param ex
+     * @return
+     */
     @Override
     public Response toResponse(BadUsageException ex) {
-        JsonFault error = new JsonFault(ex.getType().getInfo(),ex.getMessage());
+        Fault error = new Fault(ex.getType().getInfo(),ex.getMessage());
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).entity(error).build();
     }
 }

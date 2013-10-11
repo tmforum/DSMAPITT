@@ -8,13 +8,22 @@ import javax.ejb.Local;
 
 /**
  *
+ * @param <T> 
  * @author pierregauthier
  */
 @Local
 public interface WorkFlow<T> {
     
+    /**
+     *
+     * @param object
+     */
     void start(T object);
 
+    /**
+     *
+     * @param object
+     */
     void wakeUp(T object);
     
 }
