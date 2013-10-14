@@ -220,6 +220,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         for (TroubleTicket tt : tickets) {
             em.remove(tt);
         }
+        em.clear();        
         return size;
     }
 }
