@@ -13,7 +13,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.commons.utils.TMFDate;
 import tmf.org.dsmapi.tt.Status;
 import static tmf.org.dsmapi.tt.TroubleTicketField.CREATION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.DESCRIPTION;
@@ -40,6 +40,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     @PersistenceContext(unitName = "DSTroubleTicketPU")
     private EntityManager em;
     private StateModel stateModel;
+    private static long delay = 3000;
 
     @PostConstruct
     private void init() {
@@ -94,7 +95,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             // isValidTransition if this transition is allowed
             stateModel.checkTransition(currentTT.getStatus(), patchTT.getStatus());
             currentTT.setStatus(patchTT.getStatus());
-            currentTT.setStatusChangeDate(Format.toString(new Date()));
+            currentTT.setStatusChangeDate(TMFDate.toString(new Date()));
             currentTT.setStatusChangeReason(patchTT.getStatusChangeReason());
         }                
 
@@ -148,7 +149,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
      */
     public TroubleTicket updateStatus(TroubleTicket troubleTicket, Status status, String reason) {
         troubleTicket.setStatus(status);
-        troubleTicket.setStatusChangeDate(Format.toString(new Date()));
+        troubleTicket.setStatusChangeDate(TMFDate.toString(new Date()));
         troubleTicket.setStatusChangeReason(reason);
         em.merge(troubleTicket);
         return troubleTicket;
@@ -211,16 +212,17 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     }
 
     /**
-     *
-     * @return
+     * @return the delay
      */
-    public int removeAll() {
-        List<TroubleTicket> tickets = this.findAll();
-        int size = tickets.size();
-        for (TroubleTicket tt : tickets) {
-            em.remove(tt);
-        }
-        em.clear();        
-        return size;
+    public long getDelay() {
+        return delay;
     }
+
+    /**
+     * @param delay the delay to set
+     */
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
 }

@@ -4,7 +4,7 @@
  */
 package tmf.org.dsmapi.tt.service.mapper;
 
-import tmf.org.dsmapi.tt.service.Fault;
+import tmf.org.dsmapi.commons.bean.Fault;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

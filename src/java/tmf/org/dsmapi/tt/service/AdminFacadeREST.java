@@ -1,5 +1,6 @@
 package tmf.org.dsmapi.tt.service;
 
+import tmf.org.dsmapi.commons.bean.Report;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,13 +10,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.commons.utils.TMFDate;
+import tmf.org.dsmapi.hub.service.EventFacade;
 import tmf.org.dsmapi.hub.service.HubFacade;
 import tmf.org.dsmapi.tt.Note;
 import tmf.org.dsmapi.tt.RelatedObject;
@@ -34,9 +37,10 @@ public class AdminFacadeREST {
 
     @EJB
     TroubleTicketFacade ttManager;
-    
     @EJB
-    HubFacade hubManager;    
+    HubFacade hubManager;
+    @EJB
+    EventFacade eventManager;
 
     /**
      *
@@ -44,12 +48,14 @@ public class AdminFacadeREST {
      * @return
      */
     @POST
-    @Path("troubleTicket")
+    @Path("tt")
     @Consumes({"application/json"})
     @Produces({"application/json"})
     public Response post(List<TroubleTicket> entities) {
-        
-        if (entities==null) return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build(); 
+
+        if (entities == null) {
+            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+        }
 
         int previousRows = ttManager.count();
         int affectedRows;
@@ -76,18 +82,21 @@ public class AdminFacadeREST {
      * @return
      */
     @DELETE
-    @Path("troubleTicket")
+    @Path("tt")
     public Report deleteAllTT() {
 
-        int affectedRows = ttManager.removeAll();
+        int previousRows = eventManager.count();
+        ttManager.removeAll();
+        int currentRows = eventManager.count();
+        int affectedRows = previousRows - currentRows;        
 
-        Report stat = new Report(ttManager.count());
+        Report stat = new Report(currentRows);
         stat.setAffectedRows(affectedRows);
-        stat.setPreviousRows(affectedRows);
+        stat.setPreviousRows(previousRows);
 
         return stat;
     }
-    
+
     /**
      *
      * @return
@@ -96,14 +105,33 @@ public class AdminFacadeREST {
     @Path("hub")
     public Report deleteAllHub() {
 
-        int affectedRows = hubManager.removeAll();
+        int previousRows = eventManager.count();
+        hubManager.removeAll();
+        int currentRows = eventManager.count();
+        int affectedRows = previousRows - currentRows;
 
-        Report stat = new Report(hubManager.count());
+        Report stat = new Report(currentRows);
         stat.setAffectedRows(affectedRows);
-        stat.setPreviousRows(affectedRows);
+        stat.setPreviousRows(previousRows);
 
         return stat;
-    }    
+    }
+
+    @DELETE
+    @Path("event")
+    public Report deleteAllEvent() {
+
+        int previousRows = eventManager.count();
+        eventManager.removeAll();
+        int currentRows = eventManager.count();
+        int affectedRows = previousRows - currentRows;
+
+        Report stat = new Report(currentRows);
+        stat.setAffectedRows(affectedRows);
+        stat.setPreviousRows(previousRows);
+
+        return stat;
+    }
 
     /**
      *
@@ -112,7 +140,7 @@ public class AdminFacadeREST {
      * @throws UnknownResourceException
      */
     @DELETE
-    @Path("troubleTicket/{id}")
+    @Path("tt/{id}")
     public Report delete(@PathParam("id") String id) throws UnknownResourceException {
 
         int previousRows = ttManager.count();
@@ -132,35 +160,39 @@ public class AdminFacadeREST {
      * @return
      */
     @GET
-    @Path("troubleTicket/count")
+    @Path("tt/count")
     @Produces({"application/json"})
     public Report count() {
         return new Report(ttManager.count());
     }
-    
+
     /**
      *
      */
     @DELETE
-    @Path("troubleTicket/cache")
+    @Path("tt/cache")
     public void clearCache() {
-        ttManager.invalidCache();
-    }    
-    
-    
+        ttManager.clearCache();
+    }
+
+    @PUT
+    @Path("tt/wf/delay/{value}")
+    public void patchDelay(@PathParam("value") long value) {
+        ttManager.setDelay(value);
+    }
 
     /**
      *
      * @return
      */
     @GET
-    @Path("troubleTicket/mock")
+    @Path("tt/mock")
     @Produces({"application/json"})
     public TroubleTicket proto() {
         TroubleTicket tt = new TroubleTicket();
         tt.setId("id");
         Date dt = new Date();
-        String dts = Format.toString(dt);
+        String dts = TMFDate.toString(dt);
         tt.setDescription("Some Description");
 
 
@@ -174,8 +206,8 @@ public class AdminFacadeREST {
         RelatedObject ro = new RelatedObject();
         ro.setInvolvement("involvment");
         ro.setReference("referenceobject");
-        
-        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject> ();
+
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject>();
         relatedObjects.add(ro);
         relatedObjects.add(ro);
         tt.setRelatedObjects(relatedObjects);
@@ -184,16 +216,16 @@ public class AdminFacadeREST {
         rp.setRole("role");
         rp.setReference("reference party");
 
-        List<RelatedParty> relatedParties = new ArrayList<RelatedParty> ();
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
         relatedParties.add(rp);
-        relatedParties.add(rp);        
+        relatedParties.add(rp);
         tt.setRelatedParties(relatedParties);
 
         Note note = new Note();
         note.setAuthor("author");
         note.setDate(dts);
         note.setText("text");
-        List<Note> notes = new ArrayList<Note> ();
+        List<Note> notes = new ArrayList<Note>();
         notes.add(note);
         notes.add(note);
         tt.setNotes(notes);

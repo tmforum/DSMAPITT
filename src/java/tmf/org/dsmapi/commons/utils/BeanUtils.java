@@ -4,7 +4,9 @@
  */
 package tmf.org.dsmapi.commons.utils;
 
+import java.util.Iterator;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.codehaus.jackson.JsonNode;
 
 /**
  *
@@ -40,4 +42,34 @@ public class BeanUtils {
         } catch (Exception ex) {
         }
     }
+    
+    /**
+     *
+     * @param bean
+     * @param patchBean
+     * @param node
+     */
+    public static void patch(Object bean, Object patch, JsonNode node) {
+        String name;
+        JsonNode child;
+        Object value;
+        Object patchValue;
+        Iterator<String> it = node.getFieldNames();
+        while (it.hasNext()) {
+            name = it.next();
+            patchValue = BeanUtils.getNestedProperty(patch, name);
+            child = node.get(name);
+            if (child.isObject()) {
+                value = BeanUtils.getNestedProperty(bean, name);
+                if (value != null) {
+                    patch(value, patchValue, child);
+                    BeanUtils.setNestedProperty(bean, name, value);
+                } else {
+                    BeanUtils.setNestedProperty(bean, name, patchValue);
+                }
+            } else {
+                BeanUtils.setNestedProperty(bean, name, patchValue);
+            }
+        }
+    }    
 }

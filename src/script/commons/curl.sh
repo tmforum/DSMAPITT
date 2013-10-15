@@ -26,6 +26,26 @@ mycurl() {
     info_final    
 }
 
+put() {
+    mycurl "PUT" $1
+}
+
+patch() {
+    mycurl "PATCH" $1    
+}
+
+post() {
+    mycurl "POST" $1    
+}
+
+delete() {
+    mycurl "DELETE" $1    
+}
+
+get() {
+    mycurl "GET" $1    
+}
+
 wait() {
     read -s
 }

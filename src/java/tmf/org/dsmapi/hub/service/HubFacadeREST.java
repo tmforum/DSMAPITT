@@ -4,22 +4,29 @@
  */
 package tmf.org.dsmapi.hub.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import tmf.org.dsmapi.commons.utils.Format;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import org.codehaus.jackson.node.ObjectNode;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
+import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
+import tmf.org.dsmapi.commons.utils.JSONMarshaller;
+import tmf.org.dsmapi.commons.utils.URIParser;
 import tmf.org.dsmapi.hub.Hub;
 import tmf.org.dsmapi.hub.HubEvent;
 import tmf.org.dsmapi.hub.TroubleTicketEventTypeEnum;
@@ -29,6 +36,8 @@ import tmf.org.dsmapi.tt.RelatedParty;
 import tmf.org.dsmapi.tt.Severity;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicket;
+import tmf.org.dsmapi.commons.bean.Report;
+import tmf.org.dsmapi.commons.utils.TMFDate;
 
 /**
  *
@@ -36,128 +45,117 @@ import tmf.org.dsmapi.tt.TroubleTicket;
  */
 @Stateless
 @Path("hub")
-public class HubFacadeREST extends AbstractFacade<Hub> {
-    @PersistenceContext(unitName = "DSTroubleTicketPU")
-    private EntityManager em;
+public class HubFacadeREST {
 
-    /**
-     *
-     */
+    @EJB
+    HubFacade manager;
+    @EJB
+    EventFacade hubEventManager;
+
     public HubFacadeREST() {
-        super(Hub.class);
     }
 
-    /**
-     *
-     * @param entity
-     */
     @POST
-    @Override
     @Consumes({"application/json"})
-    public void create(Hub entity) {
-        super.create(entity);
+    @Produces({"application/json"})
+    public Response create(Hub entity) throws BadUsageException {
+        entity.setId(null);
+        manager.create(entity);
+        Response response = Response.ok(entity).build();
+        return response;
     }
 
-    /**
-     *
-     * @param entity
-     */
-    @PUT
-    @Override
-    @Consumes({"application/xml", "application/json"})
-    public void edit(Hub entity) {
-        super.edit(entity);
-    }
-
-    /**
-     *
-     * @param id
-     */
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") String id) {
-        super.remove(super.find(id));
+    public void remove(@PathParam("id") String id) throws UnknownResourceException {
+        manager.remove(id);
     }
 
-    /**
-     *
-     * @param id
-     * @return
-     */
     @GET
     @Path("{id}")
-    @Produces({ "application/json"})
-    public Hub find(@PathParam("id") String id) {
-        return super.find(id);
+    @Produces({"application/json"})
+    public Response findById(@PathParam("id") String id, @Context UriInfo info) throws UnknownResourceException {
+        // fields to filter view
+        Set<String> fieldSet = URIParser.getFieldsSelection(info.getQueryParameters());
+
+        Hub entity = manager.find(id);
+        Response response;
+        if (entity != null) {
+            // 200
+            if (fieldSet.isEmpty() || fieldSet.contains(URIParser.ALL_FIELDS)) {
+                response = Response.ok(entity).build();
+            } else {
+                fieldSet.add(URIParser.ID_FIELD);
+                ObjectNode node = JSONMarshaller.createNode(entity, fieldSet);
+                response = Response.ok(node).build();
+            }
+        } else {
+            // 404 not found
+            response = Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return response;
     }
 
-    /**
-     *
-     * @return
-     */
     @GET
-    @Override
     @Produces({"application/json"})
     public List<Hub> findAll() {
-        return super.findAll();
+        return manager.findAll();
     }
 
-    /**
-     *
-     * @param from
-     * @param to
-     * @return
-     */
-    @GET
-    @Path("{from}/{to}")
-    @Produces({"application/json"})
-    public List<Hub> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-        return super.findRange(new int[]{from, to});
-    }
-
-    /**
-     *
-     * @return
-     */
-    @GET
-    @Path("count")
-    @Produces("text/plain")
-    public String countREST() {
-        return String.valueOf(super.count());
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    protected EntityManager getEntityManager() {
-        return em;
-    }
-    
-    /**
-     *
-     * @param event
-     */
     @POST
     @Path("listener")
     @Consumes({"application/json"})
     @Produces({"application/json"})
     public void publishEvent(HubEvent event) {
 
-        System.out.println("HubEvent =" + event );
-        System.out.println("Event = " + event.getEvent().toString());
-        System.out.println("Event type = " + event.getEventType().getText());
-        
+        System.out.println("HubEvent =" + event);
+        System.out.println("Event = " + event.getEvent());
+        System.out.println("Event type = " + event.getEventType());
+
     }
-    
-    /**
-     *
-     * @return
-     */
+
+
+    @GET
+    @Path("listener")
+    @Produces({"application/json"})
+    public Response findEvents(@Context UriInfo info) {
+
+        // search criteria
+        MultivaluedMap<String, String> parameters = URIParser.getParameters(info);
+        // fields to filter view
+        Set<String> fieldsSelection = URIParser.getFieldsSelection(parameters);
+
+        Set<HubEvent> resultList = findByCriteria(parameters);
+
+        Response response;
+        if (fieldsSelection.isEmpty() || fieldsSelection.contains(URIParser.ALL_FIELDS)) {
+            response = Response.ok(resultList).build();
+        } else {
+            fieldsSelection.add(URIParser.ID_FIELD);
+            List<ObjectNode> nodeList = JSONMarshaller.createNodes(resultList, fieldsSelection);
+            response = Response.ok(nodeList).build();
+        }
+        return response;
+    }
+
+    // return Set of unique elements to avoid List with same elements in case of join
+    private Set<HubEvent> findByCriteria(MultivaluedMap<String, String> criteria) {
+        List<HubEvent> resultList = null;
+        if (criteria != null && !criteria.isEmpty()) {
+            resultList = hubEventManager.findByCriteria(criteria, HubEvent.class);
+        } else {
+            resultList = hubEventManager.findAll();
+        }
+        if (resultList == null) {
+            return new LinkedHashSet<HubEvent>();
+        } else {
+            return new LinkedHashSet<HubEvent>(resultList);
+        }
+    }
+
     @GET
     @Path("proto")
-    @Produces({ "application/json"})
+    @Produces({"application/json"})
     public Hub hubProto() {
         Hub hub = new Hub();
         hub.setCallback("callback");
@@ -165,14 +163,10 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         hub.setId("id");
         return hub;
     }
-    
-    /**
-     *
-     * @return
-     */
+
     @GET
     @Path("eventProto")
-    @Produces({ "application/json"})
+    @Produces({"application/json"})
     public HubEvent eventProto() {
         HubEvent event = new HubEvent();
         event.setEvent(proto());
@@ -181,7 +175,7 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         System.out.println("Event type = " + event.getEventType().getText());
         return event;
     }
-    
+
     /**
      *
      * @return
@@ -190,7 +184,7 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         TroubleTicket tt = new TroubleTicket();
         tt.setId("id");
         Date dt = new Date();
-        String dts = Format.toString(dt);
+        String dts = TMFDate.toString(dt);
         tt.setDescription("Some Description");
 
 
@@ -205,7 +199,7 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         ro.setInvolvement("involvment");
         ro.setReference("referenceobject");
 
-        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject> ();
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject>();
         relatedObjects.add(ro);
         relatedObjects.add(ro);
         tt.setRelatedObjects(relatedObjects);
@@ -214,49 +208,20 @@ public class HubFacadeREST extends AbstractFacade<Hub> {
         rp.setRole("role");
         rp.setReference("reference party");
 
-        List<RelatedParty> relatedParties = new ArrayList<RelatedParty> ();
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
         relatedParties.add(rp);
-        relatedParties.add(rp);        
+        relatedParties.add(rp);
         tt.setRelatedParties(relatedParties);
 
         Note note = new Note();
         note.setAuthor("author");
         note.setDate(dts);
         note.setText("text");
-        List<Note> notes = new ArrayList<Note> ();
+        List<Note> notes = new ArrayList<Note>();
         notes.add(note);
         notes.add(note);
         tt.setNotes(notes);
         return tt;
 
     }
-
-    /**
-     *
-     * @param input
-     * @return
-     * @throws java.text.ParseException
-     */
-    public static Date parse(String input) throws java.text.ParseException {
-
-        //NOTE: SimpleDateFormat uses GMT[-+]hh:mm for the TZ which breaks
-        //things a bit.  Before we go on we have to repair this.
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-
-        //this is zero time so we need to add that TZ indicator for 
-        if (input.endsWith("Z")) {
-            input = input.substring(0, input.length() - 1) + "GMT-00:00";
-        } else {
-            int inset = 6;
-
-            String s0 = input.substring(0, input.length() - inset);
-            String s1 = input.substring(input.length() - inset, input.length());
-
-            input = s0 + "GMT" + s1;
-        }
-
-        return df.parse(input);
-
-    }
-
 }

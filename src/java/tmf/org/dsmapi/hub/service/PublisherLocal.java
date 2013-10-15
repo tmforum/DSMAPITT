@@ -4,8 +4,10 @@
  */
 package tmf.org.dsmapi.hub.service;
 
+import java.util.Date;
 import javax.ejb.Local;
 import tmf.org.dsmapi.tt.TroubleTicket;
+
 
 /**
  *
@@ -14,41 +16,37 @@ import tmf.org.dsmapi.tt.TroubleTicket;
 @Local
 public interface PublisherLocal {
 
-    /**
-     *
-     * @param event
-     */
     void publish(Object event);
 
     /**
      *
      * @param tt
      */
-    public void createNotification(TroubleTicket tt);
+    public void createNotification(TroubleTicket bean, String reason, Date date);
 
     /**
      *
      * @param tt
      */
-    public void statusChangedNotification(TroubleTicket tt);
+    public void statusChangedNotification(TroubleTicket bean, String reason, Date date);
 
     /**
      *
      * @param tt
      */
-    public void changedNotification(TroubleTicket tt);
+    public void changedNotification(TroubleTicket bean, String reason, Date date);
 
     /**
      *
      * @param tt
      */
-    public void clearanceRequestNotification(TroubleTicket tt);
+    public void clearanceRequestNotification(TroubleTicket bean, String reason, Date date);
 
     /**
      *
      * @param tt
      */
-    public void informationRequiredNotification(TroubleTicket tt);
+    public void informationRequiredNotification(TroubleTicket bean, String reason, Date date);
    
     
 }

@@ -37,7 +37,9 @@ import org.codehaus.jackson.node.ObjectNode;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.TechnicalException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.commons.utils.TMFDate;
+import tmf.org.dsmapi.commons.utils.JSONMarshaller;
+import tmf.org.dsmapi.commons.utils.URIParser;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicketField;
@@ -80,31 +82,26 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response list(@Context UriInfo info) {
 
-        Response response = null;
+        Response response;
         // search queryParameters
         MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
         // fields to filter view
-        Set<String> fieldSet = RestUtils.getFieldSet(queryParameters);
+        Set<String> fieldsSelection = URIParser.getFieldsSelection(queryParameters);
 
         List<TroubleTicket> resultList = manager.find(queryParameters);
 
-        if (fieldSet.isEmpty() || fieldSet.contains(RestUtils.ALL_FIELDS)) {
-
+        if (fieldsSelection.isEmpty() || fieldsSelection.contains(URIParser.ALL_FIELDS)) {
             response = Response.ok(resultList).build();
-
         } else {
-
-            fieldSet.add(RestUtils.ID_FIELD);
+            fieldsSelection.add(URIParser.ID_FIELD);
             List<ObjectNode> nodeList = new ArrayList<ObjectNode>();
             ObjectNode node;
             for (TroubleTicket tt : resultList) {
-                node = RestUtils.createNodeViewWithFields(tt, fieldSet);
+                node = JSONMarshaller.createNode(tt, fieldsSelection);
                 nodeList.add(node);
             }
             response = Response.ok(nodeList).build();
-
         }
-
         return response;
     }
 
@@ -121,7 +118,7 @@ public class TroubleTicketFacadeREST {
     public Response post(TroubleTicket entity) throws BadUsageException, TechnicalException {
 
         entity.setStatus(Status.Submitted);
-        entity.setStatusChangeDate(Format.toString(new Date()));
+        entity.setStatusChangeDate(TMFDate.toString(new Date()));
         manager.create(entity);
 
         workflow.start(entity);
@@ -230,17 +227,17 @@ public class TroubleTicketFacadeREST {
     @Produces({"application/json"})
     public Response get(@PathParam("id") String id, @Context UriInfo info) throws UnknownResourceException {
 
-        Response response = null;
+        Response response;
         TroubleTicket tt = manager.find(id);
 
         MultivaluedMap<String, String> queryParameters = info.getQueryParameters();
-        Set<String> fieldSet = RestUtils.getFieldSet(queryParameters);
+        Set<String> fieldsSelection = URIParser.getFieldsSelection(queryParameters);
 
-        if (fieldSet.isEmpty() || fieldSet.contains(RestUtils.ALL_FIELDS)) {
+        if (fieldsSelection.isEmpty() || fieldsSelection.contains(URIParser.ALL_FIELDS)) {
             response = Response.ok(tt).build();
         } else {
-            fieldSet.add(RestUtils.ID_FIELD);
-            ObjectNode root = RestUtils.createNodeViewWithFields(tt, fieldSet);
+            fieldsSelection.add(URIParser.ID_FIELD);
+            ObjectNode root = JSONMarshaller.createNode(tt, fieldsSelection);
             response = Response.ok(root).build();
         }
 

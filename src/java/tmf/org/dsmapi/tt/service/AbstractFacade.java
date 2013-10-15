@@ -27,10 +27,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
+import tmf.org.dsmapi.commons.utils.TMFDate;
 
 /**
  *
- * @param <T> 
+ * @param <T>
  * @author pierregauthier
  */
 public abstract class AbstractFacade<T> {
@@ -96,6 +97,14 @@ public abstract class AbstractFacade<T> {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
 
+    public void removeAll() {
+        List<T> all = findAll();
+        EntityManager em = getEntityManager();
+        for (T entity : all) {
+            em.remove(entity);
+        }
+    }
+
     /**
      *
      * @param id
@@ -103,7 +112,7 @@ public abstract class AbstractFacade<T> {
      * @throws UnknownResourceException
      */
     public T find(Object id) throws UnknownResourceException {
-        T entity = getEntityManager().find(entityClass, id);        
+        T entity = getEntityManager().find(entityClass, id);
         if (entity == null) {
             throw new UnknownResourceException(ExceptionType.UNKNOWN_RESOURCE);
         }
@@ -121,7 +130,7 @@ public abstract class AbstractFacade<T> {
     /**
      *
      */
-    public void invalidCache() {
+    public void clearCache() {
         getEntityManager().clear();
     }
 
@@ -170,40 +179,40 @@ public abstract class AbstractFacade<T> {
     public List<T> findByCriteria(MultivaluedMap<String, String> map, Class<T> clazz) {
         List<T> resultsList = null;
         try {
-        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<T> cq = criteriaBuilder.createQuery(clazz);
-        List<Predicate> andPredicates = new ArrayList<Predicate>();
-        Root<T> tt = cq.from(clazz);
+            CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<T> cq = criteriaBuilder.createQuery(clazz);
+            List<Predicate> andPredicates = new ArrayList<Predicate>();
+            Root<T> tt = cq.from(clazz);
             for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-            List<String> valueList = entry.getValue();
-            Predicate predicate = null;
-            if (valueList.size() > 1) {
+                List<String> valueList = entry.getValue();
+                Predicate predicate = null;
+                if (valueList.size() > 1) {
                     // name=value1&name=value2&...&name=valueN
                     // value of name is list [value1, value2, ..., valueN]
                     // => name=value1 OR name=value2 OR ... OR name=valueN
-                List<Predicate> orPredicates = new ArrayList<Predicate>();
-                for (String currentValue : valueList) {
-                    Predicate orPredicate = buildPredicate(tt, entry.getKey(), currentValue);
-                    orPredicates.add(orPredicate);
+                    List<Predicate> orPredicates = new ArrayList<Predicate>();
+                    for (String currentValue : valueList) {
+                        Predicate orPredicate = buildPredicate(tt, entry.getKey(), currentValue);
+                        orPredicates.add(orPredicate);
+                    }
+                    predicate = criteriaBuilder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
+                } else {
+                    // name=value
+                    // value of name is one element list [value]
+                    // => name=value
+                    predicate = buildPredicate(tt, entry.getKey(), valueList.get(0));
                 }
-                predicate = criteriaBuilder.or(orPredicates.toArray(new Predicate[orPredicates.size()]));
-            } else {
-                // name=value
-                // value of name is one element list [value]
-                // => name=value
-                predicate = buildPredicate(tt, entry.getKey(), valueList.get(0));
+                andPredicates.add(predicate);
             }
-            andPredicates.add(predicate);
-        }
-        cq.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
-        cq.select(tt);
-        TypedQuery<T> q = getEntityManager().createQuery(cq);
-        resultsList = q.getResultList();
-        return resultsList;
+            cq.where(andPredicates.toArray(new Predicate[andPredicates.size()]));
+            cq.select(tt);
+            TypedQuery<T> q = getEntityManager().createQuery(cq);
+            resultsList = q.getResultList();
+            return resultsList;
         } catch (Exception ex) {
             Logger.getLogger(AbstractFacade.class.getName()).log(Level.INFO, "findByCriteria error, null result returned", ex);
             return null;
-    }
+        }
     }
 
     private Predicate buildPredicate(Path<T> tt, String name, String value) throws BadUsageException {
@@ -312,13 +321,9 @@ public abstract class AbstractFacade<T> {
         if (clazz.isEnum()) {
             convertedValue = safeEnumValueOf(clazz, value);
         } else if (Date.class.isAssignableFrom(clazz)) {
-            try {
-                convertedValue = formatter.parse(value);
-            } catch (ParseException ex) {
-                convertedValue = null;
-            }
+            convertedValue = TMFDate.parse(value);
         } else if ((clazz.isPrimitive() && !clazz.equals(boolean.class))
-                    || (Number.class.isAssignableFrom(clazz))){
+                || (Number.class.isAssignableFrom(clazz))) {
             try {
                 convertedValue = NumberFormat.getInstance().parse(value);
             } catch (ParseException ex) {
@@ -327,11 +332,11 @@ public abstract class AbstractFacade<T> {
         } else {
             convertedValue = value;
         }
-        if (convertedValue != null){
+        if (convertedValue != null) {
             return convertedValue;
         } else {
             throw new BadUsageException(ExceptionType.BAD_USAGE_FORMAT, "Wrong format for value " + value);
-    }    
+        }
 
     }
 
@@ -376,12 +381,12 @@ public abstract class AbstractFacade<T> {
         if (operator == null) {
             Path<T> attribute = tt.get(name);
             Object valueObject = convertStringValueToObject(value, attribute.getJavaType());
-            System.out.println("### bp RETURN "+name+"="+value);
+            System.out.println("### bp RETURN " + name + "=" + value);
             return criteriaBuilder.equal(attribute, valueObject);
         } else {
             Class javaType = tt.getJavaType();
-            if (! classCompatibleWithOperator(javaType, operator)) {
-                throw new BadUsageException(ExceptionType.BAD_USAGE_OPERATOR, operator.getValue()+" operator incompatible with field");
+            if (!classCompatibleWithOperator(javaType, operator)) {
+                throw new BadUsageException(ExceptionType.BAD_USAGE_OPERATOR, operator.getValue() + " operator incompatible with field");
             }
             Object valueObject = convertStringValueToObject(value, javaType);
             switch (operator) {

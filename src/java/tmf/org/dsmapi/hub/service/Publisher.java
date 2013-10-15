@@ -4,11 +4,15 @@
  */
 package tmf.org.dsmapi.hub.service;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.hub.Hub;
 import tmf.org.dsmapi.hub.HubEvent;
 import tmf.org.dsmapi.hub.TroubleTicketEventTypeEnum;
@@ -26,6 +30,8 @@ public class Publisher implements PublisherLocal {
     @EJB
     HubFacade hubFacade;
     @EJB
+    EventFacade hubEventFacade;
+    @EJB
     RESTEventPublisherLocal restEventPublisher;
 
     // Add business logic below. (Right-click in editor and choose
@@ -35,62 +41,62 @@ public class Publisher implements PublisherLocal {
     //Loop into array of Hubs
     //Call RestEventPublisher - Need to implement resend policy plus eviction
     //Filtering is done in RestEventPublisher based on query expression
-    /**
-     *
-     * @param event
-     */
     @Override
     public void publish(Object event) {
         System.out.println("Sending Event");
+
+        String id = null;
+
+        if (event instanceof HubEvent) {
+            try {
+                HubEvent hubEvent = (HubEvent)event;
+                hubEvent.setId(null);
+                hubEventFacade.create(hubEvent);
+                id = hubEvent.getId();
+            } catch (BadUsageException ex) {
+                Logger.getLogger(Publisher.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
 
         List<Hub> hubList = hubFacade.findAll();
         Iterator<Hub> it = hubList.iterator();
         while (it.hasNext()) {
             Hub hub = it.next();
             restEventPublisher.publish(hub, event);
-
-
-            //Thread.currentThread().sleep(1000);
         }
-        System.out.println("Sending Event After");
+        System.out.println("Sending Event After, id of event : "+id);
     }
 
-    /**
-     *
-     * @param tt
-     */
     @Override
-    public void createNotification(TroubleTicket tt) {
+    public void createNotification(TroubleTicket bean, String reason, Date date) {
         HubEvent event = new HubEvent();
-        event.setEvent(tt);
+        event.setEvent(bean);
+        event.setDate(date);
+        event.setReason(reason);        
         event.setEventType(TroubleTicketEventTypeEnum.TicketCreateNotification);
         publish(event);
 
     }
 
-    /**
-     *
-     * @param tt
-     */
     @Override
-    public void statusChangedNotification(TroubleTicket tt) {
+    public void statusChangedNotification(TroubleTicket bean, String reason, Date date) {
 
         HubEvent event = new HubEvent();
-        event.setEvent(tt);
+        event.setEvent(bean);
+        event.setDate(date);
+        event.setReason(reason);
         event.setEventType(TroubleTicketEventTypeEnum.TicketStatusChangedNotification);
         publish(event);
 
     }
 
-    /**
-     *
-     * @param tt
-     */
     @Override
-    public void changedNotification(TroubleTicket tt) {
+    public void changedNotification(TroubleTicket bean, String reason, Date date) {
 
         HubEvent event = new HubEvent();
-        event.setEvent(tt);
+        event.setDate(date);
+        event.setReason(reason);
+        event.setEvent(bean);
         event.setEventType(TroubleTicketEventTypeEnum.TicketChangedNotification);
         publish(event);
 
@@ -101,10 +107,12 @@ public class Publisher implements PublisherLocal {
      * @param tt
      */
     @Override
-    public void clearanceRequestNotification(TroubleTicket tt) {
+    public void clearanceRequestNotification(TroubleTicket bean, String reason, Date date) {
 
         HubEvent event = new HubEvent();
-        event.setEvent(tt);
+        event.setEvent(bean);
+        event.setDate(date);
+        event.setReason(reason);        
         event.setEventType(TroubleTicketEventTypeEnum.TicketClearanceRequestNotification);
         publish(event);
 
@@ -115,10 +123,12 @@ public class Publisher implements PublisherLocal {
      * @param tt
      */
     @Override
-    public void informationRequiredNotification(TroubleTicket tt) {
+    public void informationRequiredNotification(TroubleTicket bean, String reason, Date date) {
 
         HubEvent event = new HubEvent();
-        event.setEvent(tt);
+        event.setDate(date);
+        event.setReason(reason);
+        event.setEvent(bean);
         event.setEventType(TroubleTicketEventTypeEnum.InformationRequiredNotification);
         publish(event);
 

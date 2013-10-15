@@ -5,11 +5,14 @@
 package tmf.org.dsmapi.hub;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlRootElement;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  *
@@ -17,6 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @XmlRootElement
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class Hub implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,52 +28,33 @@ public class Hub implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
-    /**
-     *
-     * @return
-     */
+    private Integer leaseSeconds;
+    
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date dateTime;
+
     public String getId() {
         return id;
     }
 
-    /**
-     *
-     * @param id
-     */
     public void setId(String id) {
         this.id = id;
     }
     private String callback;
     private String query;
 
-    /**
-     *
-     * @return
-     */
     public String getCallback() {
         return callback;
     }
 
-    /**
-     *
-     * @param callback
-     */
     public void setCallback(String callback) {
         this.callback = callback;
     }
 
-    /**
-     *
-     * @return
-     */
     public String getQuery() {
         return query;
     }
 
-    /**
-     *
-     * @param query
-     */
     public void setQuery(String query) {
         this.query = query;
     }

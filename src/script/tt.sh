@@ -5,17 +5,17 @@ set -e
 usage() {
 	nom=`basename $0`
 	echo "+"
-	echo "+ +  ${nom} [-c] Create TT with default file"
-	echo "+ +  ${nom} [-c -f file ] Create TT with specified file"
-	echo "+ +  ${nom} [-p] Patch TT with default file"
-	echo "+ +  ${nom} [-p -f file ] Patch TT with specified file"
-	echo "+ +  ${nom} [-u] Update TT with default file"
-	echo "+ +  ${nom} [-u -f file ] Update TT with specified file"
-    echo "+ +  ${nom} [-l] List all TT"
-    echo "+ +  ${nom} [-l -q \"query\"] List all TT with attribute selection and/or attribute filtering"
-    echo "+ +  ${nom} [-g -i id] Retrieve single TT"
-    echo "+ +  ${nom} [-g -i id -q \"query\"] Retrieve single TT with attribute selection"
-	echo "+ +  ${nom} [-h] Help"   
+	echo "+ +  ${nom} [-c file ] post with specified file"
+	echo "+ +  ${nom} [-p file ] patch with specified file"
+	echo "+ +  ${nom} [-u file ] put with specified file"
+    echo "+ +  ${nom} [-l] list all"
+    echo "+ +  ${nom} [-l -q \"query\"] list all with attribute selection and/or attribute filtering"
+    echo "+ +  ${nom} [-g -i id] get single"
+    echo "+ +  ${nom} [-g -i id -q \"query\"] get single with attribute selection"
+    echo "+ +  ${nom} [-d] admin only - delete all"
+    echo "+ +  ${nom} [-d -i id ] admin only - delete single"
+    echo "+ +  ${nom} [-a file ] admin only - post list with specified file"
+	echo "+ +  ${nom} [-h] help"   
     echo "+ +  query format: \"fields=x,y,...\"] attribute selection"
     echo "+ +  query format: \"key=value&...\"] attribute filtering"    
     echo "+ +  query format: \"fields=x,y,...&key=value&...\"] attribute selection and/or filtering"  
@@ -31,24 +31,30 @@ if [ $# -eq 1 -a "$1" = -h ]; then usage; exit 2; fi
 # OPTIONS
 errOption=0
 OPTIND=1
-while getopts "cupglf:i:q:" option
+while getopts "dgli:q:c:u:p:a:" option
 do
 	case $option in
-		c)  CREATE=OK
+		c)  POST=OK
+            FILE="${OPTARG}"        
             ;;
+		a)  POST_MULTI=OK
+            FILE="${OPTARG}"        
+            ;;            
         u)  PUT=OK
+            FILE="${OPTARG}"          
             ;;
         p)  PATCH=OK
+            FILE="${OPTARG}"          
             ;;
         l)  GET=OK
 			;;
         g)  GET=OK
-			;;          
+			;;
+        d)  DELETE=OK
+            ;;                      
         i)  ID="${OPTARG}"
             ;;
         q)  QUERY="${OPTARG}"
-			;;
-        f)  FILE="${OPTARG}"
 			;;
 		\?) echo " option $OPTARG INVALIDE" >&2
 			errOption=3
@@ -57,27 +63,19 @@ done
 
 if [ $errOption == 3 ]; then usage >&2; exit $errOption; fi
 
-# CREATE
-if [ -n "$CREATE" ]; then
-    if [ ! -n "$FILE" ]; then
-        echo "Please provide [-f file]" >&2
-        exit 4
-    fi
-    mycurl "POST" "api/troubleTicket"
+# POST
+if [ -n "$POST" ]; then
+    post "api/troubleTicket"
     exit 2
 fi
 
 # PUT
 if [ -n "$PUT" ]; then
-    if [ ! -n "$FILE" ]; then
-        echo "Please provide [-f file]" >&2
-        exit 4        
-    fi
     if [ ! -n "$ID" ]; then
         echo "Please provide [-i id]" >&2
         exit 4
     fi    
-    mycurl "PUT" "api/troubleTicket/${ID}"
+    put "api/troubleTicket/${ID}"
     exit 2
 fi
 
@@ -87,11 +85,7 @@ if [ -n "$PATCH" ]; then
         echo "Please provide [-i id]" >&2
         exit 4
     fi
-    if [ ! -n "$FILE" ]; then
-        echo "Please provide [-f file]" >&2
-        exit 4        
-    fi
-    mycurl "PATCH" "api/troubleTicket/${ID}"
+    patch "api/troubleTicket/${ID}"
     exit 2
 fi
 
@@ -100,7 +94,25 @@ if [ -n "$GET" ]; then
     if [ -n "$QUERY" ]; then
         QUERY="?$QUERY"
     fi
-    mycurl "GET" "api/troubleTicket/${ID}${QUERY}"
+    get "api/troubleTicket/${ID}${QUERY}"
+    exit 2
+fi
+
+# ADMIN ONLY STUFF
+
+# DELETE
+if [ -n "$DELETE" ]; then
+    if [ ! -n "$ID" ]; then
+        echo "WARN: Delete all TT ? ctrl+c to break" >&2
+        wait
+    fi
+    delete "api/admin/tt/${ID}"
+    exit 2
+fi
+
+# POST
+if [ -n "$POST_MULTI" ]; then
+    post "api/admin/tt"
     exit 2
 fi
 

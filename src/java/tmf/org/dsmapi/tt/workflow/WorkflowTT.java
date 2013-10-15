@@ -11,7 +11,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import tmf.org.dsmapi.commons.utils.Format;
+import tmf.org.dsmapi.commons.utils.TMFDate;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Note;
 import tmf.org.dsmapi.tt.Status;
@@ -27,7 +27,6 @@ import tmf.org.dsmapi.tt.service.TroubleTicketFacade;
 @Asynchronous
 public class WorkflowTT implements WorkFlow<TroubleTicket> {
 
-    private final static long PAUSE = 3000;
     @EJB
     TroubleTicketFacade manager;
     @EJB
@@ -41,20 +40,20 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
     @TransactionAttribute(TransactionAttributeType.NEVER)
     public void start(TroubleTicket tt) {
         try {
-            publisher.createNotification(tt);
-            Thread.sleep(PAUSE);
+            publisher.createNotification(tt,null,new Date());
+            Thread.sleep(manager.getDelay());
 
             this.afterCreateExecute(tt);
-            publisher.statusChangedNotification(tt); // > Acknowledeged
-            Thread.sleep(PAUSE);
+            publisher.statusChangedNotification(tt,null,new Date()); // > Acknowledeged
+            Thread.sleep(manager.getDelay());
 
             this.afterAcknowledged(tt);
-            publisher.statusChangedNotification(tt); // > In Progress        
-            Thread.sleep(PAUSE);
+            publisher.statusChangedNotification(tt,null,new Date()); // > In Progress        
+            Thread.sleep(manager.getDelay());
 
             this.afterInProgress(tt);
-            publisher.statusChangedNotification(tt); // > In Progress Held OR In Progress Pending Or Resolved
-            Thread.sleep(PAUSE);
+            publisher.statusChangedNotification(tt,null,new Date()); // > In Progress Held OR In Progress Pending Or Resolved
+            Thread.sleep(manager.getDelay());
 
             this.route(tt);
 
@@ -75,26 +74,26 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
 
             if (Status.Resolved == tt.getStatus()) {
                 this.afterResolved(tt);
-                publisher.statusChangedNotification(tt); // > Closed  
+                publisher.statusChangedNotification(tt,null,new Date()); // > Closed  
             }
 
             if (Status.InProgress_Held == tt.getStatus()) {
                 this.afterInProgressHeld(tt);
-                publisher.statusChangedNotification(tt);  // > In Progress
-                Thread.sleep(PAUSE);
+                publisher.statusChangedNotification(tt,null,new Date());  // > In Progress
+                Thread.sleep(manager.getDelay());
                 this.afterInProgress(tt);
-                publisher.statusChangedNotification(tt); // > In Progress Held OR In Progress Pending Or Resolved
-                Thread.sleep(PAUSE);
+                publisher.statusChangedNotification(tt,null,new Date()); // > In Progress Held OR In Progress Pending Or Resolved
+                Thread.sleep(manager.getDelay());
                 this.route(tt);
             }
 
             if (Status.InProgress_Pending == tt.getStatus()) { // > In Progress Pending
                 this.afterInProgressPending(tt);
-                publisher.statusChangedNotification(tt);  // > In Progress
-                Thread.sleep(PAUSE);
+                publisher.statusChangedNotification(tt,null,new Date());  // > In Progress
+                Thread.sleep(manager.getDelay());
                 this.afterInProgress(tt);
-                publisher.statusChangedNotification(tt); // > In Progress Held OR In Progress Pending Or Resolved
-                Thread.sleep(PAUSE);
+                publisher.statusChangedNotification(tt,null,new Date()); // > In Progress Held OR In Progress Pending Or Resolved
+                Thread.sleep(manager.getDelay());
                 this.route(tt);
             }
 
@@ -183,7 +182,7 @@ public class WorkflowTT implements WorkFlow<TroubleTicket> {
 
             Note note = new Note();
             note.setAuthor("Mock workflow");
-            note.setDate(Format.toString(new Date()));
+            note.setDate(TMFDate.toString(new Date()));
             note.setText("To Resolved");
             partialTT.getNotes().add(note); // Set Note
 

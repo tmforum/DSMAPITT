@@ -14,11 +14,6 @@ import tmf.org.dsmapi.hub.Hub;
 @Local
 public interface RESTEventPublisherLocal {
 
-    /**
-     *
-     * @param hub
-     * @param event
-     */
     public void publish(Hub hub, Object event);
     
 }

@@ -1,4 +1,4 @@
-package tmf.org.dsmapi.tt.service;
+package tmf.org.dsmapi.commons.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
