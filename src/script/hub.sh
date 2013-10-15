@@ -5,15 +5,13 @@ set -e
 usage() {
 	nom=`basename $0`
 	echo "+"
-	echo "+ +  ${nom} [-c] Create Hub with default file"
-	echo "+ +  ${nom} [-c -f file ] Create Hub with specified file"
-	echo "+ +  ${nom} [-p] Patch Hub with default file"
-	echo "+ +  ${nom} [-p -f file ] Patch Hub with specified file"
-    echo "+ +  ${nom} [-d] Delete all Hub"    
-    echo "+ +  ${nom} [-d -i id ] Delete single Hub" 
-    echo "+ +  ${nom} [-l] List all Hub"
-    echo "+ +  ${nom} [-g -i id] Retrieve single Hub"
-	echo "+ +  ${nom} [-h] Help"   
+	echo "+ +  ${nom} [-c file ] post with specified file"
+	echo "+ +  ${nom} [-p file ] patch with specified file"   
+    echo "+ +  ${nom} [-d -i id ] delete single" 
+    echo "+ +  ${nom} [-l] list all"
+    echo "+ +  ${nom} [-g -i id] get single"
+    echo "+ +  ${nom} [-d] admin only - delete all"     
+	echo "+ +  ${nom} [-h] help"   
 	echo "+"
 	}
 
@@ -26,12 +24,14 @@ if [ $# -eq 1 -a "$1" = -h ]; then usage; exit 2; fi
 # OPTIONS
 errOption=0
 OPTIND=1
-while getopts "cupgldf:i:q:" option
+while getopts "ugldi:q:c:p:" option
 do
 	case $option in
 		c)  CREATE=OK
+            FILE="${OPTARG}"        
             ;;
         p)  PATCH=OK
+            FILE="${OPTARG}"         
             ;;
         l)  GET=OK
 			;;
@@ -52,11 +52,7 @@ if [ $errOption == 3 ]; then usage >&2; exit $errOption; fi
 
 # CREATE
 if [ -n "$CREATE" ]; then
-    if [ ! -n "$FILE" ]; then
-        echo "Please provide [-f file]" >&2
-        exit 4 
-    fi
-    post "api/hub" $FILE
+    post "api/hub"
     exit 2
 fi
 
@@ -66,11 +62,7 @@ if [ -n "$PATCH" ]; then
         echo "Please provide [-i id]" >&2
         exit 4
     fi
-    if [ ! -n "$FILE" ]; then
-        echo "Please provide [-f file]" >&2
-        exit 4 
-    fi
-    patch "api/hub/${ID}" $FILE
+    patch "api/hub/${ID}"
     exit 2
 fi
 

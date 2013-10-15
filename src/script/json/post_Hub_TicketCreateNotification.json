@@ -1,0 +1,4 @@
+{
+    "callback":"http://localhost:8001/listener",
+    "query": "eventType=TicketCreateNotification"
+}

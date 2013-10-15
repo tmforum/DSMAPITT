@@ -1,0 +1,4 @@
+{
+    "callback":"http://localhost:8002/listener",
+    "query": "eventType=TicketStatusChangedNotification"
+}
