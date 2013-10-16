@@ -21,7 +21,7 @@ public enum TroubleTicketEventTypeEnum {
     /**
      *
      */
-    TicketChangedNotification("TicketStatusChangedNotification"),
+    TicketChangedNotification("TicketChangedNotification"),
     /**
      *
      */
