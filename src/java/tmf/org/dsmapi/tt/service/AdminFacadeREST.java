@@ -48,7 +48,7 @@ public class AdminFacadeREST {
      * @return
      */
     @POST
-    @Path("tt")
+    @Path("troubleTicket")
     @Consumes({"application/json"})
     @Produces({"application/json"})
     public Response post(List<TroubleTicket> entities) {
@@ -82,12 +82,13 @@ public class AdminFacadeREST {
      * @return
      */
     @DELETE
-    @Path("tt")
+    @Path("troubleTicket")
     public Report deleteAllTT() {
 
-        int previousRows = eventManager.count();
+        eventManager.removeAll();
+        int previousRows = ttManager.count();
         ttManager.removeAll();
-        int currentRows = eventManager.count();
+        int currentRows = ttManager.count();
         int affectedRows = previousRows - currentRows;        
 
         Report stat = new Report(currentRows);

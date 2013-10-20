@@ -106,13 +106,13 @@ if [ -n "$DELETE" ]; then
         echo "WARN: Delete all TT ? ctrl+c to break" >&2
         wait
     fi
-    delete "api/admin/tt/${ID}"
+    delete "api/admin/troubleTicket/${ID}"
     exit 2
 fi
 
 # POST
 if [ -n "$POST_MULTI" ]; then
-    post "api/admin/tt"
+    post "api/admin/troubleTicket"
     exit 2
 fi
 

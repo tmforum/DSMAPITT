@@ -26,7 +26,7 @@
     ],
     "relatedParties": [
         {
-            "role": "role",
+            "role": "2",
             "reference": "reference party"
         },
         {

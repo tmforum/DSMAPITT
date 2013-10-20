@@ -6,6 +6,7 @@ import java.util.List;
 import tmf.org.dsmapi.tt.TroubleTicket;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,6 +15,7 @@ import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.ExceptionType;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
 import tmf.org.dsmapi.commons.utils.TMFDate;
+import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Status;
 import static tmf.org.dsmapi.tt.TroubleTicketField.CREATION_DATE;
 import static tmf.org.dsmapi.tt.TroubleTicketField.DESCRIPTION;
@@ -41,6 +43,8 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     private EntityManager em;
     private StateModel stateModel;
     private static long delay = 3000;
+    @EJB
+    PublisherLocal publisher;
 
     @PostConstruct
     private void init() {
@@ -73,10 +77,10 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     /**
      *
      * @param patchTT
-     * @param fields 
+     * @param fields
      * @return
      * @throws BadUsageException
-     * @throws UnknownResourceException  
+     * @throws UnknownResourceException
      */
     public TroubleTicket updateAttributes(TroubleTicket patchTT, Set<TroubleTicketField> fields) throws BadUsageException, UnknownResourceException {
 
@@ -89,15 +93,17 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         if (fields.contains(STATUS) & !(fields.contains(STATUS_CHANGE_REASON))) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "While updating 'status', please provide a 'statusChangeReason'");
         }
-        
+
         // Allow status update when there is no correlationId, for demo or admin purpose
-        if (fields.contains(STATUS) && (patchTT.getCorrelationId()==null)) {
+        if (fields.contains(STATUS) && (patchTT.getCorrelationId() == null)) {
             // isValidTransition if this transition is allowed
             stateModel.checkTransition(currentTT.getStatus(), patchTT.getStatus());
             currentTT.setStatus(patchTT.getStatus());
             currentTT.setStatusChangeDate(TMFDate.toString(new Date()));
             currentTT.setStatusChangeReason(patchTT.getStatusChangeReason());
-        }                
+            // notify Status change
+            publisher.statusChangedNotification(currentTT, null, new Date());
+        }
 
         for (TroubleTicketField token : fields) {
             switch (token) {
@@ -137,9 +143,12 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             }
         }
         em.merge(currentTT);
+
+        // Event tt changed
+        publisher.changedNotification(currentTT, null, new Date());
         return currentTT;
     }
-    
+
     /**
      *
      * @param troubleTicket
@@ -153,7 +162,7 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         troubleTicket.setStatusChangeReason(reason);
         em.merge(troubleTicket);
         return troubleTicket;
-    }    
+    }
 
     /**
      *
@@ -224,5 +233,4 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     public void setDelay(long delay) {
         this.delay = delay;
     }
-
 }

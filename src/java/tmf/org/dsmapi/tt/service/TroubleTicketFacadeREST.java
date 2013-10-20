@@ -41,6 +41,7 @@ import tmf.org.dsmapi.commons.utils.TMFDate;
 import tmf.org.dsmapi.commons.utils.JSONMarshaller;
 import tmf.org.dsmapi.commons.utils.URIParser;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
+import tmf.org.dsmapi.tt.Note;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicketField;
 import tmf.org.dsmapi.tt.workflow.WorkFlow;
@@ -121,7 +122,13 @@ public class TroubleTicketFacadeREST {
         entity.setStatusChangeDate(TMFDate.toString(new Date()));
         manager.create(entity);
 
-        workflow.start(entity);
+        List<Note> notes = entity.getNotes();
+        if (notes != null && !notes.isEmpty()) {
+            String lastText = notes.get(notes.size() - 1).getText();
+            if (!"noWorkflow".equalsIgnoreCase(lastText)) {
+                workflow.start(entity);
+            }
+        } else workflow.start(entity);
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
