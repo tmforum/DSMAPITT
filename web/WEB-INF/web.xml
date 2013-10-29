@@ -3,14 +3,14 @@
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
     
-	<!--filter>
+	<filter>
 		<filter-name>CORSFilter</filter-name>
-		<filter-class>tmf.org.dsmapi.commons.jaxrs.CORSFilter</filter-class>
+		<filter-class>tmf.org.dsmapi.commons.jaxrs.ServletResponseCORSFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>CORSFilter</filter-name>
 		<url-pattern>/api/*</url-pattern>
-	</filter-mapping-->    
+	</filter-mapping>    
     
 
 <!--<servlet>
