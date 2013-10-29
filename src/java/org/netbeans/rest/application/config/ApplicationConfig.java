@@ -28,7 +28,6 @@ public class ApplicationConfig extends Application {
      */
     private Set<Class<?>> getRestResourceClasses() {
         Set<Class<?>> resources = new java.util.HashSet<Class<?>>();
-        resources.add(tmf.org.dsmapi.commons.jaxrs.ResponseFilter.class);
         resources.add(tmf.org.dsmapi.hub.service.HubFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.service.AdminFacadeREST.class);
         resources.add(tmf.org.dsmapi.tt.service.TroubleTicketFacadeREST.class);

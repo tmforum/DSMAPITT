@@ -2,6 +2,16 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
+    
+	<!--filter>
+		<filter-name>CORSFilter</filter-name>
+		<filter-class>tmf.org.dsmapi.commons.jaxrs.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>CORSFilter</filter-name>
+		<url-pattern>/api/*</url-pattern>
+	</filter-mapping-->    
+    
 
 <!--<servlet>
     <servlet-name>RestServlet</servlet-name>
@@ -11,6 +21,12 @@
         <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
         <param-value>true</param-value>
     </init-param>
+    
+<init-param>
+    <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+    <param-value>tmf.org.dsmapi.commons.jaxrs.ResponseCorsFilter</param-value>
+</init-param>
+    
 </servlet>
 
 	<servlet-mapping>
@@ -59,8 +75,8 @@
 		<realm-name>fileRealm</realm-name>
 	</login-config>
 
-	<security-role>
-		<role-name>USERS</role-name>
-	</security-role-->
+    <security-role>
+            <role-name>USERS</role-name>
+    </security-role-->
 
 </web-app>
