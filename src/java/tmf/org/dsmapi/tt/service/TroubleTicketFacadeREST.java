@@ -42,6 +42,9 @@ import tmf.org.dsmapi.commons.utils.JSONMarshaller;
 import tmf.org.dsmapi.commons.utils.URIParser;
 import tmf.org.dsmapi.hub.service.PublisherLocal;
 import tmf.org.dsmapi.tt.Note;
+import tmf.org.dsmapi.tt.RelatedObject;
+import tmf.org.dsmapi.tt.RelatedParty;
+import tmf.org.dsmapi.tt.Severity;
 import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicketField;
 import tmf.org.dsmapi.tt.workflow.WorkFlow;
@@ -128,7 +131,9 @@ public class TroubleTicketFacadeREST {
             if (!"noWorkflow".equalsIgnoreCase(lastText)) {
                 workflow.start(entity);
             }
-        } else workflow.start(entity);
+        } else {
+            workflow.start(entity);
+        }
 
         // 201 OK + location
         UriBuilder uriBuilder = UriBuilder.fromUri(uriInfo.getRequestUri());
@@ -249,5 +254,57 @@ public class TroubleTicketFacadeREST {
         }
 
         return response;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GET
+    @Path("mock")
+    @Produces({"application/json"})
+    public TroubleTicket mock() {
+        TroubleTicket tt = new TroubleTicket();
+        tt.setId("id");
+        Date dt = new Date();
+        String dts = TMFDate.toString(dt);
+        tt.setDescription("Some Description");
+
+
+        tt.setCreationDate(dts);
+        tt.setStatus(Status.Acknowledged);
+        tt.setSeverity(Severity.Medium);
+        tt.setType("Bills, charges or payment");
+        tt.setResolutionDate(dts);
+        tt.setTargetResolutionDate(dts);
+
+        RelatedObject ro = new RelatedObject();
+        ro.setInvolvement("involvment");
+        ro.setReference("referenceobject");
+
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject>();
+        relatedObjects.add(ro);
+        relatedObjects.add(ro);
+        tt.setRelatedObjects(relatedObjects);
+
+        RelatedParty rp = new RelatedParty();
+        rp.setRole("role");
+        rp.setReference("reference party");
+
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
+        relatedParties.add(rp);
+        relatedParties.add(rp);
+        tt.setRelatedParties(relatedParties);
+
+        Note note = new Note();
+        note.setAuthor("author");
+        note.setDate(dts);
+        note.setText("text");
+        List<Note> notes = new ArrayList<Note>();
+        notes.add(note);
+        notes.add(note);
+        tt.setNotes(notes);
+        return tt;
+
     }
 }

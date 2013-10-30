@@ -141,7 +141,7 @@ public class AdminFacadeREST {
      * @throws UnknownResourceException
      */
     @DELETE
-    @Path("tt/{id}")
+    @Path("troubleTicket/{id}")
     public Report delete(@PathParam("id") String id) throws UnknownResourceException {
 
         int previousRows = ttManager.count();
@@ -161,7 +161,7 @@ public class AdminFacadeREST {
      * @return
      */
     @GET
-    @Path("tt/count")
+    @Path("troubleTicket/count")
     @Produces({"application/json"})
     public Report count() {
         return new Report(ttManager.count());
@@ -171,66 +171,15 @@ public class AdminFacadeREST {
      *
      */
     @DELETE
-    @Path("tt/cache")
+    @Path("troubleTicket/cache")
     public void clearCache() {
         ttManager.clearCache();
     }
 
     @PUT
-    @Path("tt/wf/delay/{value}")
+    @Path("troubleTicket/wf/delay/{value}")
     public void patchDelay(@PathParam("value") long value) {
         ttManager.setDelay(value);
     }
-
-    /**
-     *
-     * @return
-     */
-    @GET
-    @Path("tt/mock")
-    @Produces({"application/json"})
-    public TroubleTicket proto() {
-        TroubleTicket tt = new TroubleTicket();
-        tt.setId("id");
-        Date dt = new Date();
-        String dts = TMFDate.toString(dt);
-        tt.setDescription("Some Description");
-
-
-        tt.setCreationDate(dts);
-        tt.setStatus(Status.Acknowledged);
-        tt.setSeverity(Severity.Medium);
-        tt.setType("Bills, charges or payment");
-        tt.setResolutionDate(dts);
-        tt.setTargetResolutionDate(dts);
-
-        RelatedObject ro = new RelatedObject();
-        ro.setInvolvement("involvment");
-        ro.setReference("referenceobject");
-
-        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject>();
-        relatedObjects.add(ro);
-        relatedObjects.add(ro);
-        tt.setRelatedObjects(relatedObjects);
-
-        RelatedParty rp = new RelatedParty();
-        rp.setRole("role");
-        rp.setReference("reference party");
-
-        List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
-        relatedParties.add(rp);
-        relatedParties.add(rp);
-        tt.setRelatedParties(relatedParties);
-
-        Note note = new Note();
-        note.setAuthor("author");
-        note.setDate(dts);
-        note.setText("text");
-        List<Note> notes = new ArrayList<Note>();
-        notes.add(note);
-        notes.add(note);
-        tt.setNotes(notes);
-        return tt;
-
-    }
+    
 }

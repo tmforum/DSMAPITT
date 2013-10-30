@@ -3,8 +3,6 @@
 USER=user
 PASSWORD=user
 
-HOST=localhost
-PORT=8080
-CONTEXT=DSMAPITT
+URL_BASE=http://localhost:8080/DSMAPITT/api
 
 LOG_HOME=log
