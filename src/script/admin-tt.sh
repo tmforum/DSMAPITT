@@ -9,7 +9,7 @@ usage() {
 	echo "+"
     echo "+ +  ${nom} [-n] count"
     echo "+ +  ${nom} [-d] delete all"
-    echo "+ +  ${nom} [-d -i id ] delete single"
+    echo "+ +  ${nom} [-d id ] delete single"
     echo "+ +  ${nom} [-c file ] post list with specified file"
     echo "+ +  ${nom} [-x] invalid JPA cache"
     echo "+ +  ${nom} [-w long ] update wait time with ms value between workflow steps" 
@@ -23,7 +23,7 @@ if [ $# -eq 1 -a "$1" = -h ]; then usage; exit 2; fi
 # OPTIONS
 errOption=0
 OPTIND=1
-while getopts "mndxi:q:w:c:" option
+while getopts "ndc:xw:" option
 do
 	case $option in
         d)  DELETE=OK

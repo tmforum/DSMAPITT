@@ -28,11 +28,11 @@ import tmf.org.dsmapi.tt.TroubleTicket;
 public class AdminFacadeREST {
 
     @EJB
-    TroubleTicketFacade ttManager;
+    TroubleTicketFacade manager;
+    @EJB
+    EventFacade eventManager;    
     @EJB
     HubFacade hubManager;
-    @EJB
-    EventFacade eventManager;
 
     /**
      *
@@ -49,17 +49,17 @@ public class AdminFacadeREST {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        int previousRows = ttManager.count();
+        int previousRows = manager.count();
         int affectedRows;
 
         // Try to persist entities
         try {
-            affectedRows = ttManager.create(entities);
+            affectedRows = manager.create(entities);
         } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
-        Report stat = new Report(ttManager.count());
+        Report stat = new Report(manager.count());
         stat.setAffectedRows(affectedRows);
         stat.setPreviousRows(previousRows);
 
@@ -75,12 +75,12 @@ public class AdminFacadeREST {
      */
     @DELETE
     @Path("troubleTicket")
-    public Report deleteAllTT() {
+    public Report deleteAll() {
 
         eventManager.removeAll();
-        int previousRows = ttManager.count();
-        ttManager.removeAll();
-        int currentRows = ttManager.count();
+        int previousRows = manager.count();
+        manager.removeAll();
+        int currentRows = manager.count();
         int affectedRows = previousRows - currentRows;        
 
         Report stat = new Report(currentRows);
@@ -136,12 +136,12 @@ public class AdminFacadeREST {
     @Path("troubleTicket/{id}")
     public Report delete(@PathParam("id") String id) throws UnknownResourceException {
 
-        int previousRows = ttManager.count();
+        int previousRows = manager.count();
 
-        ttManager.remove(id);
+        manager.remove(id);
         int affectedRows = 1;
 
-        Report stat = new Report(ttManager.count());
+        Report stat = new Report(manager.count());
         stat.setAffectedRows(affectedRows);
         stat.setPreviousRows(previousRows);
 
@@ -156,7 +156,7 @@ public class AdminFacadeREST {
     @Path("troubleTicket/count")
     @Produces({"application/json"})
     public Report count() {
-        return new Report(ttManager.count());
+        return new Report(manager.count());
     }
 
     /**
@@ -165,13 +165,13 @@ public class AdminFacadeREST {
     @DELETE
     @Path("troubleTicket/cache")
     public void clearCache() {
-        ttManager.clearCache();
+        manager.clearCache();
     }
 
     @PUT
     @Path("troubleTicket/wf/delay/{value}")
     public void patchDelay(@PathParam("value") long value) {
-        ttManager.setDelay(value);
+        manager.setDelay(value);
     }
     
 }
