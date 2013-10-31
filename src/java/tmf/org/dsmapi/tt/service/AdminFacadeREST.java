@@ -1,8 +1,6 @@
 package tmf.org.dsmapi.tt.service;
 
 import tmf.org.dsmapi.commons.bean.Report;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -17,14 +15,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import tmf.org.dsmapi.commons.exceptions.BadUsageException;
 import tmf.org.dsmapi.commons.exceptions.UnknownResourceException;
-import tmf.org.dsmapi.commons.utils.TMFDate;
 import tmf.org.dsmapi.hub.service.EventFacade;
 import tmf.org.dsmapi.hub.service.HubFacade;
-import tmf.org.dsmapi.tt.Note;
-import tmf.org.dsmapi.tt.RelatedObject;
-import tmf.org.dsmapi.tt.RelatedParty;
-import tmf.org.dsmapi.tt.Severity;
-import tmf.org.dsmapi.tt.Status;
 import tmf.org.dsmapi.tt.TroubleTicket;
 
 /**
@@ -106,9 +98,9 @@ public class AdminFacadeREST {
     @Path("hub")
     public Report deleteAllHub() {
 
-        int previousRows = eventManager.count();
+        int previousRows = hubManager.count();
         hubManager.removeAll();
-        int currentRows = eventManager.count();
+        int currentRows = hubManager.count();
         int affectedRows = previousRows - currentRows;
 
         Report stat = new Report(currentRows);

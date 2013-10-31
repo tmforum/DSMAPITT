@@ -1,7 +1,5 @@
 #!/bin/bash
 
-PROTOCOL=http
-
 mkdir -p $LOG_HOME
 
 outfile="${LOG_HOME}/out"
