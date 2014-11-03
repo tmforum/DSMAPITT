@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="span4">
+        <div class="well">
+            <h2>Settings</h2>
+            <div>Base URL: <span data-ng-bind="url">{{url}}</span></div><br/>
+            <div ng-controller="UpdateSettingsController">
+                <form class="form-portSetting">
+                    <div>
+                        New URL : <input type="text" data-ng-model="newUrl"><br/>
+                        <input type="submit" value="Save" class="btn btn-primary" data-ng-click="updateSettings(newUrl)"/>
+                        <button class="btn btn-primary" data-ng-click="cancel()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
