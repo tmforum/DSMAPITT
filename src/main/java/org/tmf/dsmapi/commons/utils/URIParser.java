@@ -1,15 +1,16 @@
 package org.tmf.dsmapi.commons.utils;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
@@ -32,7 +33,7 @@ public class URIParser {
      * @param queryParameters
      * @return
      */
-    public static Set<String> getFieldsSelection(MultivaluedMap<String, String> queryParameters) {
+    public static Set<String> getFieldsSelection(Map<String, List<String>> queryParameters) {
         Set<String> fieldSet = new HashSet<String>();
         if (queryParameters != null) {
             List<String> queryParameterField = queryParameters.remove(QUERY_KEY_FIELD_ESCAPE + QUERY_KEY_FIELD);
@@ -58,11 +59,11 @@ public class URIParser {
                 return getParameters(rawQuery);
             }
         }
-        return new MultivaluedMapImpl();
+        return new MultivaluedHashMap();
     }
 
     public static MultivaluedMap<String, String> getParameters(String rawQuery) {
-        MultivaluedMap<String, String> map = new MultivaluedMapImpl();
+        MultivaluedMap<String, String> map = new MultivaluedHashMap();
         //return info.getQueryParameters();
         try {
             if (rawQuery == null || rawQuery.length() == 0) {

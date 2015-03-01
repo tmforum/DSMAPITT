@@ -56,7 +56,7 @@
 		{
 			"id": "2f1dfebe-4520-5827-4b0d-23814fce68f4",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin/count",
+			"url": "{{troubleTicketBasePath}}/admin/count",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -74,7 +74,7 @@
 		{
 			"id": "33b90baa-9fd6-ed56-f426-4e928765662d",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketSubscriberDomain}}/history",
+			"url": "{{troubleTicketSubscriberBasePath}}/history",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -92,7 +92,7 @@
 		{
 			"id": "36cc84c8-d70f-cab4-f62a-246e9451b3d9",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/troubleTicket/:id",
+			"url": "{{troubleTicketBasePath}}/troubleTicket/:id",
 			"preRequestScript": "",
 			"pathVariables": {
 				"id": "1"
@@ -113,7 +113,7 @@
 		{
 			"id": "3a88f590-0be1-2bb9-e369-55f9e1c12919",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/troubleTicket",
+			"url": "{{troubleTicketBasePath}}/troubleTicket",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -132,7 +132,7 @@
 		{
 			"id": "4ab754d4-0529-6b30-eea0-e88269ca5c5e",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin",
+			"url": "{{troubleTicketBasePath}}/admin",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "DELETE",
@@ -149,7 +149,7 @@
 		{
 			"id": "57cd3c2a-8a65-840b-3bc1-4ff2795b4ec5",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketSubscriberDomain}}/history",
+			"url": "{{troubleTicketSubscriberBasePath}}/history",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "DELETE",
@@ -167,7 +167,7 @@
 		{
 			"id": "5bcc9625-409d-305a-5a1e-84d99e59d3c3",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin",
+			"url": "{{troubleTicketBasePath}}/admin",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -186,7 +186,7 @@
 		{
 			"id": "7b8e3e57-e26a-418b-a1cc-f492566e85df",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketSubscriberDomain}}/event",
+			"url": "{{troubleTicketSubscriberBasePath}}/event",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -205,7 +205,7 @@
 		{
 			"id": "7d938bd8-07db-ddf9-2c89-1ccdd118ea1f",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://localhost:8080/DSTroubleTicket/troubleTicketApi/troubleTicket/:id",
+			"url": "{{troubleTicketBasePath}}/troubleTicket/:id",
 			"preRequestScript": "",
 			"pathVariables": {
 				"id": "1"
@@ -215,7 +215,9 @@
 			"dataMode": "raw",
 			"version": 2,
 			"tests": "",
-			"time": 1413963896042,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1425220280235,
 			"name": "/troubleTicket/{id}",
 			"description": "",
 			"collectionId": "82b057ef-beff-3023-2784-a270a774cc3e",
@@ -226,7 +228,7 @@
 		{
 			"id": "7e097b74-1618-2984-5d2d-d4a00a9af5a3",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin/:id",
+			"url": "{{troubleTicketBasePath}}/admin/:id",
 			"preRequestScript": "",
 			"pathVariables": {
 				"id": "2"
@@ -245,7 +247,7 @@
 		{
 			"id": "86b41377-86a6-1453-ddfe-94e801cdb332",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin/event",
+			"url": "{{troubleTicketBasePath}}/admin/event",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "DELETE",
@@ -262,7 +264,7 @@
 		{
 			"id": "9d7bde91-b7d9-1647-552a-f12054defd59",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/hub",
+			"url": "{{troubleTicketBasePath}}/hub",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",
@@ -281,7 +283,7 @@
 		{
 			"id": "aa98f0eb-a59b-ffe7-35b3-452dc0067f8f",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketSubscriberDomain}}/current",
+			"url": "{{troubleTicketSubscriberBasePath}}/current",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -299,7 +301,7 @@
 		{
 			"id": "bc05a105-9a51-1c96-99dd-9fb5e17bb922",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/troubleTicket",
+			"url": "{{troubleTicketBasePath}}/troubleTicket",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -317,7 +319,7 @@
 		{
 			"id": "c06ba100-36a6-ebca-6cc6-62c4e698a321",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/troubleTicket/:id",
+			"url": "{{troubleTicketBasePath}}/troubleTicket/:id",
 			"preRequestScript": "",
 			"pathVariables": {
 				"id": "1"
@@ -337,7 +339,7 @@
 		{
 			"id": "c4723f28-3cee-29ca-ec87-1bcda5a02960",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/admin/hub",
+			"url": "{{troubleTicketBasePath}}/admin/hub",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "DELETE",
@@ -354,7 +356,7 @@
 		{
 			"id": "c5623ec5-a2ae-f76e-7009-376666e30075",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/hub",
+			"url": "{{troubleTicketBasePath}}/hub",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "GET",
@@ -372,7 +374,7 @@
 		{
 			"id": "d2c04e5e-fe61-5f9a-3647-5c8fca51397f",
 			"headers": "Content-Type: application/json\nAccept: application/json\n",
-			"url": "http://{{RitmfDevHost}}/{{TroubleTicketDomain}}/troubleTicket",
+			"url": "{{troubleTicketBasePath}}/troubleTicket",
 			"preRequestScript": "",
 			"pathVariables": {},
 			"method": "POST",

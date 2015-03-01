@@ -21,7 +21,7 @@ public class ApplicationConfig extends Application {
         resources.add(org.tmf.dsmapi.jaxrs.resource.HubResource.class);
         resources.add(org.tmf.dsmapi.jaxrs.resource.TroubleTicketResource.class);
         // following code can be used to customize Jersey 1.x JSON provider:
-        try {
+    try {
             Class jacksonProvider = Class.forName("org.codehaus.jackson.jaxrs.JacksonJsonProvider");
             resources.add(jacksonProvider);
         } catch (ClassNotFoundException ex) {

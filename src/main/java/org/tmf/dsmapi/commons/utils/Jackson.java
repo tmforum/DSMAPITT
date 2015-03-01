@@ -1,6 +1,5 @@
 package org.tmf.dsmapi.commons.utils;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -12,9 +11,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.node.ArrayNode;
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -44,6 +46,7 @@ public class Jackson {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
             mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+            mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);  
             result = mapper.treeToValue(rootNode, bean.getClass());
         } catch (IOException ex) {
             Logger.getLogger(Jackson.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,7 +59,7 @@ public class Jackson {
         // simpleFields for simple property names with no '.'
         // nestedFields for nested property names with a '.'
         Set<String> simpleFields = new HashSet<String>();
-        MultivaluedMapImpl nestedFields = new MultivaluedMapImpl();
+        MultivaluedMap nestedFields = new MultivaluedHashMap();
         for (String name : names) {
             int index = name.indexOf('.');
             boolean isNestedField = index > 0 && index < name.length();
