@@ -1,0 +1,30 @@
+{
+	"id": "c67b22ac-2483-8bd4-1723-a98268398d20",
+	"name": "local.trouble.ticket.environment",
+	"values": [
+		{
+			"key": "troubleTicketingApi",
+			"value": "http://localhost:8080/DSTroubleTicket/api/troubleTicketManagement/v2",
+			"type": "text",
+			"name": "troubleTicketingApi",
+			"enabled": true
+		},
+		{
+			"key": "troubleTicketingSubscriberApi",
+			"value": "http://localhost:8080/DSTroubleTicket/subscriber/eventApi",
+			"type": "text",
+			"name": "troubleTicketingSubscriberApi",
+			"enabled": true
+		},
+		{
+			"key": "troubleTicketingAdminApi",
+			"value": "http://localhost:8080/DSTroubleTicket/api/troubleTicketManagement/v2/admin",
+			"type": "text",
+			"name": "troubleTicketingAdminApi",
+			"enabled": true
+		}
+	],
+	"timestamp": 1429752025192,
+	"synced": false,
+	"syncedFilename": ""
+}

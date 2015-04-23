@@ -1,0 +1,30 @@
+{
+	"id": "c68b8507-49a1-cdc7-e9c3-fc669823367a",
+	"name": "sandbox.trouble.ticket.environment",
+	"values": [
+		{
+			"key": "troubleTicketingApi",
+			"value": "http://env-0693795.jelastic.servint.net:8080/DSTroubleTicket/api/troubleTicketManagement/v2",
+			"type": "text",
+			"name": "troubleTicketingApi",
+			"enabled": true
+		},
+		{
+			"key": "troubleTicketingSubscriberApi",
+			"value": "http://env-0693795.jelastic.servint.net:8080/DSTroubleTicket//subscriber/eventApi",
+			"type": "text",
+			"name": "troubleTicketingSubscriberApi",
+			"enabled": true
+		},
+		{
+			"key": "troubleTicketingAdminApi",
+			"value": "http://env-0693795.jelastic.servint.net:8080/DSTroubleTicket/api/troubleTicketManagement/v2/admin",
+			"type": "text",
+			"name": "troubleTicketingAdminApi",
+			"enabled": true
+		}
+	],
+	"timestamp": 1429751964050,
+	"synced": false,
+	"syncedFilename": ""
+}
