@@ -1,1 +1,0 @@
-\n   URL:%{url_effective}\n   TIME:%{time_total}\n   STATUS:%{http_code}\n
