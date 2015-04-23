@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<api xmlns="http://orange.com/soa/schemas/oadl/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="troubleTicketManagement" majorVersion="2" minorVersion="0" namespace="http://orange.com/api/troubleTicketManagement/tmf/v2" status="DRAFT" type="PROJECT" xsi:schemaLocation="http://orange.com/soa/schemas/oadl/v1 oadl.xsd">
+    <model location="model_business.xsd" namespace="http://orange.com/api/troubleTicketManagement/tmf/v2/model/business"/>
+    <resource class="TroubleTicket">
+        <actions>
+            <create/>
+            <find/>
+            <get/>
+            <update/>
+        </actions>
+    </resource>
+</api>

@@ -1,0 +1,115 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.orange.api</groupId>
+    <artifactId>troubleTicketManagement</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+
+    <name>${project.artifactId}</name>
+
+    <!-- Builds must be done using the following default profile : 
+            mvn clean package [-Pmain-build]
+        Jaxb files are consistently generated in the classes/generated-source/xjc 
+        path to allow the cleaning of the project.
+	NOTE : If you moved the jaxb generated files in the src/main/java path, 
+               the build must be done using the following profile :
+            mvn clean package -Pno-generation
+    -->
+  
+    <properties>
+        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <hyperjaxb.version>0.6.0</hyperjaxb.version>
+        <jersey.version>2.15</jersey.version>
+        <jackson.version>1.9.13</jackson.version>
+        <eclipselink.version>2.5.2</eclipselink.version>
+        <!-- Set the application name for this application -->
+        <application.name>troubleTicketManagement</application.name>
+        <!--Beware : For a MySQL database, the database must exist in your 
+             database system before you can deploy your webapp, as it won't be 
+             created automatically. -->
+        <database.name>customerview_ritmf</database.name>
+        <!-- Set main generated sources dir (part of build directory -->
+        <generated.source.dir>${basedir}/src/main/java</generated.source.dir>
+        <!-- Set generated sources dir for JaxB files (HyperJaxb3 plugin) -->
+        <jaxb.generated.source.dir>${project.build.directory}/generated-sources/xjc</jaxb.generated.source.dir>
+        <!-- package name of the main class (must match the package provided 
+             name in the binding.xjc file -->
+        <model.main.class.name>troubleTicket</model.main.class.name>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+        <dependency>
+<groupId>com.fasterxml.jackson.module</groupId>
+<artifactId>jackson-module-jaxb-annotations</artifactId>
+<version>2.5.2</version>
+</dependency>       
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>${eclipselink.version}</version>
+            <scope>provided</scope>
+        </dependency>       
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+            <scope>provided</scope>           
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+            <scope>provided</scope>           
+        </dependency>        
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-jaxrs</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-json-jackson</artifactId>
+            <version>2.7</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-web-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>           
+        </dependency>
+    </dependencies>
+
+  <build>
+        <!-- Final name -->
+        <finalName>${project.artifactId}</finalName>
+        
+        <!-- Filter files in **/resources directory (and **/webapp/WEB-INF) -->
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+   
+  
+</project>

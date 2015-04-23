@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
+<resources>
+    <jdbc-connection-pool driver-classname="" datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource" res-type="javax.sql.DataSource" name="ritmfpool">
+		<property name="User" value="root"></property>
+		<property name="Password" value="toto"></property>
+		<property name="ServerName" value="localhost"></property>
+		<property name="PortNumber" value="3306"></property>
+		<property name="URL" value="jdbc:mysql://localhost:3306/customerview_ritmf"/>
+		<property name="databaseName" value="customerview_ritmf"/>
+		<property name="description" value="RI TMF POOL"/>
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+    </jdbc-connection-pool>
+	<jdbc-resource jndi-name="jdbc/tmfapi" pool-name="ritmfpool"></jdbc-resource>
+</resources>

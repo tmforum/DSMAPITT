@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace='http://orange.com/api/troubleTicketManagement/tmf/v2/model/business' attributeFormDefault='unqualified' elementFormDefault='qualified' xmlns='http://orange.com/api/troubleTicketManagement/tmf/v2/model/business' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  <xsd:annotation id='sidTag'>
+    <xsd:appinfo></xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element name='Note' type='Note' />
+  <xsd:element name='RelatedObject' type='RelatedObject' />
+  <xsd:element name='RelatedParty' type='RelatedParty' />
+  <xsd:element name='TroubleTicket' type='TroubleTicket' />
+  <xsd:complexType name='Note'>
+    <xsd:sequence minOccurs='1' maxOccurs='1'>
+      <xsd:element name='date' type='xsd:date' minOccurs='0' />
+      <xsd:element name='author' type='xsd:string' minOccurs='0' />
+      <xsd:element name='text' type='xsd:string' minOccurs='0' />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name='RelatedObject'>
+    <xsd:sequence minOccurs='1' maxOccurs='1'>
+      <xsd:element name='involvement' type='xsd:string' minOccurs='0' />
+      <xsd:element name='reference' type='xsd:string' minOccurs='0' />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name='RelatedParty'>
+    <xsd:sequence minOccurs='1' maxOccurs='1'>
+      <xsd:element name='id' type='xsd:string' minOccurs='0' />
+      <xsd:element name='href' type='xsd:string' minOccurs='0' />
+      <xsd:element name='role' type='xsd:string' minOccurs='0' />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name='TroubleTicket'>
+    <xsd:sequence minOccurs='1' maxOccurs='1'>
+      <xsd:element name='id' type='xsd:long' minOccurs='0' />
+      <xsd:element name='correlationId' type='xsd:string' minOccurs='0' />
+      <xsd:element name='description' type='xsd:string' minOccurs='0' />
+      <xsd:element name='severity' type='Severity' minOccurs='0' />
+      <xsd:element name='type' type='xsd:string' minOccurs='0' />
+      <xsd:element name='creationDate' type='xsd:date' minOccurs='0' />
+      <xsd:element name='targetResolutionDate' type='xsd:date' minOccurs='0' />
+      <xsd:element name='status' type='Status' />
+      <xsd:element name='statusChangeReason' type='xsd:string' />
+      <xsd:element name='statusChangeDate' type='xsd:date' minOccurs='0' />
+      <xsd:element name='relatedParty' type='RelatedParty' minOccurs='0' maxOccurs='unbounded' />
+      <xsd:element name='relatedObject' type='RelatedObject' minOccurs='0' maxOccurs='unbounded' />
+      <xsd:element name='note' type='Note' minOccurs='0' maxOccurs='unbounded' />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name='Status'>
+    <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='Submitted'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Rejected'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Acknowledged'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='InProgress'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='InProgressHeld'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='InProgressPending'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Resolved'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Closed'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Cancelled'>
+        <xsd:annotation />
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name='Severity'>
+    <xsd:restriction base='xsd:string'>
+      <xsd:enumeration value='Low'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='Medium'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      <xsd:enumeration value='High'>
+        <xsd:annotation />
+      </xsd:enumeration>
+      </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>
