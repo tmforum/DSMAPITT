@@ -22,7 +22,7 @@ import org.tmf.dsmapi.hub.service.HubFacade;
  * @author pierregauthier should be async or called with MDB
  */
 @Stateless
-//@Asynchronous
+@Asynchronous
 public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherLocal {
 
     @EJB
@@ -42,8 +42,7 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
      * Filtering is done in RestEventPublisher based on query expression
     */ 
     @Override
-    @Asynchronous
-    public synchronized void publish(TroubleTicketEvent event) {
+    public void publish(TroubleTicketEvent event) {
         try {
             eventFacade.create(event);
         } catch (BadUsageException ex) {
@@ -59,42 +58,39 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
     }
 
     @Override
-    public void createNotification(TroubleTicket bean, String reason, Date date) {
+    public void clearanceRequestNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-       
-        event.setEventType(TroubleTicketEventTypeEnum.TroubleTicketCreationNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketInformationRequiredNotification);
         publish(event);
 
     }
 
     @Override
-    public void deletionNotification(TroubleTicket bean, String reason, Date date) {
+    public void informationRequiredNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-       
-        event.setEventType(TroubleTicketEventTypeEnum.TroubleTicketDeletionNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketClearanceRequestNotification);
         publish(event);
     }
 	
     @Override
-    public void updateNotification(TroubleTicket bean, String reason, Date date) {
+    public void updateNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        
-        event.setEventType(TroubleTicketEventTypeEnum.TroubleTicketUpdateNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketUpdateNotification);
         publish(event);
     }
 
     @Override
-    public void valueChangedNotification(TroubleTicket bean, String reason, Date date) {
+    public void stateChangeNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.TroubleTicketValueChangeNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketStateChangeNotification);
         publish(event);
     }
 }

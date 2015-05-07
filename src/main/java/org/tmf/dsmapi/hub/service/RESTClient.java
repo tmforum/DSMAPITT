@@ -25,7 +25,6 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 public class RESTClient {
 
     private static Client jaxrsClient;
-//    private HashMap<String, WebResource> webResources = new HashMap<String, WebResource>();
     private HashMap<String, WebTarget> webResources = new HashMap<String, WebTarget>();
 
     public void publishEvent(String callbackURL, Object requestEntity) {
@@ -38,7 +37,6 @@ public class RESTClient {
         catch(Exception e) {
             e.printStackTrace();
         }
-        //webResource.path("").type(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(requestEntity);
     }
     
     public void publishEvent(String callbackURL, ObjectNode node) {
@@ -51,7 +49,6 @@ public class RESTClient {
         catch(Exception e) {
             e.printStackTrace();
         }
-        //webResource.path("").type(javax.ws.rs.core.MediaType.APPLICATION_JSON).post(requestEntity);
     }    
 
    private Client getJaxrsClient() {

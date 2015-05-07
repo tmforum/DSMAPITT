@@ -21,11 +21,7 @@ public class CustomJsonDateSerializer extends JsonSerializer<Date>
     @Override
     public void serialize(Date aDate, JsonGenerator aJsonGenerator, SerializerProvider aSerializerProvider)
             throws IOException, JsonProcessingException {
-//         "2014-04-25T12:16:43.397+0000"
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-//        "2013-07-21 08:16:39ZGMT+1"
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'zzz");
-//        dateFormat.setTimeZone(TimeZone.getTimeZone("PST"));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         String dateString = dateFormat.format(aDate);
         aJsonGenerator.writeString(dateString);
     }

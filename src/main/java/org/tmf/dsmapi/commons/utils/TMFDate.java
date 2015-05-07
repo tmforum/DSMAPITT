@@ -37,7 +37,7 @@ public class TMFDate {
 
     private static SimpleDateFormat getFormater() {
         if (FORMATER == null) {
-            FORMATER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+            FORMATER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
             TimeZone tz = TimeZone.getTimeZone("UTC");
             FORMATER.setTimeZone(tz);
         }

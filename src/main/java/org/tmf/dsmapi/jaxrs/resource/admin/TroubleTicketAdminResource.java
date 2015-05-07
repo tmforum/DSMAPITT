@@ -1,5 +1,6 @@
 package org.tmf.dsmapi.jaxrs.resource.admin;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,11 +19,16 @@ import javax.ws.rs.core.Response;
 import org.tmf.dsmapi.commons.exceptions.BadUsageException;
 import org.tmf.dsmapi.commons.exceptions.UnknownResourceException;
 import org.tmf.dsmapi.commons.jaxrs.model.Report;
+import org.tmf.dsmapi.commons.utils.TMFDate;
 import org.tmf.dsmapi.troubleTicket.model.TroubleTicket;
 import org.tmf.dsmapi.troubleTicket.service.TroubleTicketFacade;
 import org.tmf.dsmapi.troubleTicket.hub.model.TroubleTicketEvent;
 import org.tmf.dsmapi.troubleTicket.hub.service.TroubleTicketEventFacade;
 import org.tmf.dsmapi.troubleTicket.hub.service.TroubleTicketEventPublisherLocal;
+import org.tmf.dsmapi.troubleTicket.model.Note;
+import org.tmf.dsmapi.troubleTicket.model.RelatedObject;
+import org.tmf.dsmapi.troubleTicket.model.RelatedParty;
+import org.tmf.dsmapi.troubleTicket.model.Status;
 
 @Stateless
 @Path("admin")
@@ -64,9 +70,9 @@ public class TroubleTicketAdminResource {
         // Try to persist entities
         try {
             affectedRows = troubleTicketManagementFacade.create(entities);
-            for (TroubleTicket entitie : entities) {
-                publisher.createNotification(entitie, "troubleTicketManagement created", new Date());
-            }
+//            for (TroubleTicket entitie : entities) {
+//                publisher.clearanceRequestNotification(entitie, "troubleTicketManagement created", new Date());
+//            }
         } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
@@ -91,7 +97,7 @@ public class TroubleTicketAdminResource {
         if (troubleTicketManagement != null) {
             entity.setId(id);
             troubleTicketManagementFacade.edit(entity);
-            publisher.valueChangedNotification(entity, "TroubleTicket modified", new Date());
+//            publisher.stateChangeNotification(entity, "TroubleTicket modified", new Date());
             // 201 OK + location
             response = Response.status(Response.Status.CREATED).entity(entity).build();
 
@@ -144,8 +150,6 @@ public class TroubleTicketAdminResource {
             int previousRows = troubleTicketManagementFacade.count();
             TroubleTicket entity = troubleTicketManagementFacade.find(id);
 
-            // Event deletion
-            publisher.deletionNotification(entity, "TroubleTicket Deleted", new Date());
             try {
                 //Pause for 4 seconds to finish notification
                 Thread.sleep(4000);
@@ -234,4 +238,59 @@ public class TroubleTicketAdminResource {
     public Report count() {
         return new Report(troubleTicketManagementFacade.count());
     }
+    
+    
+    @GET
+    @Path("proto")
+    @Produces({"application/json"})
+    public TroubleTicket proto() {
+       TroubleTicket tt = new TroubleTicket();
+       
+        tt.setId(Long.getLong("42"));
+        Date dt = new Date();
+        //String dts = TMFDate.toString(dt);
+        tt.setDescription("Some Description");
+        tt.getCreationDate();
+        
+        tt.setCreationDate(TMFDate.toString(dt));
+        tt.setStatus(Status.Acknowledged);
+        
+        tt.setSeverity(org.tmf.dsmapi.troubleTicket.model.Severity.High);
+        tt.setType("Bills, charges or payment");
+        
+       // tt.setResolutionDate(dt); PG
+        tt.setTargetResolutionDate(TMFDate.toString(dt));
+       
+        RelatedObject ro = new RelatedObject();
+        ro.setInvolvement("involvment");
+        ro.setReference("referenceobject");
+
+        List<RelatedObject> relatedObjects = new ArrayList<RelatedObject>();
+        relatedObjects.add(ro);
+        relatedObjects.add(ro);
+        tt.setRelatedObject(relatedObjects);
+
+        RelatedParty rp = new RelatedParty();
+        rp.setRole("role");
+        rp.setId("any party identifer");
+        //rp.setHjid("id"); //should be a string 
+        rp.setHref("http//.../party/42");
+        
+
+        List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
+        relatedParties.add(rp);
+        relatedParties.add(rp);
+        tt.setRelatedParty(relatedParties);
+
+        Note note = new Note();
+        note.setAuthor("author");
+        note.setDate(dt);
+        note.setText("text");
+        List<Note> notes = new ArrayList<Note>();
+        notes.add(note);
+        notes.add(note);
+        tt.setNote(notes);
+        return tt;
+    }
+
 }

@@ -11,6 +11,8 @@ package org.tmf.dsmapi.troubleTicket.model;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonValue;
 
 
 /**
@@ -63,11 +65,13 @@ public enum Status {
         value = v;
     }
 
+    @JsonValue
     public String value() {
         return value;
     }
 
-     public static Status fromString(String text) {
+    @JsonCreator 
+    public static Status fromString(String text) {
         if (text != null) {
             for (Status b : Status.values()) {
                 if (text.equalsIgnoreCase(b.toString())) {

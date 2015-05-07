@@ -6,10 +6,10 @@ package org.tmf.dsmapi.troubleTicket.hub.model;
 
 public enum TroubleTicketEventTypeEnum {
 
-    TroubleTicketCreationNotification("TroubleTicketCreationNotification"),
-    TroubleTicketUpdateNotification("TroubleTicketUpdateNotification"),
-    TroubleTicketDeletionNotification("TroubleTicketDeletionNotification"),
-    TroubleTicketValueChangeNotification("TroubleTicketValueChangeNotification");
+    TicketInformationRequiredNotification("TicketInformationRequiredNotification"),
+    TicketUpdateNotification("TicketUpdateNotification"),
+    TicketClearanceRequestNotification("TicketClearanceRequestNotification"),
+    TicketStateChangeNotification("TicketStateChangeNotification");
 
     private String text;
 

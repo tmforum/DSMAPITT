@@ -6,8 +6,8 @@
 		<property name="Password" value="toto"></property>
 		<property name="ServerName" value="localhost"></property>
 		<property name="PortNumber" value="3306"></property>
-		<property name="URL" value="jdbc:mysql://localhost:3306/customerview_ritmf"/>
-		<property name="databaseName" value="customerview_ritmf"/>
+		<property name="URL" value="jdbc:mysql://localhost:3306/trouble_ticket_ritmf"/>
+		<property name="databaseName" value="trouble_ticket_ritmf"/>
 		<property name="description" value="RI TMF POOL"/>
 		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
     </jdbc-connection-pool>

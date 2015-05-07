@@ -32,20 +32,17 @@ import org.tmf.dsmapi.troubleTicket.model.TroubleTicket;
  */
 @XmlRootElement
 @Entity
-@Table(name="Event_TroubleTicket")
-@JsonPropertyOrder(value = {"event",  "date", "eventType"})
+@Table(name = "Event_TroubleTicket")
+@JsonPropertyOrder(value = {"event", "date", "eventType"})
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TroubleTicketEvent implements Serializable {
-    
+
     public TroubleTicketEvent() {
         System.out.println("TroubleTicketEvent constructor");
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonProperty("eventId")
     private String id;
-   
     @Temporal(TemporalType.TIMESTAMP)
     @JsonSerialize(using = CustomJsonDateSerializer.class)
     private Date eventTime;
@@ -53,26 +50,28 @@ public class TroubleTicketEvent implements Serializable {
     private TroubleTicket resource; //check for object
     @Enumerated(value = EnumType.STRING)
     private TroubleTicketEventTypeEnum eventType;
-    
+
     @JsonAutoDetect(fieldVisibility = ANY)
     class EventBody {
+
         private TroubleTicket troubleTicket;
+
         public TroubleTicket getTroubleTicket() {
             return troubleTicket;
         }
-        public EventBody(TroubleTicket troubleTicket) { 
-        this.troubleTicket = troubleTicket;
+
+        public EventBody(TroubleTicket troubleTicket) {
+            this.troubleTicket = troubleTicket;
+        }
     }
-    
-       
+
+    @JsonProperty("event")
+    public EventBody getEvent() {
+
+        return new EventBody(getResource());
     }
-   @JsonProperty("event")
-   public EventBody getEvent() {
-       
-       return new EventBody(getResource() );
-   }
-    
-  @JsonIgnore 
+
+    @JsonProperty("eventId")
     public String getId() {
         return id;
     }
@@ -88,15 +87,16 @@ public class TroubleTicketEvent implements Serializable {
     public void setEventType(TroubleTicketEventTypeEnum eventType) {
         this.eventType = eventType;
     }
-/*
-    public String getReason() {
-        return reason;
-    }
+    /*
+     public String getReason() {
+     return reason;
+     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-*/
+     public void setReason(String reason) {
+     this.reason = reason;
+     }
+     */
+
     public Date getEventTime() {
         return eventTime;
     }
@@ -105,17 +105,14 @@ public class TroubleTicketEvent implements Serializable {
         this.eventTime = eventTime;
     }
 
-    
-@JsonIgnore
+    @JsonIgnore
     public TroubleTicket getResource() {
-        
-        
+
+
         return resource;
     }
 
     public void setResource(TroubleTicket resource) {
         this.resource = resource;
     }
-
-    
 }

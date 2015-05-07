@@ -60,9 +60,15 @@ public class TroubleTicketHubResource {
     @DELETE
     @Produces({"application/json"})
     @Path("{id}")
-    public void remove(@PathParam("id") String id) throws UnknownResourceException {
-        
-        hubFacade.remove(id);
+    public Response remove(@PathParam("id") String id) throws UnknownResourceException {
+        Hub hub = hubFacade.find(id);
+        if (null == hub) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            hubFacade.remove(id);
+            // 200 
+            return Response.ok(hub).build();
+        }
     }
 
     @GET
