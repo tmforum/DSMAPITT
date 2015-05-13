@@ -19,7 +19,7 @@ import org.tmf.dsmapi.commons.exceptions.BadUsageException;
 import org.tmf.dsmapi.subscriber.model.EventBag;
 import org.tmf.dsmapi.subscriber.service.EventApiFacade;
 
-@WebServlet("/subscriber/eventApi/event")
+@WebServlet("/subscriber/api/event")
 public class Event extends HttpServlet {
 
     @EJB

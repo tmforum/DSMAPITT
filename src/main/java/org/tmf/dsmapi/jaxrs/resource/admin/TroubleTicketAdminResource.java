@@ -31,7 +31,7 @@ import org.tmf.dsmapi.troubleTicket.model.RelatedParty;
 import org.tmf.dsmapi.troubleTicket.model.Status;
 
 @Stateless
-@Path("admin")
+@Path("admin/troubleTicket")
 public class TroubleTicketAdminResource {
 
     @EJB

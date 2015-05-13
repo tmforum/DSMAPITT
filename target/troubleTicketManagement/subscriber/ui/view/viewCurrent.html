@@ -9,24 +9,16 @@
         <table class="table table-striped table-condensed table-hover">
             <thead>
                 <tr>
-                    <th>Id 
-                        <a href="" ng-click="predicate = '-id'; reverse=false"><span class="glyphicon glyphicon-arrow-down"></span></a>
-                        <a href="" ng-click="predicate = 'id'; reverse=false"><span class="glyphicon glyphicon-arrow-up"></span></a>
-                    </th>
-                    <th>Event</th>
-                    <th>Reason</th>
-                    <th>Date 	
-                        <a href="" ng-click="predicate = '-dateEvent'; reverse=false"><span class="glyphicon glyphicon-arrow-down"></span></a>
-                        <a href="" ng-click="predicate = 'dateEvent'; reverse=false"><span class="glyphicon glyphicon-arrow-up"></span></a>
-                    </th>
-                    <th>Data</th>		 		
+                    <th>EventId</th>
+                    <th>EventType</th>
+                    <th>EventTime</th>
+                    <th>Event</th>		 		
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>{{notification.eventId}}</td>
                     <td><span class="label label-success">{{notification.eventType}}</span></td>	
-                    <td><span class="label label-success">{{notification.reason}}</span></td>
                     <!--<td>{{notification.resource | limitTo:70 }}....-->
                     <!--<td><pre>{{notification.resource | prettify}}</pre>-->
                         <!--<a ng-controller="ModalCtrl" ng-filter="prettify" href="" ng-click="open()">++++</a>-->
@@ -37,8 +29,8 @@
                                 <div ng-show="selected">Selection from a modal: {{ selected }}</div>
                         </div>
                         -->
-                    <td>{{notification.date}}</td>
-                    <td>{{notification.resource}}</td>	
+                    <td>{{notification.eventTime}}</td>
+                    <td>{{notification.event}}</td>	
                 </tr>
             </tbody>
         </table>	

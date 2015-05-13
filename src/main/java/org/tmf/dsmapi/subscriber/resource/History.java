@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.tmf.dsmapi.subscriber.model.EventBag;
 import org.tmf.dsmapi.subscriber.service.EventApiFacade;
 
-@WebServlet("/subscriber/eventApi/history")
+@WebServlet("/subscriber/api/history")
 public class History extends HttpServlet {
 
     @EJB

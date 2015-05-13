@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.tmf.dsmapi.subscriber.model.EventBag;
 import org.tmf.dsmapi.subscriber.service.EventApiFacade;
 
-@WebServlet("/subscriber/eventApi/current")
+@WebServlet("/subscriber/api/current")
 public class Current extends HttpServlet {
 
     @EJB

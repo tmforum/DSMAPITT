@@ -5,10 +5,8 @@
 package org.tmf.dsmapi.jaxrs.resource;
 
 //import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,13 +32,9 @@ import org.tmf.dsmapi.commons.utils.URIParser;
 import org.tmf.dsmapi.troubleTicket.model.TroubleTicket;
 import org.tmf.dsmapi.troubleTicket.service.TroubleTicketFacade;
 import org.tmf.dsmapi.troubleTicket.hub.service.TroubleTicketEventPublisherLocal;
-import org.tmf.dsmapi.troubleTicket.model.Note;
-import org.tmf.dsmapi.troubleTicket.model.RelatedObject;
-import org.tmf.dsmapi.troubleTicket.model.RelatedParty;
-import org.tmf.dsmapi.troubleTicket.model.Status;
 
 @Stateless
-@Path("troubleTicket")
+@Path("/troubleTicketManagement/v2/troubleTicket")
 public class TroubleTicketResource {
 
     @EJB
@@ -57,10 +51,10 @@ public class TroubleTicketResource {
     @POST
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response create(TroubleTicket entity) throws BadUsageException, UnknownResourceException {
+    public Response create(TroubleTicket entity, @Context UriInfo info) throws BadUsageException, UnknownResourceException {
         troubleTicketManagementFacade.checkCreation(entity);
         troubleTicketManagementFacade.create(entity);
-        entity.setHref("http://serverLocalisation:port/DSTroubleTicket/api/troubleTicketManagement/v2/".concat(Long.toString(entity.getId())));
+        entity.setHref(info.getAbsolutePath()+ "/" + Long.toString(entity.getId()));
         troubleTicketManagementFacade.edit(entity);
         // 201
         Response response = Response.status(Response.Status.CREATED).entity(entity).build();

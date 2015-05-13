@@ -19,7 +19,7 @@ import org.tmf.dsmapi.troubleTicket.hub.service.TroubleTicketEventFacade;
 import org.tmf.dsmapi.hub.service.HubFacade;
 
 @Stateless
-@Path("hub")
+@Path("/troubleTicketManagement/v2/hub")
 public class TroubleTicketHubResource {
 
     @EJB

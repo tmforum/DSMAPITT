@@ -2,6 +2,8 @@ package org.tmf.dsmapi.troubleTicket.service;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.tmf.dsmapi.commons.facade.AbstractFacade;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -41,14 +43,21 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
     @Override
     public void create(TroubleTicket entity) throws BadUsageException {
-        if (entity.getId() != null) {
-            throw new BadUsageException(ExceptionType.BAD_USAGE_GENERIC, "While creating TroubleTicket, id must be null");
-        }
-
         super.create(entity);
     }
 
     public void checkCreation(TroubleTicket newTroubleTicket) throws BadUsageException {
+        
+        if (newTroubleTicket.getId() != null) {
+            try {
+                TroubleTicket tt = this.find(newTroubleTicket.getId());
+                if( null != tt){
+                    throw new BadUsageException(ExceptionType.UNKNOWN_RESOURCE, "TroubleTicket with id : "+newTroubleTicket.getId()+" already exist.");
+                }
+            } catch (UnknownResourceException ex) {
+                Logger.getLogger("en cours de creation du troubleticket id:"+newTroubleTicket.getId());
+            }
+        }
         //verify first status
         if (null == newTroubleTicket.getStatus()) {
             newTroubleTicket.setStatus(Status.Submitted);
