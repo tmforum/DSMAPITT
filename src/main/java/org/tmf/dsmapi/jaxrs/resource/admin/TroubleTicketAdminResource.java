@@ -15,7 +15,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import org.tmf.dsmapi.commons.exceptions.BadUsageException;
 import org.tmf.dsmapi.commons.exceptions.UnknownResourceException;
 import org.tmf.dsmapi.commons.jaxrs.model.Report;
@@ -38,8 +40,8 @@ public class TroubleTicketAdminResource {
     TroubleTicketFacade troubleTicketManagementFacade;
     @EJB
     TroubleTicketEventFacade eventFacade;
-    @EJB
-    TroubleTicketEventPublisherLocal publisher;
+//    @EJB
+//    TroubleTicketEventPublisherLocal publisher;
 
     @GET
     @Produces({"application/json"})
@@ -51,6 +53,7 @@ public class TroubleTicketAdminResource {
     /**
      *
      * For test purpose only
+     *
      * @param entities
      * @return
      */
@@ -58,21 +61,25 @@ public class TroubleTicketAdminResource {
     @Path("")
     @Consumes({"application/json"})
     @Produces({"application/json"})
-    public Response post(List<TroubleTicket> entities) {
+    public Response post(List<TroubleTicket> entities, @Context UriInfo info) throws UnknownResourceException {
 
         if (entities == null) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
 
         int previousRows = troubleTicketManagementFacade.count();
-        int affectedRows;
+        int affectedRows=0;
 
         // Try to persist entities
         try {
-            affectedRows = troubleTicketManagementFacade.create(entities);
-//            for (TroubleTicket entitie : entities) {
-//                publisher.clearanceRequestNotification(entitie, "troubleTicketManagement created", new Date());
-//            }
+            for (TroubleTicket entitie : entities) {
+                troubleTicketManagementFacade.create(entitie);
+                entitie.setHref(info.getAbsolutePath() + "/" + Long.toString(entitie.getId()));
+                troubleTicketManagementFacade.edit(entitie);
+                affectedRows = affectedRows + 1;
+//                publisher.createNotification(entitie, new Date());
+            }
+//            affectedRows = troubleTicketManagementFacade.create(entities);
         } catch (BadUsageException e) {
             return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
         }
@@ -98,8 +105,8 @@ public class TroubleTicketAdminResource {
             entity.setId(id);
             troubleTicketManagementFacade.edit(entity);
 //            publisher.stateChangeNotification(entity, "TroubleTicket modified", new Date());
-            // 201 OK + location
-            response = Response.status(Response.Status.CREATED).entity(entity).build();
+            // 200 OK + location
+            response = Response.status(Response.Status.OK).entity(entity).build();
 
         } else {
             // 404 not found
@@ -111,6 +118,7 @@ public class TroubleTicketAdminResource {
     /**
      *
      * For test purpose only
+     *
      * @return
      * @throws org.tmf.dsmapi.commons.exceptions.UnknownResourceException
      */
@@ -139,6 +147,7 @@ public class TroubleTicketAdminResource {
     /**
      *
      * For test purpose only
+     *
      * @param id
      * @return
      * @throws UnknownResourceException
@@ -146,39 +155,33 @@ public class TroubleTicketAdminResource {
     @DELETE
     @Path("{id}")
     public Response delete(@PathParam("id") Long id) throws UnknownResourceException {
+        int previousRows = troubleTicketManagementFacade.count();
+        TroubleTicket entity = troubleTicketManagementFacade.find(id);
+
         try {
-            int previousRows = troubleTicketManagementFacade.count();
-            TroubleTicket entity = troubleTicketManagementFacade.find(id);
-
-            try {
-                //Pause for 4 seconds to finish notification
-                Thread.sleep(4000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(TroubleTicketAdminResource.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            // remove event(s) binding to the resource
-            List<TroubleTicketEvent> events = eventFacade.findAll();
-            for (TroubleTicketEvent event : events) {
-                if (event.getResource().getId().equals(id)) {
-                    eventFacade.remove(event.getId());
-                }
-            }
-            //remove resource
-            troubleTicketManagementFacade.remove(id);
-
-            int affectedRows = 1;
-            Report stat = new Report(troubleTicketManagementFacade.count());
-            stat.setAffectedRows(affectedRows);
-            stat.setPreviousRows(previousRows);
-
-            // 200 
-            Response response = Response.ok(stat).build();
-            return response;
-        } catch (UnknownResourceException ex) {
+            //Pause for 4 seconds to finish notification
+            Thread.sleep(4000);
+        } catch (InterruptedException ex) {
             Logger.getLogger(TroubleTicketAdminResource.class.getName()).log(Level.SEVERE, null, ex);
-            Response response = Response.status(Response.Status.NOT_FOUND).build();
-            return response;
         }
+        // remove event(s) binding to the resource
+        List<TroubleTicketEvent> events = eventFacade.findAll();
+        for (TroubleTicketEvent event : events) {
+            if (event.getResource().getId().equals(id)) {
+                eventFacade.remove(event.getId());
+            }
+        }
+        //remove resource
+        troubleTicketManagementFacade.remove(id);
+
+        int affectedRows = 1;
+        Report stat = new Report(troubleTicketManagementFacade.count());
+        stat.setAffectedRows(affectedRows);
+        stat.setPreviousRows(previousRows);
+
+        // 200 
+        Response response = Response.ok(stat).build();
+        return response;
     }
 
     @GET
@@ -238,29 +241,28 @@ public class TroubleTicketAdminResource {
     public Report count() {
         return new Report(troubleTicketManagementFacade.count());
     }
-    
-    
+
     @GET
     @Path("proto")
     @Produces({"application/json"})
     public TroubleTicket proto() {
-       TroubleTicket tt = new TroubleTicket();
-       
+        TroubleTicket tt = new TroubleTicket();
+
         tt.setId(Long.getLong("42"));
         Date dt = new Date();
         //String dts = TMFDate.toString(dt);
         tt.setDescription("Some Description");
         tt.getCreationDate();
-        
+
         tt.setCreationDate(TMFDate.toString(dt));
         tt.setStatus(Status.Acknowledged);
-        
+
         tt.setSeverity(org.tmf.dsmapi.troubleTicket.model.Severity.High);
         tt.setType("Bills, charges or payment");
-        
-       // tt.setResolutionDate(dt); PG
+
+        // tt.setResolutionDate(dt); PG
         tt.setTargetResolutionDate(TMFDate.toString(dt));
-       
+
         RelatedObject ro = new RelatedObject();
         ro.setInvolvement("involvment");
         ro.setReference("referenceobject");
@@ -275,7 +277,6 @@ public class TroubleTicketAdminResource {
         rp.setId("any party identifer");
         //rp.setHjid("id"); //should be a string 
         rp.setHref("http//.../party/42");
-        
 
         List<RelatedParty> relatedParties = new ArrayList<RelatedParty>();
         relatedParties.add(rp);

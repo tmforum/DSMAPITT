@@ -36,8 +36,8 @@ public class TroubleTicketHubResource {
     public Response create(Hub entity) throws BadUsageException {
         entity.setId(null);
         hubFacade.create(entity);
-        Response response = Response.ok(entity).build();
-        return response;
+        //201
+        return Response.status(Response.Status.CREATED).entity(entity).build();
     }
 
     @DELETE
@@ -66,8 +66,8 @@ public class TroubleTicketHubResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
             hubFacade.remove(id);
-            // 200 
-            return Response.ok(hub).build();
+            // 204
+            return Response.status(Response.Status.NO_CONTENT).build();
         }
     }
 

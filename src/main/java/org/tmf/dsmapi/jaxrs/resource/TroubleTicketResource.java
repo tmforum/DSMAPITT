@@ -151,8 +151,8 @@ public class TroubleTicketResource {
         if (troubleTicketManagement != null) {
             entity.setId(id);
             troubleTicketManagementFacade.edit(entity);
-            // 201 OK + location
-            response = Response.status(Response.Status.CREATED).entity(entity).build();
+            // 200 OK + location
+            response = Response.status(Response.Status.OK).entity(entity).build();
 
         } else {
             // 404 not found
@@ -172,8 +172,8 @@ public class TroubleTicketResource {
         TroubleTicket currentTT = troubleTicketManagementFacade.checkPatch(id, partialTT);
         System.out.println("entity before partial edit 2" + currentTT);
 
-        // 201 OK + location
-        response = Response.status(Response.Status.CREATED).entity(currentTT).build();
+        // 200 OK + location
+        response = Response.status(Response.Status.OK).entity(currentTT).build();
 
         return response;
     }
