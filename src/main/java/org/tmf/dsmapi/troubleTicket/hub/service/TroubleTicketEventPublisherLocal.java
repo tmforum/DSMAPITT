@@ -37,13 +37,13 @@ public interface TroubleTicketEventPublisherLocal {
      * @param bean the bean which has been updated
      * @param date the update date
      */
-    public void updateNotification(TroubleTicket bean, Date date);
+    public void changedNotification(TroubleTicket bean, Date date);
 
     /**
      *
-     * stateChangeNotification
+     * stateChangedNotification
      * @param bean the bean which has been changed
      * @param date the change date
      */
-    public void stateChangeNotification(TroubleTicket bean, Date date);
+    public void stateChangedNotification(TroubleTicket bean, Date date);
 }

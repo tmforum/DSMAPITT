@@ -62,7 +62,7 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.TicketInformationRequiredNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.InformationRequiredNotification);
         publish(event);
 
     }
@@ -77,20 +77,20 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
     }
 	
     @Override
-    public void updateNotification(TroubleTicket bean, Date date) {
+    public void changedNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.TicketUpdateNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketChangedNotification);
         publish(event);
     }
 
     @Override
-    public void stateChangeNotification(TroubleTicket bean, Date date) {
+    public void stateChangedNotification(TroubleTicket bean, Date date) {
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.TicketStateChangeNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketStatusChangedNotification);
         publish(event);
     }
 }

@@ -32,6 +32,8 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
     @EJB
     TroubleTicketEventPublisherLocal publisher;
 
+    StateModelImpl stateModel = new StateModelImpl();
+
     public TroubleTicketFacade() {
         super(TroubleTicket.class);
     }
@@ -41,21 +43,16 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         return em;
     }
 
-    @Override
-    public void create(TroubleTicket entity) throws BadUsageException {
-        super.create(entity);
-    }
-
     public void checkCreation(TroubleTicket newTroubleTicket) throws BadUsageException {
-        
+
         if (newTroubleTicket.getId() != null) {
             try {
                 TroubleTicket tt = this.find(newTroubleTicket.getId());
-                if( null != tt){
-                    throw new BadUsageException(ExceptionType.UNKNOWN_RESOURCE, "TroubleTicket with id : "+newTroubleTicket.getId()+" already exist.");
+                if (null != tt) {
+                    throw new BadUsageException(ExceptionType.UNKNOWN_RESOURCE, "TroubleTicket with id : " + newTroubleTicket.getId() + " already exist.");
                 }
             } catch (UnknownResourceException ex) {
-                Logger.getLogger("en cours de creation du troubleticket id:"+newTroubleTicket.getId());
+                Logger.getLogger("en cours de creation du troubleticket id:" + newTroubleTicket.getId());
             }
         }
         //verify first status
@@ -110,18 +107,20 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         }
 
         if (null != partialTT.getStatus()) {
+            
             if (null == partialTT.getStatusChangeReason()) {
                 throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "statusChangeReason is mandatory if status modified ");
             }
-            if (WorkflowValidator.isCorrect(currentTT.getStatus(), partialTT.getStatus())) {
-                currentTT.setStatus(partialTT.getStatus());
 
-                currentTT.setStatusChangeDate(TMFDate.toString(new Date()));
-                currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
-                publisher.stateChangeNotification(currentTT, new Date());
-            } else {
-                throw new BadUsageException(ExceptionType.BAD_USAGE_FLOW_TRANSITION, "current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
-            }
+//            if (WorkflowValidator.isCorrect(currentTT.getStatus(), partialTT.getStatus())) {
+            stateModel.checkTransition(currentTT.getStatus(), partialTT.getStatus());
+            currentTT.setStatus(partialTT.getStatus());
+            currentTT.setStatusChangeDate(TMFDate.toString(new Date()));
+            currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
+            publisher.stateChangedNotification(currentTT, new Date());
+//            } else {
+//                throw new BadUsageException(ExceptionType.BAD_USAGE_FLOW_TRANSITION, "current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
+//            }
         }
         //System.out.println("Before editing current");
 //        super.edit(currentTT);
@@ -129,10 +128,9 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
         JsonNode node = mapper.convertValue(partialTT, JsonNode.class);
         partialTT.setId(id);
         if (BeanUtils.patch(currentTT, partialTT, node)) {
-            publisher.updateNotification(currentTT, new Date());
+            publisher.changedNotification(currentTT, new Date());
         }
 
-        
         return currentTT;
     }
 
