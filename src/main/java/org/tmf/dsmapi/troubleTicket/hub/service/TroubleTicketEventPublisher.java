@@ -62,7 +62,7 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.InformationRequiredNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketClearanceRequestNotification);
         publish(event);
 
     }
@@ -72,7 +72,7 @@ public class TroubleTicketEventPublisher implements TroubleTicketEventPublisherL
         TroubleTicketEvent event = new TroubleTicketEvent();
         event.setResource(bean);
         event.setEventTime(date);
-        event.setEventType(TroubleTicketEventTypeEnum.TicketClearanceRequestNotification);
+        event.setEventType(TroubleTicketEventTypeEnum.TicketInformationRequiredNotification);
         publish(event);
     }
 	

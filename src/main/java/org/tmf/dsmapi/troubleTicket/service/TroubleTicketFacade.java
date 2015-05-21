@@ -64,7 +64,8 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             }
         }
 
-        if (null == newTroubleTicket.getDescription()) {
+        if (null == newTroubleTicket.getDescription()
+                || newTroubleTicket.getDescription().isEmpty()) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "description is mandatory");
         }
 
@@ -72,15 +73,18 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "severity is mandatory");
         }
 
-        if (null == newTroubleTicket.getType()) {
+        if (null == newTroubleTicket.getType()
+                || newTroubleTicket.getType().isEmpty()) {
             throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "type is mandatory");
         }
 
-        if (null == newTroubleTicket.getCreationDate()) {
+        if (null == newTroubleTicket.getCreationDate()
+                || newTroubleTicket.getCreationDate().isEmpty()) {
             newTroubleTicket.setCreationDate(TMFDate.toString(new Date()));
         }
 
-        if (null == newTroubleTicket.getStatusChangeDate()) {
+        if (null == newTroubleTicket.getStatusChangeDate()
+                || newTroubleTicket.getStatusChangeDate().isEmpty()) {
             newTroubleTicket.setStatusChangeDate(TMFDate.toString(new Date()));
         }
 
@@ -108,19 +112,22 @@ public class TroubleTicketFacade extends AbstractFacade<TroubleTicket> {
 
         if (null != partialTT.getStatus()) {
             
-            if (null == partialTT.getStatusChangeReason()) {
+            if (null == partialTT.getStatusChangeReason()
+                    || partialTT.getStatusChangeReason().isEmpty()) {
                 throw new BadUsageException(ExceptionType.BAD_USAGE_MANDATORY_FIELDS, "statusChangeReason is mandatory if status modified ");
             }
 
-//            if (WorkflowValidator.isCorrect(currentTT.getStatus(), partialTT.getStatus())) {
             stateModel.checkTransition(currentTT.getStatus(), partialTT.getStatus());
             currentTT.setStatus(partialTT.getStatus());
             currentTT.setStatusChangeDate(TMFDate.toString(new Date()));
             currentTT.setStatusChangeReason(partialTT.getStatusChangeReason());
             publisher.stateChangedNotification(currentTT, new Date());
-//            } else {
-//                throw new BadUsageException(ExceptionType.BAD_USAGE_FLOW_TRANSITION, "current=" + currentTT.getStatus() + " sent=" + partialTT.getStatus());
-//            }
+            if (currentTT.getStatus().name().equalsIgnoreCase(Status.Closed.name())
+                    || currentTT.getStatus().name().equalsIgnoreCase(Status.Cancelled.name())
+                    || currentTT.getStatus().name().equalsIgnoreCase(Status.Rejected.name())
+                    ){
+                publisher.clearanceRequestNotification(currentTT, new Date());
+            }
         }
         //System.out.println("Before editing current");
 //        super.edit(currentTT);
