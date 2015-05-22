@@ -28,15 +28,31 @@ public class StateModelImpl extends StateModelBase<Status> {
 
         // Somewhere
         from(Status.Acknowledged).to(
+                Status.InProgress,
                 Status.InProgressHeld,
                 Status.InProgressPending,
-                Status.Cancelled);       
+                Status.Cancelled);   
+        from(Status.Acknowledged).to(
+                Status.InProgress,
+                Status.InProgressHeld,
+                Status.InProgressPending,
+                Status.Cancelled);  
+         from(Status.InProgress).to(
+                Status.InProgressHeld,
+                Status.InProgressPending,
+                Status.Resolved,
+                Status.Cancelled);  
         from(Status.InProgressHeld).to(
-                Status.Resolved);
+                Status.InProgress,
+                Status.Resolved, 
+                Status.InProgressPending);
         from(Status.InProgressPending).to(
+                Status.InProgress,
+                Status.InProgressHeld,
                 Status.Cancelled,
                 Status.Resolved);
         from(Status.Resolved).to(
+                Status.InProgress,
                 Status.Closed,
                 Status.InProgressHeld,
                 Status.InProgressPending);
